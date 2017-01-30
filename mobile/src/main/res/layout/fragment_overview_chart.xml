@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_overview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="de.iweinzierl.worktrack.OverviewActivityFragment"
+    tools:showIn="@layout/activity_overview">
+
+    <LinearLayout
+        android:id="@+id/bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal"
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        android:paddingStart="@dimen/activity_horizontal_margin">
+
+        <Spinner
+            android:id="@+id/yearSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:popupBackground="@color/colorPrimary" />
+
+        <Spinner
+            android:id="@+id/weekSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:popupBackground="@color/colorPrimary" />
+
+    </LinearLayout>
+
+    <org.eazegraph.lib.charts.BarChart xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/barChart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom_bar"
+        android:padding="10dp"
+        app:egBarMargin="10dp"
+        app:egBarWidth="40dp"
+        app:egFixedBarWidth="false"
+        app:egLegendHeight="40dp"
+        app:egShowDecimal="true"
+        app:egShowValues="true" />
+
+</RelativeLayout>
