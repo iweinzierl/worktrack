@@ -45,6 +45,18 @@ public class LocalTrackingItemRepository implements TrackingItemRepository {
     }
 
     @Override
+    public boolean deleteAll() {
+        try {
+            sessionFactory.getSession().getTrackingItemDao().deleteAll();
+            return true;
+        } catch (Exception e) {
+            LOGGER.error("Deleting all tracking items failed", e);
+        }
+
+        return false;
+    }
+
+    @Override
     public TrackingItem update(TrackingItem item) {
         try {
             sessionFactory.getSession().getTrackingItemDao().update(item);
@@ -85,7 +97,7 @@ public class LocalTrackingItemRepository implements TrackingItemRepository {
             return Lists.newArrayList(Collections2.filter(items, new Predicate<TrackingItem>() {
                 @Override
                 public boolean apply(TrackingItem input) {
-                    return input.getEventTime().equals(date);
+                    return input.getEventTime().toLocalDate().equals(date);
                 }
             }));
         } catch (Exception e) {

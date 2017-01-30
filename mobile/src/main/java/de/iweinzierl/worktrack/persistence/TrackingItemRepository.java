@@ -10,6 +10,8 @@ public interface TrackingItemRepository {
 
     boolean delete(TrackingItem item);
 
+    boolean deleteAll();
+
     TrackingItem update(TrackingItem item);
 
     TrackingItem findById(long id);

@@ -1,22 +1,90 @@
 package de.iweinzierl.worktrack;
 
 import android.support.v4.app.Fragment;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.widget.TextView;
 
-/**
- * A placeholder fragment containing a simple view.
- */
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ViewById;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.joda.time.Period;
+import org.joda.time.format.PeriodFormatter;
+import org.joda.time.format.PeriodFormatterBuilder;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import de.iweinzierl.worktrack.persistence.TrackingItem;
+import de.iweinzierl.worktrack.view.adapter.TrackingItemAdapter;
+
+@EFragment(R.layout.fragment_overview)
 public class OverviewActivityFragment extends Fragment {
+
+    @ViewById
+    protected RecyclerView cardView;
+
+    @ViewById
+    protected TextView dateView;
+
+    @ViewById
+    protected TextView durationView;
+
+    private static final PeriodFormatter periodFormatter = new PeriodFormatterBuilder()
+            .appendHours()
+            .printZeroNever()
+            .appendSuffix("h ")
+            .appendMinutes()
+            .printZeroAlways()
+            .appendSuffix("min")
+            .toFormatter();
 
     public OverviewActivityFragment() {
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_overview, container, false);
+
+    @AfterViews
+    public void setup() {
+        cardView.setHasFixedSize(false);
+        cardView.setLayoutManager(new LinearLayoutManager(getContext()));
+    }
+
+    public void setTrackingItems(List<TrackingItem> items) {
+        cardView.setAdapter(new TrackingItemAdapter(getContext(), items));
+
+        determineAndSetDate(items);
+        calculateAndSetDuration(items);
+    }
+
+    private void determineAndSetDate(List<TrackingItem> items) {
+        Set<LocalDate> dates = new HashSet<>();
+
+        for (TrackingItem item : items) {
+            dates.add(item.getEventTime().toLocalDate());
+        }
+
+        if (dates.size() == 1) {
+            dateView.setText(items.get(0).getEventTime().toString("yyyy-MM-dd"));
+        } else {
+            dateView.setText("TODO: IMPLEMENT");
+        }
+    }
+
+    private void calculateAndSetDuration(List<TrackingItem> items) {
+        Period duration = new Period();
+
+        for (int idx = 0; idx < items.size(); idx += 2) {
+            if (idx < items.size() - 1) {
+                DateTime tA = items.get(idx).getEventTime();
+                DateTime tB = items.get(idx + 1).getEventTime();
+
+                duration = duration.plus(new Period(tA, tB));
+            }
+        }
+
+        durationView.setText(duration.toString(periodFormatter));
     }
 }
