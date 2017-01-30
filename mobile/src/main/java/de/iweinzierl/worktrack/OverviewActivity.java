@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import de.iweinzierl.worktrack.persistence.CreationType;
 import de.iweinzierl.worktrack.persistence.DaoSessionFactory;
 import de.iweinzierl.worktrack.persistence.LocalTrackingItemRepository;
 import de.iweinzierl.worktrack.persistence.TrackingItem;
@@ -86,10 +87,10 @@ public class OverviewActivity extends AppCompatActivity {
 
         DateTime now = DateTime.now();
 
-        trackingItemRepository.save(new TrackingItem(TrackingItemType.CHECKIN, new DateTime(now.getYear(), now.getMonthOfYear(), now.getDayOfMonth(), 7, 55)));
-        trackingItemRepository.save(new TrackingItem(TrackingItemType.CHECKOUT, new DateTime(now.getYear(), now.getMonthOfYear(), now.getDayOfMonth(), 12, 10)));
-        trackingItemRepository.save(new TrackingItem(TrackingItemType.CHECKIN, new DateTime(now.getYear(), now.getMonthOfYear(), now.getDayOfMonth(), 13, 25)));
-        trackingItemRepository.save(new TrackingItem(TrackingItemType.CHECKOUT, new DateTime(now.getYear(), now.getMonthOfYear(), now.getDayOfMonth(), 18, 20)));
+        trackingItemRepository.save(new TrackingItem(TrackingItemType.CHECKIN, new DateTime(now.getYear(), now.getMonthOfYear(), now.getDayOfMonth(), 7, 55), CreationType.AUTO));
+        trackingItemRepository.save(new TrackingItem(TrackingItemType.CHECKOUT, new DateTime(now.getYear(), now.getMonthOfYear(), now.getDayOfMonth(), 12, 10), CreationType.MANUAL));
+        trackingItemRepository.save(new TrackingItem(TrackingItemType.CHECKIN, new DateTime(now.getYear(), now.getMonthOfYear(), now.getDayOfMonth(), 13, 25), CreationType.MANUAL));
+        trackingItemRepository.save(new TrackingItem(TrackingItemType.CHECKOUT, new DateTime(now.getYear(), now.getMonthOfYear(), now.getDayOfMonth(), 18, 20), CreationType.AUTO));
 
         Snackbar.make(findViewById(android.R.id.content), "Added demo data", BaseTransientBottomBar.LENGTH_SHORT).show();
 

@@ -17,6 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
+            android:paddingEnd="5dp"
             android:paddingStart="5dp">
 
             <ImageView
@@ -38,6 +39,12 @@
                 android:layout_height="match_parent"
                 android:layout_weight="3"
                 android:gravity="center" />
+
+            <ImageView
+                android:id="@+id/manualIconView"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center" />
         </LinearLayout>
     </android.support.v7.widget.CardView>
 

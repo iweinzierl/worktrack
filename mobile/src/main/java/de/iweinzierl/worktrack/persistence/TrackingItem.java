@@ -2,13 +2,14 @@ package de.iweinzierl.worktrack.persistence;
 
 import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.NotNull;
 import org.joda.time.DateTime;
 
+import de.iweinzierl.worktrack.persistence.converter.CreationTypeConverter;
 import de.iweinzierl.worktrack.persistence.converter.DateTimeConverter;
 import de.iweinzierl.worktrack.persistence.converter.TrackingItemTypeConverter;
-import org.greenrobot.greendao.annotation.Generated;
 
 @Entity
 public class TrackingItem {
@@ -22,12 +23,17 @@ public class TrackingItem {
     @NotNull
     private TrackingItemType type;
 
+    @Convert(converter = CreationTypeConverter.class, columnType = Integer.class)
+    @NotNull
+    private CreationType creationType;
+
     @Convert(converter = DateTimeConverter.class, columnType = Long.class)
     @NotNull
     private DateTime eventTime;
 
-    public TrackingItem(TrackingItemType type, DateTime eventTime) {
+    public TrackingItem(TrackingItemType type, DateTime eventTime, CreationType creationType) {
         this.type = type;
+        this.creationType = creationType;
         this.eventTime = eventTime;
     }
 
@@ -37,12 +43,13 @@ public class TrackingItem {
         this.eventTime = eventTime;
     }
 
-    @Generated(hash = 415607764)
+    @Generated(hash = 259717695)
     public TrackingItem(Long id, Long backendId, @NotNull TrackingItemType type,
-            @NotNull DateTime eventTime) {
+            @NotNull CreationType creationType, @NotNull DateTime eventTime) {
         this.id = id;
         this.backendId = backendId;
         this.type = type;
+        this.creationType = creationType;
         this.eventTime = eventTime;
     }
 
@@ -56,6 +63,10 @@ public class TrackingItem {
 
     public TrackingItemType getType() {
         return type;
+    }
+
+    public CreationType getCreationType() {
+        return creationType;
     }
 
     public DateTime getEventTime() {
@@ -76,6 +87,7 @@ public class TrackingItem {
                 "id=" + id +
                 ", backendId=" + backendId +
                 ", type=" + type +
+                ", creationType=" + creationType +
                 ", eventTime=" + eventTime +
                 '}';
     }
@@ -90,6 +102,10 @@ public class TrackingItem {
 
     public void setEventTime(DateTime eventTime) {
         this.eventTime = eventTime;
+    }
+
+    public void setCreationType(CreationType creationType) {
+        this.creationType = creationType;
     }
 
 }
