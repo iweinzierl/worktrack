@@ -5,7 +5,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
-import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 import org.joda.time.DateTime;
@@ -25,13 +24,13 @@ import de.iweinzierl.worktrack.view.adapter.TrackingItemAdapter;
 public class OverviewActivityFragment extends Fragment {
 
     @ViewById
-    protected RecyclerView cardView;
+    RecyclerView cardView;
 
     @ViewById
-    protected TextView dateView;
+    TextView dateView;
 
     @ViewById
-    protected TextView durationView;
+    TextView durationView;
 
     private static final PeriodFormatter periodFormatter = new PeriodFormatterBuilder()
             .appendHours()
@@ -45,9 +44,9 @@ public class OverviewActivityFragment extends Fragment {
     public OverviewActivityFragment() {
     }
 
-
-    @AfterViews
-    public void setup() {
+    @Override
+    public void onResume() {
+        super.onResume();
         cardView.setHasFixedSize(false);
         cardView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
@@ -66,7 +65,10 @@ public class OverviewActivityFragment extends Fragment {
             dates.add(item.getEventTime().toLocalDate());
         }
 
-        if (dates.size() == 1) {
+        if (dates.isEmpty()) {
+            dateView.setText("////-//-//");
+        }
+        else if (dates.size() == 1) {
             dateView.setText(items.get(0).getEventTime().toString("yyyy-MM-dd"));
         } else {
             dateView.setText("TODO: IMPLEMENT");
@@ -85,6 +87,6 @@ public class OverviewActivityFragment extends Fragment {
             }
         }
 
-        durationView.setText(duration.toString(periodFormatter));
+        durationView.setText(duration.normalizedStandard().toString(periodFormatter));
     }
 }
