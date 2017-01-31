@@ -9,9 +9,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
+
+import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.FragmentById;
+import org.androidannotations.annotations.UiThread;
+import org.androidannotations.annotations.ViewById;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
@@ -30,13 +37,22 @@ import de.iweinzierl.worktrack.persistence.TrackingItemType;
 public class OverviewActivity extends AppCompatActivity {
 
     @Bean
-    protected DaoSessionFactory sessionFactory;
+    DaoSessionFactory sessionFactory;
 
     @Bean(LocalTrackingItemRepository.class)
-    protected TrackingItemRepository trackingItemRepository;
+    TrackingItemRepository trackingItemRepository;
 
     @FragmentById(R.id.fragment)
-    protected OverviewActivityFragment fragment;
+    OverviewActivityFragment fragment;
+
+    @ViewById
+    FloatingActionMenu actionMenu;
+
+    @ViewById
+    FloatingActionButton checkinAction;
+
+    @ViewById
+    FloatingActionButton checkoutAction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +87,32 @@ public class OverviewActivity extends AppCompatActivity {
         }
     }
 
-    private void refreshData() {
+    @Click(R.id.checkinAction)
+    protected void checkinManually() {
+        saveTrackingItem(new TrackingItem(TrackingItemType.CHECKIN, DateTime.now(), CreationType.MANUAL));
+        refreshData();
+        closeActionMenu();
+    }
+
+    @Click(R.id.checkoutAction)
+    protected void checkoutManually() {
+        saveTrackingItem(new TrackingItem(TrackingItemType.CHECKOUT, DateTime.now(), CreationType.MANUAL));
+        refreshData();
+        closeActionMenu();
+    }
+
+    @UiThread
+    protected void closeActionMenu() {
+        actionMenu.close(true);
+    }
+
+    @Background
+    protected void saveTrackingItem(TrackingItem item) {
+        trackingItemRepository.save(item);
+    }
+
+    @Background
+    protected void refreshData() {
         List<TrackingItem> todaysItems = trackingItemRepository.findByDate(LocalDate.now());
         Collections.sort(todaysItems, new Comparator<TrackingItem>() {
             @Override
@@ -79,7 +120,12 @@ public class OverviewActivity extends AppCompatActivity {
                 return trackingItem.getEventTime().compareTo(t1.getEventTime());
             }
         });
-        fragment.setTrackingItems(todaysItems);
+        updateUi(todaysItems);
+    }
+
+    @UiThread
+    protected void updateUi(List<TrackingItem> items) {
+        fragment.setTrackingItems(items);
     }
 
     private void addDemoData() {
