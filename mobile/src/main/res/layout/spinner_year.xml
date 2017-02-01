@@ -12,5 +12,5 @@
         android:paddingEnd="@dimen/activity_horizontal_margin"
         android:paddingStart="0dp"
         android:textColor="@color/toolbarFont"
-        android:textSize="@dimen/toolbarFontsize" />
+        android:textSize="@dimen/toolbarFontSize" />
 </LinearLayout>

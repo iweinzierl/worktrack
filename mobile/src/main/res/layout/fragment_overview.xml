@@ -24,7 +24,7 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:textColor="@color/toolbarFont"
-            android:textSize="@dimen/toolbarFontsize" />
+            android:textSize="@dimen/toolbarFontSize" />
 
         <TextView
             android:id="@+id/durationView"
@@ -33,7 +33,7 @@
             android:layout_weight="3"
             android:gravity="center_vertical"
             android:textColor="@color/toolbarFont"
-            android:textSize="@dimen/toolbarFontsize" />
+            android:textSize="@dimen/toolbarFontSize" />
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView

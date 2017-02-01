@@ -5,4 +5,8 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="toolbarFont">#FFF</color>
+
+    <color name="drawerBackgroundColor">#383838</color>
+    <color name="drawerHeaderBackgroundColor">#303F9F</color>
+    <color name="drawerFontColor">#FFF</color>
 </resources>

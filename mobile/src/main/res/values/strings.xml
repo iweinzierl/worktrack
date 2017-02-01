@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Worktrack</string>
     <string name="action_settings">Settings</string>
+
+    <string name="activity_overview_chart">Overview</string>
+
+    <string name="drawer_open">Open Drawer</string>
+    <string name="drawer_close">Close Drawer</string>
 </resources>

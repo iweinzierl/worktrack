@@ -1,10 +1,7 @@
 package de.iweinzierl.worktrack;
 
-import android.os.Bundle;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -34,7 +31,7 @@ import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
 import de.iweinzierl.worktrack.persistence.TrackingItemType;
 
 @EActivity
-public class OverviewActivity extends AppCompatActivity {
+public class OverviewActivity extends BaseActivity {
 
     @Bean
     DaoSessionFactory sessionFactory;
@@ -55,11 +52,8 @@ public class OverviewActivity extends AppCompatActivity {
     FloatingActionButton checkoutAction;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_overview);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+    int getLayoutId() {
+        return R.layout.activity_overview;
     }
 
     @Override
@@ -83,7 +77,7 @@ public class OverviewActivity extends AppCompatActivity {
                 addDemoData();
                 return true;
             default:
-                return false;
+                return super.onOptionsItemSelected(item);
         }
     }
 

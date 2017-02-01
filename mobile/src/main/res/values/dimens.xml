@@ -11,5 +11,10 @@
 
     <dimen name="fab_margin">16dp</dimen>
 
-    <dimen name="toolbarFontsize">16sp</dimen>
+    <dimen name="toolbarFontSize">16sp</dimen>
+
+    <dimen name="drawer_horizontal_margin">8dp</dimen>
+    <dimen name="drawer_vertical_margin">8dp</dimen>
+    <dimen name="drawerFontSize">16sp</dimen>
+    <dimen name="drawerHeaderFontSize">24sp</dimen>
 </resources>
