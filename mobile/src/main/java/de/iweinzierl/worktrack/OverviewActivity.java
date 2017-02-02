@@ -98,6 +98,7 @@ public class OverviewActivity extends BaseActivity implements OverviewActivityFr
     @Override
     public void onDeleteItem(TrackingItem item) {
         deleteTrackingItem(item);
+        refreshData();
         Snackbar.make(findViewById(android.R.id.content), "Deleted Event", BaseTransientBottomBar.LENGTH_SHORT).show();
     }
 
