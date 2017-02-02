@@ -62,7 +62,7 @@ public class OverviewChartActivityFragment extends Fragment {
         for (WeekDay day : weekDays) {
             float hours = (float) ((int) (day.getWorkingTime().getMillis() / (10 * 60 * 60))) / 100;
             barChart.addBar(new BarModel(
-                    String.valueOf(day.getDate().getDayOfWeek()),
+                    String.valueOf(day.getDate().toString("EEE")),
                     hours,
                     hours > 8 ? colorOverHours : colorNormalHours));
         }
