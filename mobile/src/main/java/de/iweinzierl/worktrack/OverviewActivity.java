@@ -1,7 +1,9 @@
 package de.iweinzierl.worktrack;
 
+import android.content.DialogInterface;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -95,14 +97,19 @@ public class OverviewActivity extends BaseActivity {
 
     @Click(R.id.checkinAction)
     protected void checkinManually() {
-        saveTrackingItem(new TrackingItem(TrackingItemType.CHECKIN, DateTime.now(), CreationType.MANUAL));
-        refreshData();
-        closeActionMenu();
+        closeActionMenu(false);
+        saveTrackingItem(new TrackingItem(TrackingItemType.CHECKIN, DateTime.now(), CreationType.MANUAL), new AsyncCallback() {
+            @Override
+            public void callback() {
+                refreshData();
+                Snackbar.make(findViewById(android.R.id.content), "Added Event", BaseTransientBottomBar.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Click(R.id.checkinAtAction)
     protected void checkinAtManually() {
-        closeActionMenu();
+        closeActionMenu(false);
         showDateTimePickerDialog(new SwitchDateTimeDialogFragment.OnButtonClickListener() {
             @Override
             public void onPositiveButtonClick(Date date) {
@@ -114,6 +121,7 @@ public class OverviewActivity extends BaseActivity {
                     @Override
                     public void callback() {
                         refreshData();
+                        Snackbar.make(findViewById(android.R.id.content), "Added Event", BaseTransientBottomBar.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -126,14 +134,19 @@ public class OverviewActivity extends BaseActivity {
 
     @Click(R.id.checkoutAction)
     protected void checkoutManually() {
-        saveTrackingItem(new TrackingItem(TrackingItemType.CHECKOUT, DateTime.now(), CreationType.MANUAL));
-        refreshData();
-        closeActionMenu();
+        closeActionMenu(false);
+        saveTrackingItem(new TrackingItem(TrackingItemType.CHECKOUT, DateTime.now(), CreationType.MANUAL), new AsyncCallback() {
+            @Override
+            public void callback() {
+                refreshData();
+                Snackbar.make(findViewById(android.R.id.content), "Added Event", BaseTransientBottomBar.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Click(R.id.checkoutAtAction)
     protected void checkoutAtManually() {
-        closeActionMenu();
+        closeActionMenu(false);
         showDateTimePickerDialog(new SwitchDateTimeDialogFragment.OnButtonClickListener() {
             @Override
             public void onPositiveButtonClick(Date date) {
@@ -145,6 +158,7 @@ public class OverviewActivity extends BaseActivity {
                     @Override
                     public void callback() {
                         refreshData();
+                        Snackbar.make(findViewById(android.R.id.content), "Added Event", BaseTransientBottomBar.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -157,7 +171,12 @@ public class OverviewActivity extends BaseActivity {
 
     @UiThread
     protected void closeActionMenu() {
-        actionMenu.close(true);
+        closeActionMenu(true);
+    }
+
+    @UiThread
+    void closeActionMenu(boolean animate) {
+        actionMenu.close(animate);
     }
 
     @Background
@@ -218,6 +237,26 @@ public class OverviewActivity extends BaseActivity {
     }
 
     private void addDemoData() {
+        new AlertDialog.Builder(this)
+                .setTitle("Demo Data")
+                .setMessage("Really delete existing data to add demo data?")
+                .setCancelable(true)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        eraseDataAndAddDemoData();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                })
+                .show();
+    }
+
+    protected void eraseDataAndAddDemoData() {
         trackingItemRepository.deleteAll();
 
         LocalDate mon = DateTime.now().toLocalDate().dayOfWeek().withMinimumValue();
@@ -250,7 +289,7 @@ public class OverviewActivity extends BaseActivity {
         trackingItemRepository.save(new TrackingItem(TrackingItemType.CHECKIN, new DateTime(fri.getYear(), fri.getMonthOfYear(), fri.getDayOfMonth(), 14, 0), CreationType.AUTO));
         trackingItemRepository.save(new TrackingItem(TrackingItemType.CHECKOUT, new DateTime(fri.getYear(), fri.getMonthOfYear(), fri.getDayOfMonth(), 15, 38), CreationType.AUTO));
 
-        Snackbar.make(findViewById(android.R.id.content), "Added demo data", BaseTransientBottomBar.LENGTH_SHORT).show();
+        Snackbar.make(findViewById(android.R.id.content), "Erased existing and added demo data", BaseTransientBottomBar.LENGTH_SHORT).show();
 
         refreshData();
     }
