@@ -82,7 +82,16 @@
                     android:src="@drawable/ic_arrow_forward_white_32px"
                     fab:fabSize="mini"
                     fab:fab_colorNormal="#1c8f04"
-                    fab:fab_label="Check-in" />
+                    fab:fab_label="@string/activity_overview_action_checkin_now" />
+
+                <com.github.clans.fab.FloatingActionButton
+                    android:id="@+id/checkinAtAction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_arrow_forward_white_32px"
+                    fab:fabSize="mini"
+                    fab:fab_colorNormal="#1c8f04"
+                    fab:fab_label="@string/activity_overview_action_checkin_specified" />
 
                 <com.github.clans.fab.FloatingActionButton
                     android:id="@+id/checkoutAction"
@@ -91,7 +100,16 @@
                     android:src="@drawable/ic_arrow_backward_white_32px"
                     fab:fabSize="mini"
                     fab:fab_colorNormal="#d60f0f"
-                    fab:fab_label="Check-out" />
+                    fab:fab_label="@string/activity_overview_action_checkout_now" />
+
+                <com.github.clans.fab.FloatingActionButton
+                    android:id="@+id/checkoutAtAction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_arrow_backward_white_32px"
+                    fab:fabSize="mini"
+                    fab:fab_colorNormal="#d60f0f"
+                    fab:fab_label="@string/activity_overview_action_checkout_specified" />
 
             </com.github.clans.fab.FloatingActionMenu>
 

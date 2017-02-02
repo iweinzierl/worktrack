@@ -8,6 +8,8 @@ import android.view.MenuItem;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+import com.github.iweinzierl.android.logging.AndroidLoggerFactory;
+import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment;
 
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
@@ -18,10 +20,17 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
+import org.slf4j.Logger;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 import de.iweinzierl.worktrack.persistence.CreationType;
 import de.iweinzierl.worktrack.persistence.DaoSessionFactory;
@@ -29,9 +38,12 @@ import de.iweinzierl.worktrack.persistence.LocalTrackingItemRepository;
 import de.iweinzierl.worktrack.persistence.TrackingItem;
 import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
 import de.iweinzierl.worktrack.persistence.TrackingItemType;
+import de.iweinzierl.worktrack.util.AsyncCallback;
 
 @EActivity
 public class OverviewActivity extends BaseActivity {
+
+    private static final Logger LOGGER = AndroidLoggerFactory.getInstance().getLogger("OverviewActivity");
 
     @Bean
     DaoSessionFactory sessionFactory;
@@ -88,11 +100,59 @@ public class OverviewActivity extends BaseActivity {
         closeActionMenu();
     }
 
+    @Click(R.id.checkinAtAction)
+    protected void checkinAtManually() {
+        closeActionMenu();
+        showDateTimePickerDialog(new SwitchDateTimeDialogFragment.OnButtonClickListener() {
+            @Override
+            public void onPositiveButtonClick(Date date) {
+                saveTrackingItem(new TrackingItem(
+                        TrackingItemType.CHECKIN,
+                        new DateTime(date.getTime()),
+                        CreationType.MANUAL
+                ), new AsyncCallback() {
+                    @Override
+                    public void callback() {
+                        refreshData();
+                    }
+                });
+            }
+
+            @Override
+            public void onNegativeButtonClick(Date date) {
+            }
+        });
+    }
+
     @Click(R.id.checkoutAction)
     protected void checkoutManually() {
         saveTrackingItem(new TrackingItem(TrackingItemType.CHECKOUT, DateTime.now(), CreationType.MANUAL));
         refreshData();
         closeActionMenu();
+    }
+
+    @Click(R.id.checkoutAtAction)
+    protected void checkoutAtManually() {
+        closeActionMenu();
+        showDateTimePickerDialog(new SwitchDateTimeDialogFragment.OnButtonClickListener() {
+            @Override
+            public void onPositiveButtonClick(Date date) {
+                saveTrackingItem(new TrackingItem(
+                        TrackingItemType.CHECKOUT,
+                        new DateTime(date.getTime()),
+                        CreationType.MANUAL
+                ), new AsyncCallback() {
+                    @Override
+                    public void callback() {
+                        refreshData();
+                    }
+                });
+            }
+
+            @Override
+            public void onNegativeButtonClick(Date date) {
+            }
+        });
     }
 
     @UiThread
@@ -102,7 +162,16 @@ public class OverviewActivity extends BaseActivity {
 
     @Background
     protected void saveTrackingItem(TrackingItem item) {
+        saveTrackingItem(item, null);
+    }
+
+    @Background
+    protected void saveTrackingItem(TrackingItem item, AsyncCallback callback) {
         trackingItemRepository.save(item);
+
+        if (callback != null) {
+            callback.callback();
+        }
     }
 
     @Background
@@ -120,6 +189,32 @@ public class OverviewActivity extends BaseActivity {
     @UiThread
     protected void updateUi(List<TrackingItem> items) {
         fragment.setTrackingItems(items);
+    }
+
+    @UiThread
+    protected void showDateTimePickerDialog(SwitchDateTimeDialogFragment.OnButtonClickListener listener) {
+        LocalDateTime now = LocalDateTime.now();
+
+        SwitchDateTimeDialogFragment dateTimeFragment = SwitchDateTimeDialogFragment.newInstance(
+                "Title example",
+                "OK",
+                "Cancel"
+        );
+
+        dateTimeFragment.startAtCalendarView();
+        dateTimeFragment.set24HoursMode(true);
+        dateTimeFragment.setMinimumDateTime(new GregorianCalendar(now.getYear() - 5, Calendar.JANUARY, 1).getTime());
+        dateTimeFragment.setMaximumDateTime(new GregorianCalendar(now.getYear(), now.getMonthOfYear() - 1, now.getDayOfMonth(), 23, 59).getTime());
+        dateTimeFragment.setDefaultDateTime(new GregorianCalendar(now.getYear(), now.getMonthOfYear() - 1, now.getDayOfMonth(), now.getHourOfDay(), now.getMinuteOfHour()).getTime());
+
+        try {
+            dateTimeFragment.setSimpleDateMonthAndDayFormat(new SimpleDateFormat("dd MMMM", Locale.getDefault()));
+        } catch (SwitchDateTimeDialogFragment.SimpleDateMonthAndDayFormatException e) {
+            LOGGER.error("Problem while displaying datetime picker dialog", e);
+        }
+
+        dateTimeFragment.setOnButtonClickListener(listener);
+        dateTimeFragment.show(getSupportFragmentManager(), "dialog_time");
     }
 
     private void addDemoData() {

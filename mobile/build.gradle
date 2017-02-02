@@ -17,6 +17,7 @@ buildscript {
 repositories {
     mavenCentral()
     mavenLocal()
+    maven { url "https://jitpack.io" }
 }
 
 android {
@@ -66,6 +67,7 @@ dependencies {
     compile 'com.github.blackfizz:eazegraph:1.2.2@aar'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.github.clans:fab:1.6.4'
+    compile 'com.github.Kunzisoft:Android-SwitchDateTimePicker:1.5'
 
     testCompile 'junit:junit:4.12'
 }
