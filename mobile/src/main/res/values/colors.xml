@@ -9,4 +9,7 @@
     <color name="drawerBackgroundColor">#383838</color>
     <color name="drawerHeaderBackgroundColor">#303F9F</color>
     <color name="drawerFontColor">#FFF</color>
+
+    <color name="barChartOverHours">#FFC70B1B</color>
+    <color name="barChartNormalHours">#091ad6</color>
 </resources>

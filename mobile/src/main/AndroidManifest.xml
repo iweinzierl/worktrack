@@ -25,23 +25,26 @@
             android:name=".OverviewChartActivity_"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
+            <!--
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
-                <!--
                 <category android:name="android.intent.category.LAUNCHER" />
-                -->
             </intent-filter>
+            -->
         </activity>
 
-        <receiver android:name=".receiver.StartWorkReceiver_"  android:exported="true">
+        <receiver
+            android:name=".receiver.StartWorkReceiver_"
+            android:exported="true">
             <intent-filter>
-                <action android:name="de.iweinzierl.worktrack.START_WORK"/>
+                <action android:name="de.iweinzierl.worktrack.START_WORK" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".receiver.StopWorkReceiver_"  android:exported="true">
+        <receiver
+            android:name=".receiver.StopWorkReceiver_"
+            android:exported="true">
             <intent-filter>
-                <action android:name="de.iweinzierl.worktrack.STOP_WORK"/>
+                <action android:name="de.iweinzierl.worktrack.STOP_WORK" />
             </intent-filter>
         </receiver>
     </application>

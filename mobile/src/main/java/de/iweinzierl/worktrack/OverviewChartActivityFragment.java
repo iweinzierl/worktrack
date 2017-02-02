@@ -7,14 +7,17 @@ import com.google.common.collect.Lists;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.res.ColorRes;
 import org.eazegraph.lib.charts.BarChart;
 import org.eazegraph.lib.models.BarModel;
 
 import java.util.List;
 
-import de.iweinzierl.worktrack.view.adapter.YearSpinnerAdapter;
+import de.iweinzierl.worktrack.model.WeekDay;
 import de.iweinzierl.worktrack.view.adapter.WeekSpinnerAdapter;
+import de.iweinzierl.worktrack.view.adapter.YearSpinnerAdapter;
 
 @EFragment(R.layout.fragment_overview_chart)
 public class OverviewChartActivityFragment extends Fragment {
@@ -27,6 +30,12 @@ public class OverviewChartActivityFragment extends Fragment {
 
     @ViewById
     Spinner weekSpinner;
+
+    @ColorRes(R.color.barChartOverHours)
+    int colorOverHours;
+
+    @ColorRes(R.color.barChartNormalHours)
+    int colorNormalHours;
 
     public OverviewChartActivityFragment() {
     }
@@ -46,20 +55,18 @@ public class OverviewChartActivityFragment extends Fragment {
                         new WeekSpinnerAdapter.Week(2017, 4),
                         new WeekSpinnerAdapter.Week(2017, 5)
                 )));
-
-        barChart.addBarList(createModel());
-        barChart.startAnimation();
     }
 
-    private List<BarModel> createModel() {
-        return Lists.newArrayList(
-                new BarModel("Mon", 8.4f, 0xFF123456),
-                new BarModel("Tue", 9.5f, 0xFF123456),
-                new BarModel("Wed", 7.6f, 0xFF123456),
-                new BarModel("Thu", 12.8f, 0xFF123456),
-                new BarModel("Fri", 7.8f, 0xFF123456),
-                new BarModel("Sat", 0f, 0xFF123456),
-                new BarModel("Sun", 0f, 0xFF123456)
-        );
+    @UiThread
+    public void setWeekDays(List<WeekDay> weekDays) {
+        for (WeekDay day : weekDays) {
+            float hours = (float) ((int) (day.getWorkingTime().getMillis() / (10 * 60 * 60))) / 100;
+            barChart.addBar(new BarModel(
+                    String.valueOf(day.getDate().getDayOfWeek()),
+                    hours,
+                    hours > 8 ? colorOverHours : colorNormalHours));
+        }
+
+        barChart.startAnimation();
     }
 }
