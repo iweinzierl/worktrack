@@ -31,10 +31,10 @@
     </style>
 
     <style name="Drawer.Item">
-        <item name="android:paddingStart">@dimen/drawer_horizontal_margin</item>
-        <item name="android:paddingEnd">@dimen/drawer_horizontal_margin</item>
-        <item name="android:paddingTop">@dimen/drawer_vertical_margin</item>
-        <item name="android:paddingBottom">@dimen/drawer_vertical_margin</item>
+        <item name="android:paddingStart">@dimen/drawerItemLeftPadding</item>
+        <item name="android:paddingEnd">@dimen/drawerItemRightPadding</item>
+        <item name="android:paddingTop">@dimen/drawerItemTopPadding</item>
+        <item name="android:paddingBottom">@dimen/drawerItemBottomPadding</item>
     </style>
 
     <style name="Drawer.Item.Text">

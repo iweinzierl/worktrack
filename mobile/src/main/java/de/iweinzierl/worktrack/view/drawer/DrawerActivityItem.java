@@ -6,6 +6,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.github.iweinzierl.android.utils.UiUtils;
 
@@ -14,11 +15,13 @@ import de.iweinzierl.worktrack.R;
 class DrawerActivityItem implements DrawerItem {
 
     private final int label;
+    private final int icon;
     private final Class activity;
 
 
-    DrawerActivityItem(int label, Class activity) {
+    DrawerActivityItem(int label, int icon, Class activity) {
         this.label = label;
+        this.icon = icon;
         this.activity = activity;
     }
 
@@ -34,6 +37,9 @@ class DrawerActivityItem implements DrawerItem {
     public View getView(View view, ViewGroup viewGroup) {
         Context context = viewGroup.getContext();
         View item = LayoutInflater.from(context).inflate(R.layout.drawer_activity_item, viewGroup, false);
+
+        ImageView iconView = (ImageView) item.findViewById(R.id.icon);
+        iconView.setImageResource(icon);
 
         UiUtils.setSafeText(item, R.id.label, context.getString(getLabel()));
 

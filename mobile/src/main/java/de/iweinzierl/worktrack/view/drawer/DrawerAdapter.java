@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import de.iweinzierl.worktrack.OverviewActivity_;
 import de.iweinzierl.worktrack.OverviewChartActivity_;
 import de.iweinzierl.worktrack.R;
 
@@ -12,7 +13,8 @@ public class DrawerAdapter extends BaseAdapter {
 
     private static final DrawerItem[] NAV_ITEMS = {
             new DrawerHeaderItem(),
-            new DrawerActivityItem(R.string.activity_overview_chart, OverviewChartActivity_.class)
+            new DrawerActivityItem(R.string.activity_overview, R.drawable.ic_view_day_white_24px, OverviewActivity_.class),
+            new DrawerActivityItem(R.string.activity_overview_chart, R.drawable.ic_view_week_white_24px, OverviewChartActivity_.class)
     };
 
     private final DrawerLayout drawerLayout;
