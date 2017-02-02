@@ -68,6 +68,7 @@ dependencies {
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.github.clans:fab:1.6.4'
     compile 'com.github.Kunzisoft:Android-SwitchDateTimePicker:1.5'
+    compile 'com.hudomju:swipe-to-dismiss-undo:1.0'
 
     testCompile 'junit:junit:4.12'
 }

@@ -7,19 +7,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.common.collect.Lists;
+
+import java.util.Collections;
 import java.util.List;
 
 import de.iweinzierl.worktrack.R;
 import de.iweinzierl.worktrack.persistence.TrackingItem;
 
-public class TrackingItemAdapter extends RecyclerView.Adapter<TrackingItemViewHolder> {
+public class TrackingItemAdapter extends RecyclerView.Adapter<TrackingItemViewHolder> implements ItemToucheHelperAdapter<TrackingItem> {
 
     private final Context context;
-    private final List<TrackingItem> items;
 
-    public TrackingItemAdapter(@NonNull Context context, @NonNull List<TrackingItem> items) {
+    private List<TrackingItem> items;
+
+    @SuppressWarnings("unchecked")
+    public TrackingItemAdapter(@NonNull Context context) {
         this.context = context;
-        this.items = items;
+        this.items = Collections.EMPTY_LIST;
     }
 
     @Override
@@ -36,5 +41,20 @@ public class TrackingItemAdapter extends RecyclerView.Adapter<TrackingItemViewHo
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+        items.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    @Override
+    public TrackingItem getItem(int position) {
+        return items.get(position);
+    }
+
+    public void setItems(List<TrackingItem> items) {
+        this.items = Lists.newArrayList(items);
     }
 }

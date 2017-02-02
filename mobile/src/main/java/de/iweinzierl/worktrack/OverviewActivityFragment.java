@@ -1,8 +1,10 @@
 package de.iweinzierl.worktrack;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.widget.TextView;
 
 import org.androidannotations.annotations.EFragment;
@@ -18,10 +20,42 @@ import java.util.List;
 import java.util.Set;
 
 import de.iweinzierl.worktrack.persistence.TrackingItem;
+import de.iweinzierl.worktrack.view.adapter.ItemToucheHelperAdapter;
 import de.iweinzierl.worktrack.view.adapter.TrackingItemAdapter;
 
 @EFragment(R.layout.fragment_overview)
 public class OverviewActivityFragment extends Fragment {
+
+    public interface TrackingItemCallback {
+        void onDeleteItem(TrackingItem item);
+    }
+
+    private class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
+        private final ItemToucheHelperAdapter<TrackingItem> adapter;
+        private final TrackingItemCallback trackingItemCallback;
+
+        private ItemTouchHelperCallback(ItemToucheHelperAdapter<TrackingItem> adapter, TrackingItemCallback trackingItemCallback) {
+            this.adapter = adapter;
+            this.trackingItemCallback = trackingItemCallback;
+        }
+
+
+        @Override
+        public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+            return makeMovementFlags(0, ItemTouchHelper.START | ItemTouchHelper.END);
+        }
+
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+            trackingItemCallback.onDeleteItem(adapter.getItem(viewHolder.getAdapterPosition()));
+            adapter.onItemDismiss(viewHolder.getAdapterPosition());
+        }
+    }
 
     @ViewById
     RecyclerView cardView;
@@ -31,6 +65,10 @@ public class OverviewActivityFragment extends Fragment {
 
     @ViewById
     TextView durationView;
+
+    private TrackingItemAdapter trackingItemAdapter;
+
+    private TrackingItemCallback trackingItemCallback;
 
     private static final PeriodFormatter periodFormatter = new PeriodFormatterBuilder()
             .appendHours()
@@ -45,14 +83,29 @@ public class OverviewActivityFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        trackingItemAdapter = new TrackingItemAdapter(getContext());
+
+        if (context instanceof TrackingItemCallback) {
+            trackingItemCallback = (TrackingItemCallback) context;
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
+
+        ItemTouchHelper touchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(trackingItemAdapter, trackingItemCallback));
+        touchHelper.attachToRecyclerView(cardView);
+
         cardView.setHasFixedSize(false);
         cardView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     public void setTrackingItems(List<TrackingItem> items) {
-        cardView.setAdapter(new TrackingItemAdapter(getContext(), items));
+        trackingItemAdapter.setItems(items);
+        cardView.setAdapter(trackingItemAdapter);
 
         determineAndSetDate(items);
         calculateAndSetDuration(items);
@@ -67,8 +120,7 @@ public class OverviewActivityFragment extends Fragment {
 
         if (dates.isEmpty()) {
             dateView.setText("////-//-//");
-        }
-        else if (dates.size() == 1) {
+        } else if (dates.size() == 1) {
             dateView.setText(items.get(0).getEventTime().toString("yyyy-MM-dd"));
         } else {
             dateView.setText("TODO: IMPLEMENT");

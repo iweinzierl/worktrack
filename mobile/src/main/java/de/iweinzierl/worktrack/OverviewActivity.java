@@ -43,7 +43,7 @@ import de.iweinzierl.worktrack.persistence.TrackingItemType;
 import de.iweinzierl.worktrack.util.AsyncCallback;
 
 @EActivity
-public class OverviewActivity extends BaseActivity {
+public class OverviewActivity extends BaseActivity implements OverviewActivityFragment.TrackingItemCallback {
 
     private static final Logger LOGGER = AndroidLoggerFactory.getInstance().getLogger("OverviewActivity");
 
@@ -93,6 +93,12 @@ public class OverviewActivity extends BaseActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onDeleteItem(TrackingItem item) {
+        deleteTrackingItem(item);
+        Snackbar.make(findViewById(android.R.id.content), "Deleted Event", BaseTransientBottomBar.LENGTH_SHORT).show();
     }
 
     @Click(R.id.checkinAction)
@@ -191,6 +197,11 @@ public class OverviewActivity extends BaseActivity {
         if (callback != null) {
             callback.callback();
         }
+    }
+
+    @Background
+    protected void deleteTrackingItem(TrackingItem item) {
+        trackingItemRepository.delete(item);
     }
 
     @Background
