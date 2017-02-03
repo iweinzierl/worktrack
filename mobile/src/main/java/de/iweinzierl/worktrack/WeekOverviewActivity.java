@@ -20,10 +20,10 @@ import de.iweinzierl.worktrack.persistence.TrackingItem;
 import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
 
 @EActivity
-public class OverviewChartActivity extends BaseActivity {
+public class WeekOverviewActivity extends BaseActivity {
 
     @FragmentById(R.id.fragment)
-    OverviewChartActivityFragment fragment;
+    WeekOverviewActivityFragment fragment;
 
     @Bean(LocalTrackingItemRepository.class)
     TrackingItemRepository trackingItemRepository;

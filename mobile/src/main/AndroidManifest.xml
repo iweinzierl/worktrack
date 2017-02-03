@@ -22,7 +22,7 @@
         </activity>
 
         <activity
-            android:name=".OverviewChartActivity_"
+            android:name=".WeekOverviewActivity_"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <!--

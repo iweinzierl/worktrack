@@ -32,7 +32,7 @@ import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
 import de.iweinzierl.worktrack.view.adapter.ItemToucheHelperAdapter;
 import de.iweinzierl.worktrack.view.adapter.TrackingItemAdapter;
 
-@EFragment(R.layout.fragment_overview)
+@EFragment(R.layout.fragment_day_overview)
 public class DayOverviewFragment extends Fragment {
 
     public static final String ARGS_YEAR = "dayoverviewfragment.args.year";

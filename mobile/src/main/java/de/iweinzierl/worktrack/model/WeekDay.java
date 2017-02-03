@@ -22,6 +22,7 @@ public class WeekDay {
     public WeekDay(LocalDate date, List<TrackingItem> items) {
         this.date = date;
         this.items = items;
+        sortItems();
     }
 
     public LocalDate getDate() {

@@ -17,17 +17,39 @@
         android:paddingEnd="@dimen/activity_horizontal_margin"
         android:paddingStart="@dimen/activity_horizontal_margin">
 
-        <Spinner
-            android:id="@+id/yearSpinner"
+        <TextView
+            android:id="@+id/weekView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:popupBackground="@color/colorPrimary" />
+            android:gravity="center_vertical"
+            android:textColor="@color/toolbarFont"
+            android:textSize="@dimen/toolbarFontSize" />
 
-        <Spinner
-            android:id="@+id/weekSpinner"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:popupBackground="@color/colorPrimary" />
+            android:gravity="center_vertical"
+            android:text="/"
+            android:textColor="@color/toolbarFont"
+            android:textSize="@dimen/toolbarFontSize" />
+
+        <TextView
+            android:id="@+id/yearView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textColor="@color/toolbarFont"
+            android:textSize="@dimen/toolbarFontSize" />
+
+        <TextView
+            android:id="@+id/durationView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingEnd="0dp"
+            android:paddingStart="@dimen/activity_horizontal_margin"
+            android:textColor="@color/toolbarFont"
+            android:textSize="@dimen/toolbarFontSize" />
 
     </LinearLayout>
 
