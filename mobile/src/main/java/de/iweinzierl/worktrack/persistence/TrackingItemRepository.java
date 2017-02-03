@@ -19,4 +19,6 @@ public interface TrackingItemRepository {
     List<TrackingItem> findAll();
 
     List<TrackingItem> findByDate(LocalDate date);
+
+    LocalDate findFirstLocalDate();
 }

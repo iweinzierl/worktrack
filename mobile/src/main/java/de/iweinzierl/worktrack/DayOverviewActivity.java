@@ -3,21 +3,24 @@ package de.iweinzierl.worktrack;
 import android.content.DialogInterface;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.DatePicker;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.github.iweinzierl.android.logging.AndroidLoggerFactory;
+import com.google.common.collect.Lists;
 import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment;
 
+import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.FragmentById;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.joda.time.DateTime;
@@ -27,8 +30,6 @@ import org.slf4j.Logger;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -41,11 +42,12 @@ import de.iweinzierl.worktrack.persistence.TrackingItem;
 import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
 import de.iweinzierl.worktrack.persistence.TrackingItemType;
 import de.iweinzierl.worktrack.util.AsyncCallback;
+import de.iweinzierl.worktrack.view.adapter.DayOverviewFragmentAdapter;
 
 @EActivity
-public class OverviewActivity extends BaseActivity implements OverviewActivityFragment.TrackingItemCallback {
+public class DayOverviewActivity extends BaseActivity implements DayOverviewFragment.TrackingItemCallback {
 
-    private static final Logger LOGGER = AndroidLoggerFactory.getInstance().getLogger("OverviewActivity");
+    private static final Logger LOGGER = AndroidLoggerFactory.getInstance().getLogger("DayOverviewActivity");
 
     @Bean
     DaoSessionFactory sessionFactory;
@@ -53,8 +55,10 @@ public class OverviewActivity extends BaseActivity implements OverviewActivityFr
     @Bean(LocalTrackingItemRepository.class)
     TrackingItemRepository trackingItemRepository;
 
-    @FragmentById(R.id.fragment)
-    OverviewActivityFragment fragment;
+    @ViewById
+    ViewPager pager;
+
+    DayOverviewFragmentAdapter pagerAdapter;
 
     @ViewById
     FloatingActionMenu actionMenu;
@@ -70,11 +74,16 @@ public class OverviewActivity extends BaseActivity implements OverviewActivityFr
         return R.layout.activity_overview;
     }
 
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
+    @AfterViews
+    protected void setupUI() {
+        LocalDate first = trackingItemRepository.findFirstLocalDate();
+        LocalDate last = LocalDate.now();
 
-        refreshData();
+        pagerAdapter = new DayOverviewFragmentAdapter(
+                getSupportFragmentManager(),
+                createListOfDays(first, last));
+        pager.setAdapter(pagerAdapter);
+        pager.setCurrentItem(pagerAdapter.getCount() - 1);
     }
 
     @Override
@@ -90,6 +99,9 @@ public class OverviewActivity extends BaseActivity implements OverviewActivityFr
             case R.id.action_demo_data:
                 addDemoData();
                 return true;
+            case R.id.action_select_date:
+                showDatePickerDialog();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -98,7 +110,7 @@ public class OverviewActivity extends BaseActivity implements OverviewActivityFr
     @Override
     public void onDeleteItem(TrackingItem item) {
         deleteTrackingItem(item);
-        refreshData();
+        updateUi();
         Snackbar.make(findViewById(android.R.id.content), "Deleted Event", BaseTransientBottomBar.LENGTH_SHORT).show();
     }
 
@@ -108,7 +120,7 @@ public class OverviewActivity extends BaseActivity implements OverviewActivityFr
         saveTrackingItem(new TrackingItem(TrackingItemType.CHECKIN, DateTime.now(), CreationType.MANUAL), new AsyncCallback() {
             @Override
             public void callback() {
-                refreshData();
+                updateUi();
                 Snackbar.make(findViewById(android.R.id.content), "Added Event", BaseTransientBottomBar.LENGTH_SHORT).show();
             }
         });
@@ -127,7 +139,7 @@ public class OverviewActivity extends BaseActivity implements OverviewActivityFr
                 ), new AsyncCallback() {
                     @Override
                     public void callback() {
-                        refreshData();
+                        updateUi();
                         Snackbar.make(findViewById(android.R.id.content), "Added Event", BaseTransientBottomBar.LENGTH_SHORT).show();
                     }
                 });
@@ -145,7 +157,7 @@ public class OverviewActivity extends BaseActivity implements OverviewActivityFr
         saveTrackingItem(new TrackingItem(TrackingItemType.CHECKOUT, DateTime.now(), CreationType.MANUAL), new AsyncCallback() {
             @Override
             public void callback() {
-                refreshData();
+                updateUi();
                 Snackbar.make(findViewById(android.R.id.content), "Added Event", BaseTransientBottomBar.LENGTH_SHORT).show();
             }
         });
@@ -164,7 +176,7 @@ public class OverviewActivity extends BaseActivity implements OverviewActivityFr
                 ), new AsyncCallback() {
                     @Override
                     public void callback() {
-                        refreshData();
+                        updateUi();
                         Snackbar.make(findViewById(android.R.id.content), "Added Event", BaseTransientBottomBar.LENGTH_SHORT).show();
                     }
                 });
@@ -205,21 +217,10 @@ public class OverviewActivity extends BaseActivity implements OverviewActivityFr
         trackingItemRepository.delete(item);
     }
 
-    @Background
-    protected void refreshData() {
-        List<TrackingItem> todaysItems = trackingItemRepository.findByDate(LocalDate.now());
-        Collections.sort(todaysItems, new Comparator<TrackingItem>() {
-            @Override
-            public int compare(TrackingItem trackingItem, TrackingItem t1) {
-                return trackingItem.getEventTime().compareTo(t1.getEventTime());
-            }
-        });
-        updateUi(todaysItems);
-    }
-
     @UiThread
-    protected void updateUi(List<TrackingItem> items) {
-        fragment.setTrackingItems(items);
+    protected void updateUi() {
+        DayOverviewFragment fragment = (DayOverviewFragment) pagerAdapter.getItem(pager.getCurrentItem());
+        fragment.updateUI();
     }
 
     @UiThread
@@ -246,6 +247,61 @@ public class OverviewActivity extends BaseActivity implements OverviewActivityFr
 
         dateTimeFragment.setOnButtonClickListener(listener);
         dateTimeFragment.show(getSupportFragmentManager(), "dialog_time");
+    }
+
+    @UiThread
+    protected void showDatePickerDialog() {
+        LocalDate now = LocalDate.now();
+        LocalDate min = trackingItemRepository.findFirstLocalDate();
+
+        final DatePicker datePicker = new DatePicker(this);
+        datePicker.setMaxDate(now.toDate().getTime());
+        datePicker.setMinDate(min.toDate().getTime());
+
+        new AlertDialog.Builder(this)
+                .setView(datePicker)
+                .setTitle(R.string.activity_overview_action_select_date)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        LocalDate selected = new LocalDate(
+                                datePicker.getYear(),
+                                datePicker.getMonth() + 1, // 0 based months
+                                datePicker.getDayOfMonth()
+                        );
+
+                        if (selected.isAfter(LocalDate.now())) {
+                            Snackbar.make(
+                                    findViewById(android.R.id.content),
+                                    "Cannot jump into the future",
+                                    Snackbar.LENGTH_LONG).show();
+                        } else {
+                            jumpToDate(selected);
+                        }
+                    }
+                })
+                .show();
+    }
+
+    @UiThread
+    protected void jumpToDate(LocalDate date) {
+        int pos = pagerAdapter.findPosition(date);
+        if (pos >= 0 && pos < pagerAdapter.getCount()) {
+            pager.setCurrentItem(pos);
+        }
+    }
+
+    private List<LocalDate> createListOfDays(LocalDate first, LocalDate last) {
+        List<LocalDate> dates = Lists.newArrayList();
+        LocalDate current = first;
+
+        do {
+            dates.add(current);
+            current = current.plusDays(1);
+        }
+        while (!current.isAfter(last));
+
+        return dates;
     }
 
     private void addDemoData() {
@@ -303,6 +359,6 @@ public class OverviewActivity extends BaseActivity implements OverviewActivityFr
 
         Snackbar.make(findViewById(android.R.id.content), "Erased existing and added demo data", BaseTransientBottomBar.LENGTH_SHORT).show();
 
-        refreshData();
+        updateUi();
     }
 }

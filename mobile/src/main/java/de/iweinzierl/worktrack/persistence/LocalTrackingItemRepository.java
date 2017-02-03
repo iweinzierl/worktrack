@@ -106,4 +106,18 @@ public class LocalTrackingItemRepository implements TrackingItemRepository {
 
         return null;
     }
+
+    @Override
+    public LocalDate findFirstLocalDate() {
+        try {
+            return sessionFactory.getSession().queryBuilder(TrackingItem.class)
+                    .limit(1)
+                    .orderAsc(TrackingItemDao.Properties.EventTime)
+                    .unique().getEventTime().toLocalDate();
+        } catch (Exception e) {
+            LOGGER.error("Problem while fining first local date", e);
+        }
+
+        return null;
+    }
 }

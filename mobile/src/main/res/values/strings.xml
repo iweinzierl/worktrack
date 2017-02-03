@@ -6,6 +6,7 @@
     <string name="drawer_close">Close Drawer</string>
 
     <string name="activity_overview">Daily Overview</string>
+    <string name="activity_overview_action_select_date">Choose date</string>
     <string name="activity_overview_action_checkin_now">Check-In Now</string>
     <string name="activity_overview_action_checkin_specified">Check-In At</string>
     <string name="activity_overview_action_checkout_now">Check-Out Now</string>

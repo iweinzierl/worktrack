@@ -1,7 +1,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="de.iweinzierl.worktrack.OverviewActivity">
+    tools:context="de.iweinzierl.worktrack.DayOverviewActivity">
+
+    <item
+        android:id="@+id/action_select_date"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_today_white_32px"
+        android:title="@string/activity_overview_action_select_date"
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_demo_data"
