@@ -23,7 +23,7 @@ import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
 public class WeekOverviewActivity extends BaseActivity {
 
     @FragmentById(R.id.fragment)
-    WeekOverviewActivityFragment fragment;
+    WeekOverviewFragment fragment;
 
     @Bean(LocalTrackingItemRepository.class)
     TrackingItemRepository trackingItemRepository;

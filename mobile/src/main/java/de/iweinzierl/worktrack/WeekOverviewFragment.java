@@ -20,7 +20,7 @@ import java.util.List;
 import de.iweinzierl.worktrack.model.WeekDay;
 
 @EFragment(R.layout.fragment_week_overview)
-public class WeekOverviewActivityFragment extends Fragment {
+public class WeekOverviewFragment extends Fragment {
 
     private static final PeriodFormatter periodFormatter = new PeriodFormatterBuilder()
             .appendHours()
@@ -47,7 +47,7 @@ public class WeekOverviewActivityFragment extends Fragment {
     @ViewById
     TextView durationView;
 
-    public WeekOverviewActivityFragment() {
+    public WeekOverviewFragment() {
     }
 
     @AfterViews
