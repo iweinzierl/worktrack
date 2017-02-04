@@ -71,7 +71,7 @@ public class DayOverviewActivity extends BaseActivity implements DayOverviewFrag
 
     @Override
     int getLayoutId() {
-        return R.layout.activity_overview;
+        return R.layout.activity_day_overview;
     }
 
     @AfterViews

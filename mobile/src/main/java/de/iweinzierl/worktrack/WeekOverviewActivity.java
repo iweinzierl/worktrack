@@ -30,7 +30,7 @@ public class WeekOverviewActivity extends BaseActivity {
 
     @Override
     int getLayoutId() {
-        return R.layout.activity_overview_chart;
+        return R.layout.activity_week_overview;
     }
 
     @Override
