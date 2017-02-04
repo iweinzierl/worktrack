@@ -12,6 +12,9 @@ import org.slf4j.Logger;
 
 import java.util.List;
 
+import de.iweinzierl.worktrack.model.Week;
+import de.iweinzierl.worktrack.model.WeekDay;
+
 @EBean
 public class LocalTrackingItemRepository implements TrackingItemRepository {
 
@@ -119,5 +122,27 @@ public class LocalTrackingItemRepository implements TrackingItemRepository {
         }
 
         return null;
+    }
+
+    @Override
+    public Week findWeek(int year, int weekNum) {
+        LocalDate minDate = LocalDate.now()
+                .withYear(year)
+                .withWeekOfWeekyear(weekNum)
+                .withDayOfWeek(1);
+
+        Week.Builder builder = Week.newBuilder()
+                .withYear(year)
+                .withWeekNum(weekNum);
+
+        for (int i = 0; i < 7; i++) {
+            List<TrackingItem> items = findByDate(minDate.plusDays(i));
+            builder.withWeekDay(WeekDay.newBuilder()
+                    .withItems(items)
+                    .withLocalDate(minDate.plusDays(i))
+                    .build());
+        }
+
+        return builder.build();
     }
 }

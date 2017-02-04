@@ -1,9 +1,12 @@
 package de.iweinzierl.worktrack;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
@@ -17,10 +20,16 @@ import org.joda.time.format.PeriodFormatterBuilder;
 
 import java.util.List;
 
+import de.iweinzierl.worktrack.model.Week;
 import de.iweinzierl.worktrack.model.WeekDay;
+import de.iweinzierl.worktrack.persistence.LocalTrackingItemRepository;
+import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
 
 @EFragment(R.layout.fragment_week_overview)
 public class WeekOverviewFragment extends Fragment {
+
+    public static final String ARGS_YEAR = "weekoverviewfragment.args.year";
+    public static final String ARGS_WEEKNUM = "weekoverviewfragment.args.weeknum";
 
     private static final PeriodFormatter periodFormatter = new PeriodFormatterBuilder()
             .appendHours()
@@ -28,6 +37,9 @@ public class WeekOverviewFragment extends Fragment {
             .appendMinutes()
             .appendSuffix(" min ")
             .toFormatter();
+
+    @Bean(LocalTrackingItemRepository.class)
+    TrackingItemRepository trackingItemRepository;
 
     @ViewById
     BarChart barChart;
@@ -50,8 +62,23 @@ public class WeekOverviewFragment extends Fragment {
     public WeekOverviewFragment() {
     }
 
-    @AfterViews
-    protected void setup() {
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateUI();
+    }
+
+    @Background
+    protected void updateUI() {
+        Bundle args = getArguments();
+        if (args != null) {
+            Week week = trackingItemRepository.findWeek(
+                    args.getInt(ARGS_YEAR),
+                    args.getInt(ARGS_WEEKNUM)
+            );
+
+            setWeekDays(week.getDays());
+        }
     }
 
     @UiThread
