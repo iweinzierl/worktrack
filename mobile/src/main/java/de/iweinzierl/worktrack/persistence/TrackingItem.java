@@ -27,7 +27,7 @@ public class TrackingItem {
     @NotNull
     private CreationType creationType;
 
-    @Convert(converter = DateTimeConverter.class, columnType = Long.class)
+    @Convert(converter = DateTimeConverter.class, columnType = String.class)
     @NotNull
     private DateTime eventTime;
 

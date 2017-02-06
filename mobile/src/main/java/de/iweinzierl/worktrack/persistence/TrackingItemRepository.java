@@ -25,4 +25,6 @@ public interface TrackingItemRepository {
     LocalDate findFirstLocalDate();
 
     Week findWeek(int year, int weekNum);
+
+    boolean hasItemsAt(LocalDate date);
 }

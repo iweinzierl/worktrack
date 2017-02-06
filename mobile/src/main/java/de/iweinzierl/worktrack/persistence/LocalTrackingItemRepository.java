@@ -1,12 +1,10 @@
 package de.iweinzierl.worktrack.persistence;
 
 import com.github.iweinzierl.android.logging.AndroidLoggerFactory;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.Lists;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
+import org.greenrobot.greendao.query.WhereCondition;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 
@@ -14,6 +12,7 @@ import java.util.List;
 
 import de.iweinzierl.worktrack.model.Week;
 import de.iweinzierl.worktrack.model.WeekDay;
+import de.iweinzierl.worktrack.persistence.converter.DateTimeConverter;
 
 @EBean
 public class LocalTrackingItemRepository implements TrackingItemRepository {
@@ -96,13 +95,15 @@ public class LocalTrackingItemRepository implements TrackingItemRepository {
     @Override
     public List<TrackingItem> findByDate(final LocalDate date) {
         try {
-            List<TrackingItem> items = sessionFactory.getSession().getTrackingItemDao().loadAll();
-            return Lists.newArrayList(Collections2.filter(items, new Predicate<TrackingItem>() {
-                @Override
-                public boolean apply(TrackingItem input) {
-                    return input.getEventTime().toLocalDate().equals(date);
-                }
-            }));
+            WhereCondition where = new WhereCondition.StringCondition(
+                    "substr(T.\"" + TrackingItemDao.Properties.EventTime.columnName + "\", 1, 10)"
+                            + " = '" + date.toString(DateTimeConverter.DATE_FORMAT) + "'");
+
+            return sessionFactory.getSession().queryBuilder(TrackingItem.class)
+                    .where(where)
+                    .orderAsc(TrackingItemDao.Properties.EventTime)
+                    .list();
+
         } catch (Exception e) {
             LOGGER.error("Deleting tracking item failed", e);
         }
@@ -113,10 +114,13 @@ public class LocalTrackingItemRepository implements TrackingItemRepository {
     @Override
     public LocalDate findFirstLocalDate() {
         try {
-            return sessionFactory.getSession().queryBuilder(TrackingItem.class)
+            TrackingItem first = sessionFactory.getSession().queryBuilder(TrackingItem.class)
                     .limit(1)
                     .orderAsc(TrackingItemDao.Properties.EventTime)
-                    .unique().getEventTime().toLocalDate();
+                    .unique();
+
+            return first == null ? null : first.getEventTime().toLocalDate();
+
         } catch (Exception e) {
             LOGGER.error("Problem while fining first local date", e);
         }
@@ -144,5 +148,28 @@ public class LocalTrackingItemRepository implements TrackingItemRepository {
         }
 
         return builder.build();
+    }
+
+    @Override
+    public boolean hasItemsAt(LocalDate date) {
+        if (date == null) {
+            return false;
+        }
+
+        try {
+            WhereCondition where = new WhereCondition.StringCondition(
+                    "substr(T.\"" + TrackingItemDao.Properties.EventTime.columnName + "\", 1, 10)"
+                            + " = '" + date.toString(DateTimeConverter.DATE_FORMAT) + "'");
+
+            return sessionFactory.getSession().queryBuilder(TrackingItem.class)
+                    .where(where)
+                    .orderAsc(TrackingItemDao.Properties.EventTime)
+                    .limit(1)
+                    .unique() != null;
+        } catch (Exception e) {
+            LOGGER.error("Problem while determining if items exist for given date.", e);
+        }
+
+        return false;
     }
 }

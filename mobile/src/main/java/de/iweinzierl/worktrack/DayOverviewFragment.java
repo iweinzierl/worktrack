@@ -22,9 +22,7 @@ import org.joda.time.format.PeriodFormatterBuilder;
 
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import de.iweinzierl.worktrack.persistence.LocalTrackingItemRepository;
 import de.iweinzierl.worktrack.persistence.TrackingItem;
@@ -96,12 +94,13 @@ public class DayOverviewFragment extends Fragment {
             .toFormatter();
 
     public DayOverviewFragment() {
+        trackingItemAdapter = new TrackingItemAdapter();
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        trackingItemAdapter = new TrackingItemAdapter(getContext());
+        trackingItemAdapter.setContext(context);
 
         if (context instanceof TrackingItemCallback) {
             trackingItemCallback = (TrackingItemCallback) context;
@@ -113,6 +112,7 @@ public class DayOverviewFragment extends Fragment {
         ItemTouchHelper touchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(trackingItemAdapter, trackingItemCallback));
         touchHelper.attachToRecyclerView(cardView);
 
+        cardView.setAdapter(trackingItemAdapter);
         cardView.setHasFixedSize(false);
         cardView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
@@ -137,33 +137,21 @@ public class DayOverviewFragment extends Fragment {
                 }
             });
 
+            setDateView(date);
             setTrackingItems(byDate);
         }
     }
 
     @UiThread
-    public void setTrackingItems(List<TrackingItem> items) {
+    protected void setTrackingItems(List<TrackingItem> items) {
         trackingItemAdapter.setItems(items);
-        cardView.setAdapter(trackingItemAdapter);
 
-        determineAndSetDate(items);
         calculateAndSetDuration(items);
     }
 
-    private void determineAndSetDate(List<TrackingItem> items) {
-        Set<LocalDate> dates = new HashSet<>();
-
-        for (TrackingItem item : items) {
-            dates.add(item.getEventTime().toLocalDate());
-        }
-
-        if (dates.isEmpty()) {
-            dateView.setText("////-//-//");
-        } else if (dates.size() == 1) {
-            dateView.setText(items.get(0).getEventTime().toString("yyyy-MM-dd"));
-        } else {
-            dateView.setText("TODO: IMPLEMENT");
-        }
+    @UiThread
+    protected void setDateView(LocalDate date) {
+        dateView.setText(date.toString("yyyy-MM-dd"));
     }
 
     private void calculateAndSetDuration(List<TrackingItem> items) {

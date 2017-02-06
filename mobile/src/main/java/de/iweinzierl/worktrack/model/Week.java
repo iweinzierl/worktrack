@@ -53,6 +53,14 @@ public class Week {
             days = Lists.newArrayList();
         }
 
+        public int getYear() {
+            return year;
+        }
+
+        public int getWeekNum() {
+            return weekNum;
+        }
+
         public Builder withYear(int year) {
             this.year = year;
             return this;

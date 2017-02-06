@@ -1,7 +1,6 @@
 package de.iweinzierl.worktrack.view.adapter;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,13 +16,12 @@ import de.iweinzierl.worktrack.persistence.TrackingItem;
 
 public class TrackingItemAdapter extends RecyclerView.Adapter<TrackingItemViewHolder> implements ItemToucheHelperAdapter<TrackingItem> {
 
-    private final Context context;
+    private Context context;
 
     private List<TrackingItem> items;
 
     @SuppressWarnings("unchecked")
-    public TrackingItemAdapter(@NonNull Context context) {
-        this.context = context;
+    public TrackingItemAdapter() {
         this.items = Collections.EMPTY_LIST;
     }
 
@@ -56,5 +54,9 @@ public class TrackingItemAdapter extends RecyclerView.Adapter<TrackingItemViewHo
 
     public void setItems(List<TrackingItem> items) {
         this.items = Lists.newArrayList(items);
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
     }
 }

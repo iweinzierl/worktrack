@@ -8,13 +8,10 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
-import org.joda.time.Duration;
 import org.joda.time.LocalDate;
-import org.joda.time.Period;
-import org.joda.time.format.PeriodFormatterBuilder;
 
+import java.util.Collections;
 import java.util.List;
 
 import de.iweinzierl.worktrack.model.Week;
@@ -41,7 +38,6 @@ public class WeekOverviewActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
         refreshDate(LocalDate.now());
     }
 
@@ -64,35 +60,37 @@ public class WeekOverviewActivity extends BaseActivity {
                     .withItems(items)
                     .build());
         }
-
-        displayWorkingHours(days);
     }
 
-    @UiThread
-    protected void displayWorkingHours(List<WeekDay> days) {
-        Duration d = new Duration(0);
-        for (WeekDay day : days) {
-            d = d.plus(day.getWorkingTime());
-        }
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(new PeriodFormatterBuilder()
-                    .appendHours()
-                    .appendSuffix(" hours ")
-                    .appendMinutes()
-                    .appendSuffix(" min ")
-                    .toFormatter().print(new Period(d)));
-        }
-    }
-
+    @SuppressWarnings("unchecked")
     private List<Week> calculateWeeks() {
-        // TODO
-        return Lists.newArrayList(
-                Week.newBuilder().withYear(2017).withWeekNum(1).build(),
-                Week.newBuilder().withYear(2017).withWeekNum(2).build(),
-                Week.newBuilder().withYear(2017).withWeekNum(3).build(),
-                Week.newBuilder().withYear(2017).withWeekNum(4).build(),
-                Week.newBuilder().withYear(2017).withWeekNum(5).build()
-        );
+        LocalDate now = LocalDate.now();
+        LocalDate current = trackingItemRepository.findFirstLocalDate();
+
+        if (current == null) {
+            return Collections.EMPTY_LIST;
+        }
+
+        List<Week> weeks = Lists.newArrayList();
+        Week.Builder builder = Week.newBuilder()
+                .withYear(0)
+                .withWeekNum(0);
+
+        do {
+            if (builder.getYear() != current.getYear() || builder.getWeekNum() != current.getWeekOfWeekyear()) {
+                if (trackingItemRepository.hasItemsAt(current)) {
+                    builder = Week.newBuilder()
+                            .withYear(current.getYear())
+                            .withWeekNum(current.getWeekOfWeekyear());
+
+                    weeks.add(builder.build());
+                }
+            }
+
+            current = current.plusDays(1);
+        }
+        while (!current.isAfter(now));
+
+        return weeks;
     }
 }
