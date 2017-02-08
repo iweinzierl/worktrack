@@ -7,13 +7,12 @@
     tools:context="de.iweinzierl.worktrack.DayOverviewFragment"
     tools:showIn="@layout/activity_day_overview">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/bottom_bar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_alignParentBottom="true"
         android:background="@color/colorPrimary"
-        android:orientation="horizontal"
         android:paddingEnd="@dimen/activity_horizontal_margin"
         android:paddingStart="@dimen/activity_horizontal_margin">
 
@@ -21,7 +20,6 @@
             android:id="@+id/dateView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:gravity="center_vertical"
             android:textColor="@color/toolbarFont"
             android:textSize="@dimen/toolbarFontSize" />
@@ -30,11 +28,23 @@
             android:id="@+id/durationView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="3"
+            android:layout_toEndOf="@id/dateView"
             android:gravity="center_vertical"
+            android:paddingStart="@dimen/activity_horizontal_margin"
+            android:paddingEnd="0dp"
             android:textColor="@color/toolbarFont"
             android:textSize="@dimen/toolbarFontSize" />
-    </LinearLayout>
+
+        <ImageView
+            android:id="@+id/warningIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/activity_dayoverview_incorrect_warning"
+            android:src="@drawable/ic_warning_red_32px"
+            android:visibility="gone" />
+    </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/cardView"

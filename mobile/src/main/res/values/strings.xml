@@ -5,14 +5,15 @@
     <string name="drawer_open">Open Drawer</string>
     <string name="drawer_close">Close Drawer</string>
 
-    <string name="activity_overview">Daily Overview</string>
-    <string name="activity_overview_action_select_date">Choose date</string>
-    <string name="activity_overview_action_checkin_now">Check-In Now</string>
-    <string name="activity_overview_action_checkin_specified">Check-In At</string>
-    <string name="activity_overview_action_checkout_now">Check-Out Now</string>
-    <string name="activity_overview_action_checkout_specified">Check-Out At</string>
+    <string name="activity_dayverview">Daily Overview</string>
+    <string name="activity_dayoverview_incorrect_warning">Items are not correct!</string>
+    <string name="activity_dayoverview_action_select_date">Choose date</string>
+    <string name="activity_dayoverview_action_checkin_now">Check-In Now</string>
+    <string name="activity_dayoverview_action_checkin_specified">Check-In At</string>
+    <string name="activity_dayoverview_action_checkout_now">Check-Out Now</string>
+    <string name="activity_dayoverview_action_checkout_specified">Check-Out At</string>
 
-    <string name="activity_overview_chart">Weekly Overview</string>
+    <string name="activity_weekoverview">Weekly Overview</string>
 
     <string name="dialog_datetime_chooser_title">Choose Date and Time</string>
 

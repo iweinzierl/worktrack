@@ -54,6 +54,7 @@ public class TrackingItemAdapter extends RecyclerView.Adapter<TrackingItemViewHo
 
     public void setItems(List<TrackingItem> items) {
         this.items = Lists.newArrayList(items);
+        notifyDataSetChanged();
     }
 
     public void setContext(Context context) {

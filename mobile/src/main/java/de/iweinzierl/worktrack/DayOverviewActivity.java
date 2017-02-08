@@ -109,9 +109,13 @@ public class DayOverviewActivity extends BaseActivity implements DayOverviewFrag
 
     @Override
     public void onDeleteItem(TrackingItem item) {
-        deleteTrackingItem(item);
-        updateUi();
-        Snackbar.make(findViewById(android.R.id.content), "Deleted Event", BaseTransientBottomBar.LENGTH_SHORT).show();
+        deleteTrackingItem(item, new AsyncCallback() {
+            @Override
+            public void callback() {
+                updateUi();
+                Snackbar.make(findViewById(android.R.id.content), "Deleted Event", BaseTransientBottomBar.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Click(R.id.checkinAction)
@@ -214,7 +218,16 @@ public class DayOverviewActivity extends BaseActivity implements DayOverviewFrag
 
     @Background
     protected void deleteTrackingItem(TrackingItem item) {
+        deleteTrackingItem(item, null);
+    }
+
+    @Background
+    protected void deleteTrackingItem(TrackingItem item, AsyncCallback callback) {
         trackingItemRepository.delete(item);
+
+        if (callback != null) {
+            callback.callback();
+        }
     }
 
     @UiThread
@@ -260,7 +273,7 @@ public class DayOverviewActivity extends BaseActivity implements DayOverviewFrag
 
         new AlertDialog.Builder(this)
                 .setView(datePicker)
-                .setTitle(R.string.activity_overview_action_select_date)
+                .setTitle(R.string.activity_dayoverview_action_select_date)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {

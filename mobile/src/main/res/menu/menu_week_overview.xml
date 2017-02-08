@@ -7,6 +7,6 @@
         android:id="@+id/action_select_date"
         android:icon="@drawable/ic_today_white_32px"
         android:orderInCategory="100"
-        android:title="@string/activity_overview_action_select_date"
+        android:title="@string/activity_dayoverview_action_select_date"
         app:showAsAction="ifRoom" />
 </menu>

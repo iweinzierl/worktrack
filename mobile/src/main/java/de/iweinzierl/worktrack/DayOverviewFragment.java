@@ -6,6 +6,8 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
@@ -27,6 +29,7 @@ import java.util.List;
 import de.iweinzierl.worktrack.persistence.LocalTrackingItemRepository;
 import de.iweinzierl.worktrack.persistence.TrackingItem;
 import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
+import de.iweinzierl.worktrack.persistence.TrackingItemType;
 import de.iweinzierl.worktrack.view.adapter.ItemToucheHelperAdapter;
 import de.iweinzierl.worktrack.view.adapter.TrackingItemAdapter;
 
@@ -79,6 +82,11 @@ public class DayOverviewFragment extends Fragment {
 
     @ViewById
     TextView durationView;
+
+    @ViewById
+    ImageView warningIcon;
+
+    private boolean trackingItemsCorrect;
 
     private TrackingItemAdapter trackingItemAdapter;
 
@@ -139,13 +147,41 @@ public class DayOverviewFragment extends Fragment {
 
             setDateView(date);
             setTrackingItems(byDate);
+            determineIfItemsAreCorrect(byDate);
+            displayWarningIcon(!trackingItemsCorrect);
+        }
+    }
+
+    private void determineIfItemsAreCorrect(List<TrackingItem> items) {
+        setTrackingItemsCorrect(true);
+
+        // 1. check if two subsequent items are from the same type
+        TrackingItem last = null;
+        for (TrackingItem item : items) {
+            if (last != null && last.getType() == item.getType()) {
+                setTrackingItemsCorrect(false);
+            }
+            last = item;
+        }
+
+        // 2. check if the last item of a past day is a check-in item
+        if (last != null && !last.getEventTime().toLocalDate().isEqual(LocalDate.now()) && last.getType() == TrackingItemType.CHECKIN) {
+            setTrackingItemsCorrect(false);
+        }
+    }
+
+    @UiThread
+    protected void displayWarningIcon(boolean display) {
+        if (display) {
+            warningIcon.setVisibility(View.VISIBLE);
+        } else {
+            warningIcon.setVisibility(View.GONE);
         }
     }
 
     @UiThread
     protected void setTrackingItems(List<TrackingItem> items) {
         trackingItemAdapter.setItems(items);
-
         calculateAndSetDuration(items);
     }
 
@@ -154,13 +190,20 @@ public class DayOverviewFragment extends Fragment {
         dateView.setText(date.toString("yyyy-MM-dd"));
     }
 
+    private void setTrackingItemsCorrect(boolean trackingItemsCorrect) {
+        this.trackingItemsCorrect = trackingItemsCorrect;
+    }
+
     private void calculateAndSetDuration(List<TrackingItem> items) {
         Period duration = new Period();
 
         for (int idx = 0; idx < items.size(); idx += 2) {
             if (idx < items.size() - 1) {
-                DateTime tA = items.get(idx).getEventTime();
-                DateTime tB = items.get(idx + 1).getEventTime();
+                TrackingItem itemA = items.get(idx);
+                TrackingItem itemB = items.get(idx + 1);
+
+                DateTime tA = itemA.getEventTime();
+                DateTime tB = itemB.getEventTime();
 
                 duration = duration.plus(new Period(tA, tB));
             }
