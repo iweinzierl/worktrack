@@ -15,4 +15,11 @@
     <string name="activity_overview_chart">Weekly Overview</string>
 
     <string name="dialog_datetime_chooser_title">Choose Date and Time</string>
+
+    <string name="dialog_weekpicker_title">Navigate to week</string>
+    <string name="dialog_weekpicker_message">Select a week and year:</string>
+    <string name="dialog_weekpicker_button_ok">Navigate</string>
+    <string name="dialog_weekpicker_button_cancel">Cancel</string>
+    <string name="dialog_weekpicker_label_week">Week:</string>
+    <string name="dialog_weekpicker_label_year">Year:</string>
 </resources>

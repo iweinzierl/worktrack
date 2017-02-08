@@ -9,49 +9,9 @@
     android:paddingTop="@dimen/spinner_vertical_margin">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:paddingEnd="4dp"
-        android:paddingStart="0dp"
-        android:text="cw"
-        android:textColor="@color/toolbarFont"
-        android:textSize="@dimen/spinner_fontsize" />
-
-    <TextView
         android:id="@+id/weekNum"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
-        android:paddingEnd="@dimen/activity_horizontal_margin"
-        android:paddingStart="0dp"
-        android:textColor="@color/toolbarFont"
         android:textSize="@dimen/spinner_fontsize" />
-
-    <TextView
-        android:id="@+id/startDateView"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:textColor="@color/toolbarFont"
-        android:textSize="@dimen/spinner_fontsize" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:paddingEnd="5dp"
-        android:paddingStart="5dp"
-        android:text="-"
-        android:textColor="@color/toolbarFont"
-        android:textSize="@dimen/spinner_fontsize" />
-
-    <TextView
-        android:id="@+id/endDateView"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:textColor="@color/toolbarFont"
-        android:textSize="@dimen/spinner_fontsize" />
-
 </LinearLayout>

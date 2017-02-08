@@ -1,13 +1,20 @@
 package de.iweinzierl.worktrack;
 
+import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.google.common.collect.Lists;
 
+import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.joda.time.LocalDate;
 
@@ -20,6 +27,7 @@ import de.iweinzierl.worktrack.persistence.LocalTrackingItemRepository;
 import de.iweinzierl.worktrack.persistence.TrackingItem;
 import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
 import de.iweinzierl.worktrack.view.adapter.WeekOverviewFragmentAdapter;
+import de.iweinzierl.worktrack.view.dialog.WeekPickerDialogFragment;
 
 @EActivity
 public class WeekOverviewActivity extends BaseActivity {
@@ -29,6 +37,8 @@ public class WeekOverviewActivity extends BaseActivity {
 
     @Bean(LocalTrackingItemRepository.class)
     TrackingItemRepository trackingItemRepository;
+
+    WeekOverviewFragmentAdapter weekOverviewFragmentAdapter;
 
     @Override
     int getLayoutId() {
@@ -41,10 +51,33 @@ public class WeekOverviewActivity extends BaseActivity {
         refreshDate(LocalDate.now());
     }
 
+    @AfterInject
+    protected void setup() {
+        weekOverviewFragmentAdapter = new WeekOverviewFragmentAdapter(
+                getSupportFragmentManager(), calculateWeeks());
+    }
+
     @AfterViews
     protected void setupUI() {
-        List<Week> weeks = calculateWeeks();
-        pager.setAdapter(new WeekOverviewFragmentAdapter(getSupportFragmentManager(), weeks));
+        pager.setAdapter(weekOverviewFragmentAdapter);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_week_overview, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_select_date:
+                showWeekPickerDialog();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Background
@@ -60,6 +93,43 @@ public class WeekOverviewActivity extends BaseActivity {
                     .withItems(items)
                     .build());
         }
+    }
+
+    @UiThread
+    protected void navigateTo(int weekNum, int year) {
+        Week week = Week.newBuilder().withWeekNum(weekNum).withYear(year).build();
+        int pos = weekOverviewFragmentAdapter.findPosition(week);
+
+        if (pos >= 0) {
+            pager.setCurrentItem(pos);
+        } else {
+            Snackbar.make(
+                    findViewById(android.R.id.content),
+                    "Unable to find: " + weekNum + "/" + year, Snackbar.LENGTH_SHORT
+            ).show();
+        }
+    }
+
+    private void showWeekPickerDialog() {
+        List<Week> weeks = calculateWeeks();
+        int minYear = weeks == null || weeks.isEmpty() ? LocalDate.now().getYear() : weeks.get(0).getYear();
+        int maxYear = weeks == null || weeks.isEmpty() ? LocalDate.now().getYear() : weeks.get(weeks.size() - 1).getYear();
+
+        WeekPickerDialogFragment dialogFragment = WeekPickerDialogFragment.newInstance(
+                1, minYear,
+                52, maxYear
+        );
+        dialogFragment.setCallback(new WeekPickerDialogFragment.Callback() {
+            @Override
+            public void onWeekSelected(int week, int year) {
+                navigateTo(week, year);
+            }
+
+            @Override
+            public void onDismiss() {
+            }
+        });
+        dialogFragment.show(getSupportFragmentManager(), null);
     }
 
     @SuppressWarnings("unchecked")

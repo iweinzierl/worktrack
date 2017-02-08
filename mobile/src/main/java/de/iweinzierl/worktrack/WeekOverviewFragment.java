@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.widget.TextView;
 
-import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
@@ -57,6 +56,9 @@ public class WeekOverviewFragment extends Fragment {
     TextView yearView;
 
     @ViewById
+    TextView weekRangeView;
+
+    @ViewById
     TextView durationView;
 
     public WeekOverviewFragment() {
@@ -104,9 +106,21 @@ public class WeekOverviewFragment extends Fragment {
         if (date != null) {
             weekView.setText(String.valueOf(date.getWeekOfWeekyear()));
             yearView.setText(String.valueOf(date.getYear()));
+            weekRangeView.setText(createWeekRangeString(date));
             durationView.setText(periodFormatter.print(duration.toPeriod()));
         }
 
         barChart.startAnimation();
+    }
+
+    private String createWeekRangeString(LocalDate dayInWeek) {
+        LocalDate min = dayInWeek.withDayOfWeek(1);
+        LocalDate max = dayInWeek.withDayOfWeek(7);
+
+        return "(" +
+                min.toString("dd.MM.") +
+                " - " +
+                max.toString("dd.MM.") +
+                ")";
     }
 }

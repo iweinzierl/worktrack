@@ -9,8 +9,5 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
-        android:paddingEnd="@dimen/activity_horizontal_margin"
-        android:paddingStart="0dp"
-        android:textColor="@color/toolbarFont"
-        android:textSize="@dimen/toolbarFontSize" />
+        android:textSize="@dimen/spinner_fontsize" />
 </LinearLayout>

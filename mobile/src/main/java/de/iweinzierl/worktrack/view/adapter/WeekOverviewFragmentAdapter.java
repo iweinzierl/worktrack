@@ -48,7 +48,15 @@ public class WeekOverviewFragmentAdapter extends FragmentStatePagerAdapter {
         return weeks.size();
     }
 
-    public int findPosition(final Week week) {
-        return weeks.indexOf(week);
+    public int findPosition(final Week weekToFind) {
+        for (int i = 0; i < weeks.size(); i++) {
+            Week week = weeks.get(i);
+
+            if (week.getYear() == weekToFind.getYear() && week.getWeekNum() == weekToFind.getWeekNum()) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 }

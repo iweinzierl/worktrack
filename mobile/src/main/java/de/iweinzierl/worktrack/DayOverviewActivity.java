@@ -276,7 +276,7 @@ public class DayOverviewActivity extends BaseActivity implements DayOverviewFrag
                                     "Cannot jump into the future",
                                     Snackbar.LENGTH_LONG).show();
                         } else {
-                            jumpToDate(selected);
+                            navigateTo(selected);
                         }
                     }
                 })
@@ -284,7 +284,7 @@ public class DayOverviewActivity extends BaseActivity implements DayOverviewFrag
     }
 
     @UiThread
-    protected void jumpToDate(LocalDate date) {
+    protected void navigateTo(LocalDate date) {
         int pos = pagerAdapter.findPosition(date);
         if (pos >= 0 && pos < pagerAdapter.getCount()) {
             pager.setCurrentItem(pos);
