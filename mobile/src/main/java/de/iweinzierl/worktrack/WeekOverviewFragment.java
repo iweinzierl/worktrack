@@ -70,15 +70,19 @@ public class WeekOverviewFragment extends Fragment {
         updateUI();
     }
 
+    public Week getWeek() {
+        Bundle args = getArguments();
+        return args == null
+                ? null
+                : trackingItemRepository.findWeek(
+                args.getInt(ARGS_YEAR),
+                args.getInt(ARGS_WEEKNUM));
+    }
+
     @Background
     protected void updateUI() {
-        Bundle args = getArguments();
-        if (args != null) {
-            Week week = trackingItemRepository.findWeek(
-                    args.getInt(ARGS_YEAR),
-                    args.getInt(ARGS_WEEKNUM)
-            );
-
+        Week week = getWeek();
+        if (week != null) {
             setWeekDays(week.getDays());
         }
     }

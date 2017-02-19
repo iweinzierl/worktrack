@@ -14,6 +14,7 @@
     <string name="activity_dayoverview_action_checkout_specified">Check-Out At</string>
 
     <string name="activity_weekoverview">Weekly Overview</string>
+    <string name="activity_weekoverview_action_export_mail">Export</string>
 
     <string name="dialog_datetime_chooser_title">Choose Date and Time</string>
 

@@ -1,12 +1,16 @@
 package de.iweinzierl.worktrack;
 
-import android.os.Bundle;
+import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.github.iweinzierl.android.logging.AndroidLoggerFactory;
 import com.google.common.collect.Lists;
 
 import org.androidannotations.annotations.AfterInject;
@@ -17,7 +21,10 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.joda.time.LocalDate;
+import org.slf4j.Logger;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,11 +33,21 @@ import de.iweinzierl.worktrack.model.WeekDay;
 import de.iweinzierl.worktrack.persistence.LocalTrackingItemRepository;
 import de.iweinzierl.worktrack.persistence.TrackingItem;
 import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
+import de.iweinzierl.worktrack.util.CsvTransformer;
+import de.iweinzierl.worktrack.util.FileUtil;
 import de.iweinzierl.worktrack.view.adapter.WeekOverviewFragmentAdapter;
 import de.iweinzierl.worktrack.view.dialog.WeekPickerDialogFragment;
 
 @EActivity
 public class WeekOverviewActivity extends BaseActivity {
+
+    private static final Logger LOGGER = AndroidLoggerFactory.getInstance().getLogger("WeekOverviewActivity");
+
+    private static final int REQUEST_SEND_MAIL = 110;
+
+    private static final String[] PERMISSIONS_EMAIL = new String[]{
+            "android.permission.WRITE_EXTERNAL_STORAGE"
+    };
 
     @ViewById
     ViewPager pager;
@@ -75,8 +92,19 @@ public class WeekOverviewActivity extends BaseActivity {
             case R.id.action_select_date:
                 showWeekPickerDialog();
                 return true;
+            case R.id.action_export_email:
+                exportToMailRequest();
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == REQUEST_SEND_MAIL) {
+            exportToMail();
         }
     }
 
@@ -130,6 +158,32 @@ public class WeekOverviewActivity extends BaseActivity {
             }
         });
         dialogFragment.show(getSupportFragmentManager(), null);
+    }
+
+    private void exportToMailRequest() {
+        ActivityCompat.requestPermissions(this, PERMISSIONS_EMAIL, REQUEST_SEND_MAIL);
+    }
+
+    private void exportToMail() {
+        int currentItem = pager.getCurrentItem();
+        Week meta = ((WeekOverviewFragment) weekOverviewFragmentAdapter.getItem(currentItem)).getWeek();
+
+        try {
+            Week week = trackingItemRepository.findWeek(meta.getYear(), meta.getWeekNum());
+            String csv = new CsvTransformer().transform(week);
+            File csvFile = FileUtil.toFile("export_" + meta.getWeekNum() + "_" + meta.getYear() + ".csv", csv);
+
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("*/*");
+            intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"weinzierl.ingo@gmail.com"});
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Worktrack Export " + meta.getWeekNum() + "/" + meta.getYear());
+            intent.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(this,
+                    BuildConfig.APPLICATION_ID + ".provider", csvFile));
+
+            startActivity(intent);
+        } catch (IOException e) {
+            LOGGER.error("Export to mail failed", e);
+        }
     }
 
     @SuppressWarnings("unchecked")

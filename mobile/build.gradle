@@ -69,6 +69,8 @@ dependencies {
     compile 'com.github.clans:fab:1.6.4'
     compile 'com.github.Kunzisoft:Android-SwitchDateTimePicker:1.5'
     compile 'com.hudomju:swipe-to-dismiss-undo:1.0'
+    compile 'net.sf.opencsv:opencsv:2.3'
+
 
     testCompile 'junit:junit:4.12'
 }
