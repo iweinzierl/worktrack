@@ -47,7 +47,10 @@ public class WeekOverviewFragment extends Fragment {
     BarChart barChart;
 
     @ColorRes(R.color.barChartOverHours)
-    int colorOverHours;
+    int barColorOverHours;
+
+    @ColorRes(R.color.toolbarOverHours)
+    int toolbarColorOverHours;
 
     @ColorRes(R.color.barChartNormalHours)
     int colorNormalHours;
@@ -108,7 +111,7 @@ public class WeekOverviewFragment extends Fragment {
             barChart.addBar(new BarModel(
                     String.valueOf(day.getDate().toString("EEE")),
                     hours,
-                    hours > dailyWorkingHours ? colorOverHours : colorNormalHours));
+                    hours > dailyWorkingHours ? barColorOverHours : colorNormalHours));
 
             if (!day.getItems().isEmpty()) {
                 date = day.getItems().get(0).getEventTime().toLocalDate();
@@ -122,7 +125,7 @@ public class WeekOverviewFragment extends Fragment {
             durationView.setText(periodFormatter.print(duration.toPeriod()));
 
             if (duration.isLongerThan(Hours.hours(weeklyWorkingHours).toStandardDuration())) {
-                durationView.setTextColor(colorOverHours);
+                durationView.setTextColor(toolbarColorOverHours);
                 durationView.setTypeface(Typeface.DEFAULT_BOLD);
             }
         }

@@ -1,6 +1,7 @@
 package de.iweinzierl.worktrack;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +17,7 @@ import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.res.ColorRes;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
@@ -30,6 +32,7 @@ import de.iweinzierl.worktrack.persistence.LocalTrackingItemRepository;
 import de.iweinzierl.worktrack.persistence.TrackingItem;
 import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
 import de.iweinzierl.worktrack.persistence.TrackingItemType;
+import de.iweinzierl.worktrack.util.SettingsHelper;
 import de.iweinzierl.worktrack.view.adapter.ItemToucheHelperAdapter;
 import de.iweinzierl.worktrack.view.adapter.TrackingItemAdapter;
 
@@ -85,6 +88,9 @@ public class DayOverviewFragment extends Fragment {
 
     @ViewById
     ImageView warningIcon;
+
+    @ColorRes(R.color.toolbarOverHours)
+    int overHoursColor;
 
     private boolean trackingItemsCorrect;
 
@@ -195,6 +201,8 @@ public class DayOverviewFragment extends Fragment {
     }
 
     private void calculateAndSetDuration(List<TrackingItem> items) {
+        final int dailyWorkingHours = new SettingsHelper(getActivity()).getDailyWorkingHours();
+
         Period duration = new Period();
 
         for (int idx = 0; idx < items.size(); idx += 2) {
@@ -210,5 +218,10 @@ public class DayOverviewFragment extends Fragment {
         }
 
         durationView.setText(duration.normalizedStandard().toString(periodFormatter));
+
+        if (duration.getHours() > dailyWorkingHours) {
+            durationView.setTextColor(overHoursColor);
+            durationView.setTypeface(Typeface.DEFAULT_BOLD);
+        }
     }
 }
