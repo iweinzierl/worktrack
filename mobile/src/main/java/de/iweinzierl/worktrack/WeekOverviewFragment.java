@@ -92,6 +92,8 @@ public class WeekOverviewFragment extends Fragment {
         Duration duration = new Duration(0);
         LocalDate date = null;
 
+        barChart.clearChart();
+
         for (WeekDay day : weekDays) {
             long millis = day.getWorkingTime().getMillis();
             duration = duration.plus(millis);

@@ -66,6 +66,10 @@ public class WeekOverviewActivity extends BaseActivity {
     protected void onStart() {
         super.onStart();
         refreshDate(LocalDate.now());
+        navigateTo(
+                LocalDate.now().getWeekOfWeekyear(),
+                LocalDate.now().getYear()
+        );
     }
 
     @AfterInject
