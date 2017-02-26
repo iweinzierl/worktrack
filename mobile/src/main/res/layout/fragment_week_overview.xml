@@ -69,17 +69,11 @@
 
     </RelativeLayout>
 
-    <org.eazegraph.lib.charts.BarChart xmlns:app="http://schemas.android.com/apk/res-auto"
+    <lecho.lib.hellocharts.view.ColumnChartView
         android:id="@+id/barChart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/bottom_bar"
-        android:padding="10dp"
-        app:egBarMargin="10dp"
-        app:egBarWidth="40dp"
-        app:egFixedBarWidth="false"
-        app:egLegendHeight="40dp"
-        app:egShowDecimal="true"
-        app:egShowValues="true" />
+        android:padding="10dp" />
 
 </RelativeLayout>

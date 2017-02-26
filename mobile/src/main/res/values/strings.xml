@@ -19,6 +19,8 @@
 
     <string name="activity_weekoverview">Weekly Overview</string>
     <string name="activity_weekoverview_action_export_mail">Export</string>
+    <string name="activity_weekoverview_chart_xaxis_label">Week days</string>
+    <string name="activity_weekoverview_chart_yaxis_label">Hours per day</string>
 
     <string name="activity_yearoverview">Year Overview</string>
     <string name="activity_yearoverview_overhours_label">Extra hours this year</string>
@@ -40,4 +42,12 @@
     <string name="settings_daily_working_hours_summary">The number of working hours per day.</string>
     <string name="settings_weekly_working_hours_title">Weekly working hours</string>
     <string name="settings_weekly_working_hours_summary">The number of working hours per week.</string>
+
+    <string name="monday">Mon</string>
+    <string name="tuesday">Tue</string>
+    <string name="wednesday">Wed</string>
+    <string name="thursday">Thu</string>
+    <string name="friday">Fri</string>
+    <string name="saturday">Sat</string>
+    <string name="sunday">Sun</string>
 </resources>
