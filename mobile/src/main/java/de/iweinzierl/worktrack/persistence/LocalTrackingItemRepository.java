@@ -12,6 +12,7 @@ import java.util.List;
 
 import de.iweinzierl.worktrack.model.Week;
 import de.iweinzierl.worktrack.model.WeekDay;
+import de.iweinzierl.worktrack.model.Year;
 import de.iweinzierl.worktrack.persistence.converter.DateTimeConverter;
 
 @EBean
@@ -145,6 +146,17 @@ public class LocalTrackingItemRepository implements TrackingItemRepository {
                     .withItems(items)
                     .withLocalDate(minDate.plusDays(i))
                     .build());
+        }
+
+        return builder.build();
+    }
+
+    @Override
+    public Year findYear(int year) {
+        Year.Builder builder = Year.newBuilder().withYear(year);
+
+        for (int week = 1; week <= 52; week++) {
+            builder.withWeek(findWeek(year, week));
         }
 
         return builder.build();

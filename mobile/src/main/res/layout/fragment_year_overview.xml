@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_overview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="de.iweinzierl.worktrack.DayOverviewFragment"
+    tools:showIn="@layout/activity_day_overview">
+
+    <RelativeLayout
+        android:id="@+id/bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimary"
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        android:paddingStart="@dimen/activity_horizontal_margin">
+
+        <TextView
+            android:id="@+id/yearView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textColor="@color/toolbarFont"
+            android:textSize="@dimen/toolbarFontSize" />
+
+        <TextView
+            android:id="@+id/overHoursTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:gravity="center_vertical"
+            android:paddingEnd="0dp"
+            android:paddingStart="@dimen/activity_horizontal_margin"
+            android:text="@string/activity_yearoverview_overhours_label"
+            android:textColor="@color/toolbarFont"
+            android:textSize="@dimen/toolbarFontSize" />
+
+        <TextView
+            android:id="@+id/overHoursView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toStartOf="@id/overHoursTextView"
+            android:gravity="center_vertical"
+            android:textColor="@color/toolbarFont"
+            android:textSize="@dimen/toolbarFontSize" />
+
+    </RelativeLayout>
+
+    <lecho.lib.hellocharts.view.LineChartView
+        android:id="@+id/lineChart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom_bar" />
+
+</RelativeLayout>

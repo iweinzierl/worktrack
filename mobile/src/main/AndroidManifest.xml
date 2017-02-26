@@ -33,8 +33,12 @@
             </intent-filter>
             -->
         </activity>
+        <activity
+            android:name=".YearOverviewActivity_"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".SettingsActivity_"/>
+        <activity android:name=".SettingsActivity_" />
 
         <receiver
             android:name=".receiver.StartWorkReceiver_"

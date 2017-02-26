@@ -5,6 +5,7 @@ import org.joda.time.LocalDate;
 import java.util.List;
 
 import de.iweinzierl.worktrack.model.Week;
+import de.iweinzierl.worktrack.model.Year;
 
 public interface TrackingItemRepository {
 
@@ -25,6 +26,8 @@ public interface TrackingItemRepository {
     LocalDate findFirstLocalDate();
 
     Week findWeek(int year, int weekNum);
+
+    Year findYear(int year);
 
     boolean hasItemsAt(LocalDate date);
 }

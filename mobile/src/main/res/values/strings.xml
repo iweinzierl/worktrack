@@ -20,6 +20,11 @@
     <string name="activity_weekoverview">Weekly Overview</string>
     <string name="activity_weekoverview_action_export_mail">Export</string>
 
+    <string name="activity_yearoverview">Year Overview</string>
+    <string name="activity_yearoverview_overhours_label">Extra hours this year</string>
+    <string name="activity_yearoverview_chart_xaxis_label">Calendar weeks</string>
+    <string name="activity_yearoverview_chart_yaxis_label">Hours per week</string>
+
     <string name="activity_settings">Settings</string>
 
     <string name="dialog_datetime_chooser_title">Choose Date and Time</string>
