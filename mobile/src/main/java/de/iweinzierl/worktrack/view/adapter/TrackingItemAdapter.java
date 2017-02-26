@@ -47,6 +47,10 @@ public class TrackingItemAdapter extends RecyclerView.Adapter<TrackingItemViewHo
         notifyItemRemoved(position);
     }
 
+    public void onItemDismissRevert(int position) {
+        notifyItemChanged(position);
+    }
+
     @Override
     public TrackingItem getItem(int position) {
         return items.get(position);

@@ -1,9 +1,11 @@
 package de.iweinzierl.worktrack;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -68,9 +70,33 @@ public class DayOverviewFragment extends Fragment {
         }
 
         @Override
-        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-            trackingItemCallback.onDeleteItem(adapter.getItem(viewHolder.getAdapterPosition()));
-            adapter.onItemDismiss(viewHolder.getAdapterPosition());
+        public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
+            final TrackingItem item = adapter.getItem(viewHolder.getAdapterPosition());
+
+            new AlertDialog.Builder(getActivity())
+                    .setTitle(R.string.activity_dayoverview_action_delete_title)
+                    .setMessage(R.string.activity_dayoverview_action_delete_message)
+                    .setNegativeButton(R.string.activity_dayoverview_action_delete_cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            dialog.dismiss();
+                            adapter.onItemDismissRevert(viewHolder.getAdapterPosition());
+                        }
+                    })
+                    .setPositiveButton(R.string.activity_dayoverview_action_delete_ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            trackingItemCallback.onDeleteItem(item);
+                            adapter.onItemDismiss(viewHolder.getAdapterPosition());
+                        }
+                    })
+                    .show();
         }
     }
 
