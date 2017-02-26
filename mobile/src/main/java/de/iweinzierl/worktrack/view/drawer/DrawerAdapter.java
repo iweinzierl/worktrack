@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import de.iweinzierl.worktrack.DayOverviewActivity_;
+import de.iweinzierl.worktrack.SettingsActivity_;
 import de.iweinzierl.worktrack.WeekOverviewActivity_;
 import de.iweinzierl.worktrack.R;
 
@@ -14,7 +15,8 @@ public class DrawerAdapter extends BaseAdapter {
     private static final DrawerItem[] NAV_ITEMS = {
             new DrawerHeaderItem(),
             new DrawerActivityItem(R.string.activity_dayverview, R.drawable.ic_view_day_white_24px, DayOverviewActivity_.class),
-            new DrawerActivityItem(R.string.activity_weekoverview, R.drawable.ic_view_week_white_24px, WeekOverviewActivity_.class)
+            new DrawerActivityItem(R.string.activity_weekoverview, R.drawable.ic_view_week_white_24px, WeekOverviewActivity_.class),
+            new DrawerActivityItem(R.string.activity_settings, R.drawable.ic_settings_white_36px, SettingsActivity_.class)
     };
 
     private final DrawerLayout drawerLayout;

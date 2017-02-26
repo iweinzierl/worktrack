@@ -1,5 +1,6 @@
 package de.iweinzierl.worktrack;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.widget.TextView;
@@ -13,6 +14,7 @@ import org.androidannotations.annotations.res.ColorRes;
 import org.eazegraph.lib.charts.BarChart;
 import org.eazegraph.lib.models.BarModel;
 import org.joda.time.Duration;
+import org.joda.time.Hours;
 import org.joda.time.LocalDate;
 import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
@@ -23,6 +25,7 @@ import de.iweinzierl.worktrack.model.Week;
 import de.iweinzierl.worktrack.model.WeekDay;
 import de.iweinzierl.worktrack.persistence.LocalTrackingItemRepository;
 import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
+import de.iweinzierl.worktrack.util.SettingsHelper;
 
 @EFragment(R.layout.fragment_week_overview)
 public class WeekOverviewFragment extends Fragment {
@@ -89,6 +92,9 @@ public class WeekOverviewFragment extends Fragment {
 
     @UiThread
     public void setWeekDays(List<WeekDay> weekDays) {
+        final int dailyWorkingHours = new SettingsHelper(getActivity()).getDailyWorkingHours();
+        final int weeklyWorkingHours = new SettingsHelper(getActivity()).getWeeklyWorkingHours();
+
         Duration duration = new Duration(0);
         LocalDate date = null;
 
@@ -102,7 +108,7 @@ public class WeekOverviewFragment extends Fragment {
             barChart.addBar(new BarModel(
                     String.valueOf(day.getDate().toString("EEE")),
                     hours,
-                    hours > 8 ? colorOverHours : colorNormalHours));
+                    hours > dailyWorkingHours ? colorOverHours : colorNormalHours));
 
             if (!day.getItems().isEmpty()) {
                 date = day.getItems().get(0).getEventTime().toLocalDate();
@@ -114,6 +120,11 @@ public class WeekOverviewFragment extends Fragment {
             yearView.setText(String.valueOf(date.getYear()));
             weekRangeView.setText(createWeekRangeString(date));
             durationView.setText(periodFormatter.print(duration.toPeriod()));
+
+            if (duration.isLongerThan(Hours.hours(weeklyWorkingHours).toStandardDuration())) {
+                durationView.setTextColor(colorOverHours);
+                durationView.setTypeface(Typeface.DEFAULT_BOLD);
+            }
         }
 
         barChart.startAnimation();
