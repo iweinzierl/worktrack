@@ -56,6 +56,8 @@ public class YearOverviewFragment extends Fragment {
     @StringRes(R.string.activity_yearoverview_chart_xaxis_label)
     String xAxisLabel;
 
+    List<Week> weeks;
+
     LineChartData lineChartData;
     Line chartLine;
 
@@ -67,12 +69,28 @@ public class YearOverviewFragment extends Fragment {
         chartLine = createChartLine();
 
         lineChartData = new LineChartData(Lists.newArrayList(chartLine));
-        lineChartData.setAxisXBottom(createXAxis());
         lineChartData.setAxisYLeft(createYAxis());
         lineChartData.setBaseValue(0);
 
         lineChart.setLineChartData(lineChartData);
         lineChart.setInteractive(false);
+    }
+
+    private void updateXAxis() {
+        List<AxisValue> values = Lists.newArrayList();
+
+        for (int i = weeks.get(0).getWeekNum(); i <= weeks.get(weeks.size() - 1).getWeekNum(); i++) {
+            values.add(new AxisValue(i));
+        }
+
+        Axis axis = new Axis(values)
+                .setHasTiltedLabels(false)
+                .setHasLines(true)
+                .setHasSeparationLine(true)
+                .setName(xAxisLabel);
+
+        lineChartData.setAxisXBottom(axis);
+        lineChart.setLineChartData(lineChartData);
     }
 
     @Override
@@ -104,15 +122,16 @@ public class YearOverviewFragment extends Fragment {
 
     @UiThread
     public void setWeeks(List<Week> weeks) {
+        this.weeks = stripEmptyWeeks(weeks);
+
         yearView.setText(String.valueOf(getConfiguredYear()));
 
         final int weeklyWorkingHours = new SettingsHelper(getContext()).getWeeklyWorkingHours();
         int overHours = 0;
 
-        List<Week> revisedWeeks = stripEmptyWeeks(weeks);
         List<PointValue> values = new ArrayList<>();
 
-        for (Week week : revisedWeeks) {
+        for (Week week : this.weeks) {
             long hours = week.getWorkingTime().getStandardHours();
 
             if (hours > 0) {
@@ -125,37 +144,35 @@ public class YearOverviewFragment extends Fragment {
         chartLine.setValues(values);
         lineChart.setLineChartData(lineChartData);
         overHoursView.setText(String.valueOf(overHours));
+
+        updateXAxis();
     }
 
     private List<Week> stripEmptyWeeks(List<Week> weeks) {
         List<Week> revisedWeeks = Lists.newArrayList(weeks);
-
         for (int idx = revisedWeeks.size() - 1; idx >= 0; idx--) {
             if (revisedWeeks.get(idx).getWorkingTime().getMillis() == 0) {
                 revisedWeeks.remove(idx);
-            }
-            else {
+            } else {
                 break;
             }
         }
 
+        List<Week> stripped = Lists.newArrayList();
         for (int idx = 0; idx < revisedWeeks.size(); idx++) {
-            if (revisedWeeks.get(idx).getWorkingTime().getMillis() == 0) {
-                revisedWeeks.remove(idx);
-            }
-            else {
-                break;
+            if (!stripped.isEmpty() || revisedWeeks.get(idx).getWorkingTime().getMillis() > 0) {
+                stripped.add(revisedWeeks.get(idx));
             }
         }
 
-        return revisedWeeks;
+        return stripped;
     }
 
     private Line createChartLine() {
         return new Line()
                 .setColor(colorNormalHours)
-                .setHasLabels(false)
-                .setHasLabelsOnlyForSelected(true)
+                .setHasLabels(true)
+                .setHasLabelsOnlyForSelected(false)
                 .setHasLines(true)
                 .setHasPoints(true);
     }
@@ -175,22 +192,6 @@ public class YearOverviewFragment extends Fragment {
         axis.setHasSeparationLine(true);
         axis.setHasLines(true);
         axis.setName(yAxisLabel);
-
-        return axis;
-    }
-
-    private Axis createXAxis() {
-        List<AxisValue> values = Lists.newArrayList();
-
-        for (int i = 1; i <= 52; i++) {
-            values.add(new AxisValue(i));
-        }
-
-        Axis axis = new Axis(values);
-        axis.setHasTiltedLabels(false);
-        axis.setHasLines(true);
-        axis.setHasSeparationLine(true);
-        axis.setName(xAxisLabel);
 
         return axis;
     }
