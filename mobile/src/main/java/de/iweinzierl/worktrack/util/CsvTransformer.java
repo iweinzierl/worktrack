@@ -9,6 +9,7 @@ import java.io.StringWriter;
 import au.com.bytecode.opencsv.CSVWriter;
 import de.iweinzierl.worktrack.model.Week;
 import de.iweinzierl.worktrack.model.WeekDay;
+import de.iweinzierl.worktrack.model.Year;
 import de.iweinzierl.worktrack.persistence.TrackingItem;
 
 public class CsvTransformer {
@@ -45,11 +46,25 @@ public class CsvTransformer {
     public String transform(Week week) {
         initialize();
 
-        for (WeekDay day : week.getDays()) {
-            appendDay(day);
+        appendWeek(week);
+
+        return writer.toString();
+    }
+
+    public String transform(Year year) {
+        initialize();
+
+        for (Week week : year.getWeeks()) {
+            appendWeek(week);
         }
 
         return writer.toString();
+    }
+
+    private void appendWeek(Week week) {
+        for (WeekDay day : week.getDays()) {
+            appendDay(day);
+        }
     }
 
     private void appendDay(WeekDay day) {

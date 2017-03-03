@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.github.iweinzierl.android.logging.AndroidLoggerFactory;
 import com.google.common.collect.Lists;
 
 import org.androidannotations.annotations.AfterInject;
@@ -17,17 +18,22 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.joda.time.LocalDate;
+import org.slf4j.Logger;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
 import de.iweinzierl.worktrack.model.Year;
 import de.iweinzierl.worktrack.persistence.LocalTrackingItemRepository;
 import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
+import de.iweinzierl.worktrack.util.MailHelper;
 import de.iweinzierl.worktrack.view.adapter.YearOverviewFragmentAdapter;
 
 @EActivity
 public class YearOverviewActivity extends BaseActivity {
+
+    private static final Logger LOGGER = AndroidLoggerFactory.getInstance().getLogger("YearOverviewActivity");
 
     private static final int REQUEST_SEND_MAIL = 110;
 
@@ -114,6 +120,14 @@ public class YearOverviewActivity extends BaseActivity {
     }
 
     private void exportToMail() {
+        int currentItem = pager.getCurrentItem();
+        Year year = ((YearOverviewFragment) yearOverviewFragmentAdapter.getItem(currentItem)).getYear();
+
+        try {
+            MailHelper.sendMail(this, year);
+        } catch (IOException e) {
+            LOGGER.error("Export to mail failed", e);
+        }
     }
 
     @SuppressWarnings("unchecked")

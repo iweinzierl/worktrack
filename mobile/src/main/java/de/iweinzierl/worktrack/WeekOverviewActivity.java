@@ -1,10 +1,8 @@
 package de.iweinzierl.worktrack;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,7 +21,6 @@ import org.androidannotations.annotations.ViewById;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -33,8 +30,7 @@ import de.iweinzierl.worktrack.model.WeekDay;
 import de.iweinzierl.worktrack.persistence.LocalTrackingItemRepository;
 import de.iweinzierl.worktrack.persistence.TrackingItem;
 import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
-import de.iweinzierl.worktrack.util.CsvTransformer;
-import de.iweinzierl.worktrack.util.FileUtil;
+import de.iweinzierl.worktrack.util.MailHelper;
 import de.iweinzierl.worktrack.view.adapter.WeekOverviewFragmentAdapter;
 import de.iweinzierl.worktrack.view.dialog.WeekPickerDialogFragment;
 
@@ -174,17 +170,7 @@ public class WeekOverviewActivity extends BaseActivity {
 
         try {
             Week week = trackingItemRepository.findWeek(meta.getYear(), meta.getWeekNum());
-            String csv = new CsvTransformer().transform(week);
-            File csvFile = FileUtil.toFile("export_" + meta.getWeekNum() + "_" + meta.getYear() + ".csv", csv);
-
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setType("*/*");
-            intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"weinzierl.ingo@gmail.com"});
-            intent.putExtra(Intent.EXTRA_SUBJECT, "Worktrack Export " + meta.getWeekNum() + "/" + meta.getYear());
-            intent.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(this,
-                    BuildConfig.APPLICATION_ID + ".provider", csvFile));
-
-            startActivity(intent);
+            MailHelper.sendMail(this, week);
         } catch (IOException e) {
             LOGGER.error("Export to mail failed", e);
         }
