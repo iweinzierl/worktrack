@@ -18,10 +18,12 @@ public class MailHelper {
             return;
         }
 
+        SettingsHelper settingsHelper = new SettingsHelper(context);
+
         String csv = new CsvTransformer().transform(week);
         sendMailWithCsv(
                 context,
-                new String[]{"weinzierl.ingo@gmail.com"},
+                new String[]{settingsHelper.getDefaultEmailAddress()},
                 "Worktrack Export " + week.getWeekNum() + "/" + week.getYear(),
                 csv
         );
@@ -32,10 +34,12 @@ public class MailHelper {
             return;
         }
 
+        SettingsHelper settingsHelper = new SettingsHelper(context);
+
         String csv = new CsvTransformer().transform(year);
         sendMailWithCsv(
                 context,
-                new String[]{"weinzierl.ingo@gmail.com"},
+                new String[]{settingsHelper.getDefaultEmailAddress()},
                 "Worktrack Export " + year.getYear(),
                 csv
         );

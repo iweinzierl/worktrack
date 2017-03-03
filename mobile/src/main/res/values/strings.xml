@@ -38,10 +38,14 @@
     <string name="dialog_weekpicker_label_week">Week:</string>
     <string name="dialog_weekpicker_label_year">Year:</string>
 
+    <string name="settings_category_working_time">Working Time</string>
     <string name="settings_daily_working_hours_title">Daily working hours</string>
     <string name="settings_daily_working_hours_summary">The number of working hours per day.</string>
     <string name="settings_weekly_working_hours_title">Weekly working hours</string>
     <string name="settings_weekly_working_hours_summary">The number of working hours per week.</string>
+    <string name="settings_category_export">Data Export</string>
+    <string name="settings_export_default_mail_title">Default Email Address</string>
+    <string name="settings_export_default_mail_summary">The default email address used for mailings.</string>
 
     <string name="monday">Mon</string>
     <string name="tuesday">Tue</string>

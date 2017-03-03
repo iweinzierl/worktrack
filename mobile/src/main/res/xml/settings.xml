@@ -1,20 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <EditTextPreference
-        android:defaultValue="8"
-        android:enabled="true"
-        android:inputType="number"
-        android:key="setting_daily_working_hours"
-        android:summary="@string/settings_daily_working_hours_summary"
-        android:title="@string/settings_daily_working_hours_title" />
+    <PreferenceCategory android:title="@string/settings_category_working_time">
 
-    <EditTextPreference
-        android:defaultValue="40"
-        android:enabled="true"
-        android:inputType="number"
-        android:key="setting_weekly_working_hours"
-        android:summary="@string/settings_weekly_working_hours_summary"
-        android:title="@string/settings_weekly_working_hours_title" />
+        <EditTextPreference
+            android:defaultValue="8"
+            android:enabled="true"
+            android:inputType="number"
+            android:key="setting_daily_working_hours"
+            android:summary="@string/settings_daily_working_hours_summary"
+            android:title="@string/settings_daily_working_hours_title" />
 
+        <EditTextPreference
+            android:defaultValue="40"
+            android:enabled="true"
+            android:inputType="number"
+            android:key="setting_weekly_working_hours"
+            android:summary="@string/settings_weekly_working_hours_summary"
+            android:title="@string/settings_weekly_working_hours_title" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/settings_category_export">
+
+        <EditTextPreference
+            android:defaultValue=""
+            android:enabled="true"
+            android:inputType="textEmailAddress"
+            android:key="setting_exports_default_mail"
+            android:summary="@string/settings_export_default_mail_summary"
+            android:title="@string/settings_export_default_mail_title" />
+
+    </PreferenceCategory>
 </PreferenceScreen>
