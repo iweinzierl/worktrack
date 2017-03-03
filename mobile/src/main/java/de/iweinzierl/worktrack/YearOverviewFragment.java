@@ -109,7 +109,7 @@ public class YearOverviewFragment extends Fragment {
         final int weeklyWorkingHours = new SettingsHelper(getContext()).getWeeklyWorkingHours();
         int overHours = 0;
 
-        List<Week> revisedWeeks = Lists.newArrayList(weeks);
+        List<Week> revisedWeeks = stripEmptyWeeks(weeks);
         List<PointValue> values = new ArrayList<>();
 
         for (Week week : revisedWeeks) {
@@ -125,6 +125,30 @@ public class YearOverviewFragment extends Fragment {
         chartLine.setValues(values);
         lineChart.setLineChartData(lineChartData);
         overHoursView.setText(String.valueOf(overHours));
+    }
+
+    private List<Week> stripEmptyWeeks(List<Week> weeks) {
+        List<Week> revisedWeeks = Lists.newArrayList(weeks);
+
+        for (int idx = revisedWeeks.size() - 1; idx >= 0; idx--) {
+            if (revisedWeeks.get(idx).getWorkingTime().getMillis() == 0) {
+                revisedWeeks.remove(idx);
+            }
+            else {
+                break;
+            }
+        }
+
+        for (int idx = 0; idx < revisedWeeks.size(); idx++) {
+            if (revisedWeeks.get(idx).getWorkingTime().getMillis() == 0) {
+                revisedWeeks.remove(idx);
+            }
+            else {
+                break;
+            }
+        }
+
+        return revisedWeeks;
     }
 
     private Line createChartLine() {

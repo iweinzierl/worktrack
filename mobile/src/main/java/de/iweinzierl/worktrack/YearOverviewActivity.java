@@ -12,7 +12,6 @@ import com.google.common.collect.Lists;
 
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
@@ -22,10 +21,8 @@ import org.joda.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
-import de.iweinzierl.worktrack.model.WeekDay;
 import de.iweinzierl.worktrack.model.Year;
 import de.iweinzierl.worktrack.persistence.LocalTrackingItemRepository;
-import de.iweinzierl.worktrack.persistence.TrackingItem;
 import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
 import de.iweinzierl.worktrack.view.adapter.YearOverviewFragmentAdapter;
 
@@ -94,21 +91,6 @@ public class YearOverviewActivity extends BaseActivity {
 
         if (requestCode == REQUEST_SEND_MAIL) {
             exportToMail();
-        }
-    }
-
-    @Background
-    protected void refreshDate(LocalDate date) {
-        LocalDate start = date.dayOfWeek().withMinimumValue();
-        List<WeekDay> days = Lists.newArrayList();
-
-        for (int i = 0; i < 7; i++) {
-            List<TrackingItem> items = trackingItemRepository.findByDate(start.plusDays(i));
-
-            days.add(WeekDay.newBuilder()
-                    .withLocalDate(start.plusDays(i))
-                    .withItems(items)
-                    .build());
         }
     }
 
