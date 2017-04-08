@@ -29,7 +29,7 @@ public class WeekOverviewFragmentAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         Fragment fragment = fragments.get(position);
 
-        if (fragment == null) {
+        if (fragment == null && !weeks.isEmpty()) {
             Week week = weeks.get(position);
 
             Bundle args = new Bundle();

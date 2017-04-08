@@ -1,6 +1,7 @@
 package de.iweinzierl.worktrack;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
@@ -13,6 +14,7 @@ import android.widget.DatePicker;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.github.iweinzierl.android.logging.AndroidLoggerFactory;
+import com.google.android.gms.drive.OpenFileActivityBuilder;
 import com.google.common.collect.Lists;
 import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment;
 
@@ -101,6 +103,9 @@ public class DayOverviewActivity extends BaseActivity implements DayOverviewFrag
                 return true;
             case R.id.action_select_date:
                 showDatePickerDialog();
+                return true;
+            case R.id.action_import_data:
+                importData();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -294,6 +299,12 @@ public class DayOverviewActivity extends BaseActivity implements DayOverviewFrag
                     }
                 })
                 .show();
+    }
+
+    @UiThread
+    protected void importData() {
+        // TODO
+        startActivity(new Intent(this, ImportFileActivity_.class));
     }
 
     @UiThread

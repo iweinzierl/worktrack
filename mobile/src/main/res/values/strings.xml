@@ -16,6 +16,7 @@
     <string name="activity_dayoverview_action_delete_message">Really delete tracking item?</string>
     <string name="activity_dayoverview_action_delete_ok">Delete</string>
     <string name="activity_dayoverview_action_delete_cancel">No</string>
+    <string name="activity_dayoverview_action_import_data">Import Data</string>
 
     <string name="activity_weekoverview">Weekly Overview</string>
     <string name="activity_weekoverview_action_export_mail">Export</string>
