@@ -11,13 +11,6 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_import_data"
-        android:icon="@drawable/ic_import_export_white_24dp"
-        android:orderInCategory="100"
-        android:title="@string/activity_dayoverview_action_import_data"
-        app:showAsAction="ifRoom" />
-
-    <item
         android:id="@+id/action_demo_data"
         android:orderInCategory="100"
         android:title="Add Demo Data"

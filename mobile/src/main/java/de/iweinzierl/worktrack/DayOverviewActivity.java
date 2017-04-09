@@ -1,7 +1,6 @@
 package de.iweinzierl.worktrack;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
@@ -14,7 +13,6 @@ import android.widget.DatePicker;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.github.iweinzierl.android.logging.AndroidLoggerFactory;
-import com.google.android.gms.drive.OpenFileActivityBuilder;
 import com.google.common.collect.Lists;
 import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment;
 
@@ -39,9 +37,7 @@ import java.util.Locale;
 
 import de.iweinzierl.worktrack.persistence.CreationType;
 import de.iweinzierl.worktrack.persistence.DaoSessionFactory;
-import de.iweinzierl.worktrack.persistence.LocalTrackingItemRepository;
 import de.iweinzierl.worktrack.persistence.TrackingItem;
-import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
 import de.iweinzierl.worktrack.persistence.TrackingItemType;
 import de.iweinzierl.worktrack.util.AsyncCallback;
 import de.iweinzierl.worktrack.view.adapter.DayOverviewFragmentAdapter;
@@ -53,9 +49,6 @@ public class DayOverviewActivity extends BaseActivity implements DayOverviewFrag
 
     @Bean
     DaoSessionFactory sessionFactory;
-
-    @Bean(LocalTrackingItemRepository.class)
-    TrackingItemRepository trackingItemRepository;
 
     @ViewById
     ViewPager pager;
@@ -90,6 +83,8 @@ public class DayOverviewActivity extends BaseActivity implements DayOverviewFrag
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_overview, menu);
         return true;
@@ -103,9 +98,6 @@ public class DayOverviewActivity extends BaseActivity implements DayOverviewFrag
                 return true;
             case R.id.action_select_date:
                 showDatePickerDialog();
-                return true;
-            case R.id.action_import_data:
-                importData();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -299,12 +291,6 @@ public class DayOverviewActivity extends BaseActivity implements DayOverviewFrag
                     }
                 })
                 .show();
-    }
-
-    @UiThread
-    protected void importData() {
-        // TODO
-        startActivity(new Intent(this, ImportFileActivity_.class));
     }
 
     @UiThread

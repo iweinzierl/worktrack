@@ -17,6 +17,7 @@
     <string name="activity_dayoverview_action_delete_ok">Delete</string>
     <string name="activity_dayoverview_action_delete_cancel">No</string>
     <string name="activity_dayoverview_action_import_data">Import Data</string>
+    <string name="activity_dayoverview_action_create_backup">Create Backup</string>
 
     <string name="activity_weekoverview">Weekly Overview</string>
     <string name="activity_weekoverview_action_export_mail">Export</string>
@@ -28,6 +29,8 @@
     <string name="activity_yearoverview_chart_xaxis_label">Calendar weeks</string>
     <string name="activity_yearoverview_chart_yaxis_label">Hours per week</string>
 
+    <string name="activity_list_backups">Backups</string>
+
     <string name="activity_settings">Settings</string>
 
     <string name="dialog_datetime_chooser_title">Choose Date and Time</string>
@@ -38,6 +41,10 @@
     <string name="dialog_weekpicker_button_cancel">Cancel</string>
     <string name="dialog_weekpicker_label_week">Week:</string>
     <string name="dialog_weekpicker_label_year">Year:</string>
+
+    <string name="dialog_backup_title_input_title">Backup Name</string>
+    <string name="dialog_backup_title_input_confirm">Backup</string>
+    <string name="dialog_backup_title_input_cancel">Cancel</string>
 
     <string name="settings_category_working_time">Working Time</string>
     <string name="settings_daily_working_hours_title">Daily working hours</string>

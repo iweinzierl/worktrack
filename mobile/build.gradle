@@ -35,7 +35,7 @@ android {
 
     signingConfigs {
         debug {
-            storeFile rootProject.file("debug-keystore")
+            storeFile rootProject.file("debug.keystore")
             storePassword "debugkey"
             keyAlias "debug-key"
             keyPassword "debugkey"
@@ -75,6 +75,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
+    compile 'com.google.guava:guava:20.0'
     compile 'org.greenrobot:greendao:3.2.2'
     compile 'joda-time:joda-time:2.9.7'
     compile 'com.github.iweinzierl:android-logging:1.0'
