@@ -11,8 +11,8 @@ import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi;
 import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveFolder;
+import com.google.android.gms.drive.Metadata;
 import com.google.android.gms.drive.MetadataChangeSet;
-import com.google.common.base.Joiner;
 
 import org.slf4j.Logger;
 
@@ -125,14 +125,27 @@ public class BackupHelper {
                 });
     }
 
+    public void cleanBackups() {
+        Drive.DriveApi.getAppFolder(googleApiClient).listChildren(googleApiClient).setResultCallback(new ResultCallback<DriveApi.MetadataBufferResult>() {
+            @Override
+            public void onResult(@NonNull DriveApi.MetadataBufferResult metadataBufferResult) {
+                for (Metadata metadata : metadataBufferResult.getMetadataBuffer()) {
+                    LOGGER.info("Delete -> {}", metadata.getTitle());
+                    metadata.getDriveId().asDriveFile().delete(googleApiClient);
+                }
+            }
+        });
+    }
+
     private int createBackup(OutputStream outputStream) throws IOException {
         List<TrackingItem> items = trackingItemRepository.findAll();
 
         if (items != null && !items.isEmpty()) {
             CSVWriter csvWriter = new CSVWriter(new OutputStreamWriter(outputStream, "utf-8"), SEPARATOR, QUOTE_CHARACTER);
+            CsvTransformer csvTransformer = new CsvTransformer();
 
             for (TrackingItem item : items) {
-                csvWriter.writeNext(item.toStringArray());
+                csvWriter.writeNext(csvTransformer.toStringArray(item));
             }
 
             csvWriter.flush();
@@ -144,10 +157,13 @@ public class BackupHelper {
 
     private void importBackup(InputStream inputStream) throws IOException {
         CSVReader csvReader = new CSVReader(new InputStreamReader(inputStream), SEPARATOR, QUOTE_CHARACTER);
+        CsvTransformer csvTransformer = new CsvTransformer();
 
         for (String[] line : csvReader.readAll()) {
-            LOGGER.debug(Joiner.on(",").join(line));
-            // TODO
+            TrackingItem trackingItem = csvTransformer.fromArrayString(line);
+            LOGGER.debug("Import item -> {}", trackingItem);
+
+            // TODO persist
         }
     }
 

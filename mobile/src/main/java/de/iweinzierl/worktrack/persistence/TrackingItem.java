@@ -14,8 +14,6 @@ import de.iweinzierl.worktrack.persistence.converter.TrackingItemTypeConverter;
 @Entity
 public class TrackingItem {
 
-    private static final String DEFAULT_DATETIME_PATTERN = "yyyy-MM-dd HH:mm";
-
     @Id
     private Long id;
 
@@ -47,7 +45,7 @@ public class TrackingItem {
 
     @Generated(hash = 259717695)
     public TrackingItem(Long id, Long backendId, @NotNull TrackingItemType type,
-            @NotNull CreationType creationType, @NotNull DateTime eventTime) {
+                        @NotNull CreationType creationType, @NotNull DateTime eventTime) {
         this.id = id;
         this.backendId = backendId;
         this.type = type;
@@ -94,15 +92,6 @@ public class TrackingItem {
                 '}';
     }
 
-    public String[] toStringArray() {
-        return new String[] {
-                String.valueOf(id),
-                String.valueOf(backendId),
-                type.name(),
-                creationType.name(),
-                eventTime.toString(DEFAULT_DATETIME_PATTERN)
-        };
-    }
 
     public void setId(Long id) {
         this.id = id;
