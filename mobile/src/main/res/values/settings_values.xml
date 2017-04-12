@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_backup_frequency_default">Weekly</string>
+    <array name="settings_backup_frequency_entries">
+        <item>Never</item>
+        <item>Daily</item>
+        <item>Weekly</item>
+        <item>Monthly</item>
+    </array>
+
+    <array name="settings_backup_frequency_entry_values">
+        <item>Never</item>
+        <item>Daily</item>
+        <item>Weekly</item>
+        <item>Monthly</item>
+    </array>
+
+    <string name="settings_backup_required_connection_default">Wifi</string>
+    <array name="settings_backup_required_connection_entries">
+        <item>Wifi</item>
+        <item>Wifi or Mobile data</item>
+    </array>
+
+    <array name="settings_backup_required_connection_entry_values">
+        <item>Wifi</item>
+        <item>Both</item>
+    </array>
+</resources>

@@ -32,4 +32,44 @@
             android:title="@string/settings_export_default_mail_title" />
 
     </PreferenceCategory>
+
+    <PreferenceScreen
+        android:key="settings_backup"
+        android:persistent="false"
+        android:summary="@string/settings_backup_screen_summary"
+        android:title="@string/settings_backup_screen_title">
+
+        <PreferenceCategory android:title="@string/settings_backup_category_last_backup">
+
+            <de.iweinzierl.worktrack.view.settings.LastBackupPreference />
+
+        </PreferenceCategory>
+
+        <PreferenceCategory android:title="@string/settings_backup_category_google_drive">
+
+            <ListPreference
+                android:defaultValue="@string/settings_backup_frequency_default"
+                android:dialogTitle="@string/settings_backup_frequency_dialogtitle"
+                android:entries="@array/settings_backup_frequency_entries"
+                android:entryValues="@array/settings_backup_frequency_entry_values"
+                android:key="@string/settings_backup_frequency"
+                android:summary="%s"
+                android:title="@string/settings_backup_frequency" />
+
+            <ListPreference
+                android:dialogTitle="@string/settings_backup_account_dialogtitle"
+                android:key="@string/settings_backup_account"
+                android:title="@string/settings_backup_account" />
+
+            <ListPreference
+                android:defaultValue="@string/settings_backup_required_connection_default"
+                android:dialogTitle="@string/settings_backup_required_connection_dialogtitle"
+                android:entries="@array/settings_backup_required_connection_entries"
+                android:entryValues="@array/settings_backup_required_connection_entry_values"
+                android:key="@string/settings_backup_required_connection"
+                android:summary="%s"
+                android:title="@string/settings_backup_required_connection" />
+
+        </PreferenceCategory>
+    </PreferenceScreen>
 </PreferenceScreen>

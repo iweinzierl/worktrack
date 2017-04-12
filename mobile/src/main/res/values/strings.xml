@@ -54,6 +54,18 @@
     <string name="settings_category_export">Data Export</string>
     <string name="settings_export_default_mail_title">Default Email Address</string>
     <string name="settings_export_default_mail_summary">The default email address used for mailings.</string>
+    <string name="settings_backup_screen_title">Backup</string>
+    <string name="settings_backup_screen_summary">Specify the backup settings in order to save your data.</string>
+    <string name="settings_backup_category_google_drive">Google Drive Settings</string>
+    <string name="settings_backup_frequency">Save on Google Drive</string>
+    <string name="settings_backup_frequency_dialogtitle">Save on Google Drive:</string>
+    <string name="settings_backup_account">Account</string>
+    <string name="settings_backup_account_dialogtitle">Choose an account:</string>
+    <string name="settings_backup_required_connection">Requires Connection</string>
+    <string name="settings_backup_required_connection_dialogtitle">Requires Connection:</string>
+    <string name="settings_backup_category_last_backup">Last Backup</string>
+    <string name="preference_last_backup_date">Last Backup Date:</string>
+    <string name="preference_last_backup_size">Last Backup Size:</string>
 
     <string name="monday">Mon</string>
     <string name="tuesday">Tue</string>
