@@ -31,4 +31,14 @@ public class Backup {
     public LocalDateTime getLastModified() {
         return lastModified;
     }
+
+    @Override
+    public String toString() {
+        return "Backup{" +
+                "driveId='" + driveId + '\'' +
+                ", title='" + title + '\'' +
+                ", size=" + size +
+                ", lastModified=" + lastModified +
+                '}';
+    }
 }

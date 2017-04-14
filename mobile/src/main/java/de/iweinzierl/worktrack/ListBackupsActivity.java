@@ -1,5 +1,6 @@
 package de.iweinzierl.worktrack;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,6 +18,7 @@ import com.google.android.gms.drive.Metadata;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
@@ -27,22 +29,39 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.iweinzierl.worktrack.model.Backup;
+import de.iweinzierl.worktrack.persistence.LocalTrackingItemRepository;
+import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
+import de.iweinzierl.worktrack.util.BackupHelper;
 import de.iweinzierl.worktrack.view.adapter.BackupAdapter;
 
 @EActivity(R.layout.activity_list_backups)
-public class ListBackupsActivity extends BaseGoogleApiActivity {
+public class ListBackupsActivity extends BaseGoogleApiActivity implements BackupHelper.BackupCallback {
 
     public static final String EXTRA_BACKUP_DRIVE_ID = "ListBackupsActivity.Extra.BackupId";
 
     private static final Logger LOGGER = AndroidLoggerFactory.getInstance().getLogger(ListBackupsActivity.class.getName());
 
-    private BackupAdapter backupAdapter = new BackupAdapter();
+    private BackupAdapter backupAdapter;
+
+    @Bean(LocalTrackingItemRepository.class)
+    TrackingItemRepository trackingItemRepository;
 
     @ViewById
     RecyclerView backups;
 
     @ViewById
     Toolbar toolbar;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        backupAdapter = new BackupAdapter(new BackupAdapter.ClickCallback() {
+            @Override
+            public void onClick(int position, Backup backup) {
+                importBackup(backup);
+            }
+        });
+    }
 
     @AfterViews
     void setupViews() {
@@ -91,5 +110,36 @@ public class ListBackupsActivity extends BaseGoogleApiActivity {
     protected void setBackups(List<Backup> backupList) {
         LOGGER.info("Found {} backups in Google Drive App folder", backupList.size());
         backupAdapter.setItems(backupList);
+    }
+
+    @UiThread
+    protected void importBackup(Backup backup) {
+        LOGGER.info("Import backup: {}", backup);
+
+        Intent data = new Intent();
+        data.putExtra(EXTRA_BACKUP_DRIVE_ID, backup.getDriveId());
+
+        setResult(RESULT_OK, data);
+        finish();
+    }
+
+    @Override
+    public void onCreationSuccessful() {
+
+    }
+
+    @Override
+    public void onCreationFailed() {
+
+    }
+
+    @Override
+    public void onImportSuccessful() {
+
+    }
+
+    @Override
+    public void onImportFailed() {
+
     }
 }

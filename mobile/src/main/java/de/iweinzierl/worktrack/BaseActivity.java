@@ -3,6 +3,7 @@ package de.iweinzierl.worktrack;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -25,7 +26,7 @@ import de.iweinzierl.worktrack.view.dialog.BackupTitleInputDialog;
 import de.iweinzierl.worktrack.view.drawer.DrawerAdapter;
 
 @EActivity
-public abstract class BaseActivity extends BaseGoogleApiActivity {
+public abstract class BaseActivity extends BaseGoogleApiActivity implements BackupHelper.BackupCallback {
 
     private static final Logger LOGGER = AndroidLoggerFactory.getInstance().getLogger("BaseActivity");
 
@@ -159,5 +160,32 @@ public abstract class BaseActivity extends BaseGoogleApiActivity {
                 trackingItemRepository,
                 getGoogleApiClient()
         ).importBackup(backupDriveId);
+    }
+
+    @Override
+    public void onCreationSuccessful() {
+        showMessage("Backup creation successful");
+    }
+
+    @Override
+    public void onCreationFailed() {
+        showMessage("Backup creation failed");
+    }
+
+    @Override
+    public void onImportSuccessful() {
+        showMessage("Backup import successful");
+    }
+
+    @Override
+    public void onImportFailed() {
+        showMessage("Backup import failed");
+    }
+
+    protected void showMessage(String message) {
+        Snackbar.make(
+                getWindow().getDecorView().findViewById(android.R.id.content),
+                message,
+                Snackbar.LENGTH_LONG).show();
     }
 }

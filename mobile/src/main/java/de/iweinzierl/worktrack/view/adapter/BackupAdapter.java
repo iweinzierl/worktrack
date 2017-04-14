@@ -15,11 +15,22 @@ import de.iweinzierl.worktrack.model.Backup;
 
 public class BackupAdapter extends RecyclerView.Adapter<BackupViewHolder> {
 
+    public interface ClickCallback {
+
+        void onClick(int position, Backup backup);
+    }
+
     private List<Backup> items;
+    private ClickCallback clickCallback;
 
     @SuppressWarnings("unchecked")
     public BackupAdapter() {
         this.items = Collections.EMPTY_LIST;
+    }
+
+    public BackupAdapter(ClickCallback clickCallback) {
+        this();
+        this.clickCallback = clickCallback;
     }
 
     @Override
@@ -29,9 +40,18 @@ public class BackupAdapter extends RecyclerView.Adapter<BackupViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(BackupViewHolder holder, int position) {
-        Backup backup = items.get(position);
+    public void onBindViewHolder(final BackupViewHolder holder, final int position) {
+        final Backup backup = items.get(position);
         holder.apply(backup);
+
+        holder.itemView.findViewById(R.id.itemRoot).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (clickCallback != null) {
+                    clickCallback.onClick(position, backup);
+                }
+            }
+        });
     }
 
     @Override

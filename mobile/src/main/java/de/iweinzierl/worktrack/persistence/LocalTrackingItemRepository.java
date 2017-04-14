@@ -5,6 +5,7 @@ import com.github.iweinzierl.android.logging.AndroidLoggerFactory;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 import org.greenrobot.greendao.query.WhereCondition;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 
@@ -21,12 +22,22 @@ public class LocalTrackingItemRepository implements TrackingItemRepository {
     private static final Logger LOGGER = AndroidLoggerFactory.getInstance().getLogger("LocalTrackingItemRepository");
 
     @Bean
-    protected DaoSessionFactory sessionFactory;
+    DaoSessionFactory sessionFactory;
+
+    private DaoSession session;
+
+    public DaoSession getSession() {
+        if (session == null) {
+            session = sessionFactory.getSession();
+        }
+
+        return session;
+    }
 
     @Override
     public TrackingItem save(TrackingItem item) {
         try {
-            sessionFactory.getSession().getTrackingItemDao().save(item);
+            getSession().getTrackingItemDao().save(item);
             return item;
         } catch (Exception e) {
             LOGGER.error("Saving tracking item failed", e);
@@ -38,7 +49,7 @@ public class LocalTrackingItemRepository implements TrackingItemRepository {
     @Override
     public boolean delete(TrackingItem item) {
         try {
-            sessionFactory.getSession().getTrackingItemDao().delete(item);
+            getSession().getTrackingItemDao().delete(item);
             return true;
         } catch (Exception e) {
             LOGGER.error("Deleting tracking item failed", e);
@@ -48,9 +59,18 @@ public class LocalTrackingItemRepository implements TrackingItemRepository {
     }
 
     @Override
+    public void deleteByEventTime(DateTime eventTime) {
+        List<TrackingItem> items = findByEventTime(eventTime);
+
+        for (TrackingItem item : items) {
+            delete(item);
+        }
+    }
+
+    @Override
     public boolean deleteAll() {
         try {
-            sessionFactory.getSession().getTrackingItemDao().deleteAll();
+            getSession().getTrackingItemDao().deleteAll();
             return true;
         } catch (Exception e) {
             LOGGER.error("Deleting all tracking items failed", e);
@@ -62,7 +82,7 @@ public class LocalTrackingItemRepository implements TrackingItemRepository {
     @Override
     public TrackingItem update(TrackingItem item) {
         try {
-            sessionFactory.getSession().getTrackingItemDao().update(item);
+            getSession().getTrackingItemDao().update(item);
             return item;
         } catch (Exception e) {
             LOGGER.error("Deleting tracking item failed", e);
@@ -74,7 +94,7 @@ public class LocalTrackingItemRepository implements TrackingItemRepository {
     @Override
     public TrackingItem findById(long id) {
         try {
-            return sessionFactory.getSession().getTrackingItemDao().load(id);
+            return getSession().getTrackingItemDao().load(id);
         } catch (Exception e) {
             LOGGER.error("Deleting tracking item failed", e);
         }
@@ -85,12 +105,22 @@ public class LocalTrackingItemRepository implements TrackingItemRepository {
     @Override
     public List<TrackingItem> findAll() {
         try {
-            return sessionFactory.getSession().getTrackingItemDao().loadAll();
+            return getSession().getTrackingItemDao().loadAll();
         } catch (Exception e) {
             LOGGER.error("Deleting tracking item failed", e);
         }
 
         return null;
+    }
+
+    @Override
+    public List<TrackingItem> findByEventTime(DateTime eventTime) {
+        return getSession().queryBuilder(TrackingItem.class)
+                .where(TrackingItemDao.Properties.EventTime.eq(
+                        eventTime.toString(DateTimeConverter.DATETIME_FORMAT)
+                ))
+                .build()
+                .list();
     }
 
     @Override
@@ -100,7 +130,7 @@ public class LocalTrackingItemRepository implements TrackingItemRepository {
                     "substr(T.\"" + TrackingItemDao.Properties.EventTime.columnName + "\", 1, 10)"
                             + " = '" + date.toString(DateTimeConverter.DATE_FORMAT) + "'");
 
-            return sessionFactory.getSession().queryBuilder(TrackingItem.class)
+            return getSession().queryBuilder(TrackingItem.class)
                     .where(where)
                     .orderAsc(TrackingItemDao.Properties.EventTime)
                     .list();
@@ -115,7 +145,7 @@ public class LocalTrackingItemRepository implements TrackingItemRepository {
     @Override
     public LocalDate findFirstLocalDate() {
         try {
-            TrackingItem first = sessionFactory.getSession().queryBuilder(TrackingItem.class)
+            TrackingItem first = getSession().queryBuilder(TrackingItem.class)
                     .limit(1)
                     .orderAsc(TrackingItemDao.Properties.EventTime)
                     .unique();
@@ -173,7 +203,7 @@ public class LocalTrackingItemRepository implements TrackingItemRepository {
                     "substr(T.\"" + TrackingItemDao.Properties.EventTime.columnName + "\", 1, 10)"
                             + " = '" + date.toString(DateTimeConverter.DATE_FORMAT) + "'");
 
-            return sessionFactory.getSession().queryBuilder(TrackingItem.class)
+            return getSession().queryBuilder(TrackingItem.class)
                     .where(where)
                     .orderAsc(TrackingItemDao.Properties.EventTime)
                     .limit(1)

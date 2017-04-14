@@ -1,8 +1,6 @@
 package de.iweinzierl.worktrack.util;
 
-import android.app.Activity;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 
 import com.github.iweinzierl.android.logging.AndroidLoggerFactory;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -11,8 +9,10 @@ import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi;
 import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveFolder;
+import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.Metadata;
 import com.google.android.gms.drive.MetadataChangeSet;
+import com.google.common.base.Joiner;
 
 import org.slf4j.Logger;
 
@@ -31,6 +31,16 @@ import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
 
 public class BackupHelper {
 
+    public interface BackupCallback {
+        void onCreationSuccessful();
+
+        void onCreationFailed();
+
+        void onImportSuccessful();
+
+        void onImportFailed();
+    }
+
     private static final Logger LOGGER = AndroidLoggerFactory.getInstance().getLogger(BackupHelper.class.getName());
 
     private static final String MIME_TYPE = "text/plain";
@@ -38,18 +48,18 @@ public class BackupHelper {
     private static final char SEPARATOR = ',';
     private static final char QUOTE_CHARACTER = '"';
 
-    private final Activity activity;
+    private final BackupCallback callback;
     private final TrackingItemRepository trackingItemRepository;
     private final GoogleApiClient googleApiClient;
 
     private final ResultCallback<DriveFolder.DriveFileResult> creationCallback = new ResultCallback<DriveFolder.DriveFileResult>() {
         @Override
         public void onResult(@NonNull DriveFolder.DriveFileResult result) {
-            if (!result.getStatus().isSuccess()) {
-                showMessage("Error while trying to create the file");
-                return;
+            if (callback != null && result.getStatus().isSuccess()) {
+                callback.onCreationSuccessful();
+            } else if (callback != null && !result.getStatus().isSuccess()) {
+                callback.onCreationFailed();
             }
-            showMessage("Created Backup in App Folder: " + result.getDriveFile().getDriveId());
         }
     };
 
@@ -60,12 +70,11 @@ public class BackupHelper {
         }
     };
 
-    public BackupHelper(Activity activity, TrackingItemRepository trackingItemRepository, GoogleApiClient googleApiClient) {
-        Objects.requireNonNull(activity, "activity must not be null");
+    public BackupHelper(BackupCallback callback, TrackingItemRepository trackingItemRepository, GoogleApiClient googleApiClient) {
         Objects.requireNonNull(trackingItemRepository, "trackingItemRepository must not be null");
         Objects.requireNonNull(googleApiClient, "googleApiClient must not be null");
 
-        this.activity = activity;
+        this.callback = callback;
         this.trackingItemRepository = trackingItemRepository;
         this.googleApiClient = googleApiClient;
     }
@@ -78,8 +87,8 @@ public class BackupHelper {
                 .setResultCallback(new ResultCallback<DriveApi.DriveContentsResult>() {
                     @Override
                     public void onResult(@NonNull DriveApi.DriveContentsResult result) {
-                        if (!result.getStatus().isSuccess()) {
-                            showMessage("Error while trying to create new file contents");
+                        if (callback != null && !result.getStatus().isSuccess()) {
+                            callback.onCreationFailed();
                             return;
                         }
 
@@ -95,7 +104,10 @@ public class BackupHelper {
                                     .createFile(googleApiClient, changeSet, result.getDriveContents())
                                     .setResultCallback(creationCallback);
                         } catch (IOException e) {
-                            LOGGER.error("Unable to create backup", e);
+                            LOGGER.error("BACKUP CREATION FAILED", e);
+                            if (callback != null) {
+                                callback.onCreationFailed();
+                            }
                         }
                     }
                 });
@@ -104,23 +116,20 @@ public class BackupHelper {
     public void importBackup(@NonNull final String backupDriveId) {
         Objects.requireNonNull(backupDriveId, "backupDriveId must not be null");
 
-        Drive.DriveApi
-                .fetchDriveId(googleApiClient, backupDriveId)
-                .setResultCallback(new ResultCallback<DriveApi.DriveIdResult>() {
+        DriveId.decodeFromString(backupDriveId)
+                .asDriveFile()
+                .open(googleApiClient, DriveFile.MODE_READ_ONLY, progressListener)
+                .setResultCallback(new ResultCallback<DriveApi.DriveContentsResult>() {
                     @Override
-                    public void onResult(@NonNull DriveApi.DriveIdResult driveIdResult) {
-                        driveIdResult.getDriveId().asDriveFile()
-                                .open(googleApiClient, DriveFile.MODE_READ_ONLY, progressListener)
-                                .setResultCallback(new ResultCallback<DriveApi.DriveContentsResult>() {
-                                    @Override
-                                    public void onResult(@NonNull DriveApi.DriveContentsResult driveContentsResult) {
-                                        try {
-                                            importBackup(driveContentsResult.getDriveContents().getInputStream());
-                                        } catch (IOException e) {
-                                            LOGGER.error("Unable to import backup", e);
-                                        }
-                                    }
-                                });
+                    public void onResult(@NonNull DriveApi.DriveContentsResult driveContentsResult) {
+                        try {
+                            importBackup(driveContentsResult.getDriveContents().getInputStream());
+                        } catch (IOException e) {
+                            LOGGER.error("BACKUP IMPORT FAILED", e);
+                            if (callback != null) {
+                                callback.onImportFailed();
+                            }
+                        }
                     }
                 });
     }
@@ -155,22 +164,43 @@ public class BackupHelper {
         return items == null ? 0 : items.size();
     }
 
-    private void importBackup(InputStream inputStream) throws IOException {
-        CSVReader csvReader = new CSVReader(new InputStreamReader(inputStream), SEPARATOR, QUOTE_CHARACTER);
-        CsvTransformer csvTransformer = new CsvTransformer();
+    private void importBackup(final InputStream inputStream) throws IOException {
+        trackingItemRepository.getSession().runInTx(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final CSVReader csvReader = new CSVReader(new InputStreamReader(inputStream), SEPARATOR, QUOTE_CHARACTER);
+                    final CsvTransformer csvTransformer = new CsvTransformer();
 
-        for (String[] line : csvReader.readAll()) {
-            TrackingItem trackingItem = csvTransformer.fromArrayString(line);
-            LOGGER.debug("Import item -> {}", trackingItem);
+                    for (String[] line : csvReader.readAll()) {
+                        TrackingItem trackingItem = csvTransformer.fromArrayString(line);
 
-            // TODO persist
-        }
-    }
+                        if (trackingItem != null) {
+                            trackingItem.setId(null);
 
-    private void showMessage(String message) {
-        Snackbar.make(
-                activity.getWindow().findViewById(android.R.id.content),
-                message,
-                Snackbar.LENGTH_SHORT).show();
+                            trackingItemRepository.deleteByEventTime(trackingItem.getEventTime());
+                            trackingItemRepository.save(trackingItem);
+
+                            LOGGER.debug("Import item -> {}", trackingItem);
+                        } else {
+                            LOGGER.warn("Skipped line in backup: {}", Joiner.on(",").join(line));
+                        }
+                    }
+
+                    List<TrackingItem> trackingItems = trackingItemRepository.findAll();
+                    LOGGER.info("{} tracking items in database after import", trackingItems.size());
+
+                    if (callback != null) {
+                        callback.onImportSuccessful();
+                    }
+                } catch (Exception e) {
+                    LOGGER.error("BACKUP IMPORT ERROR", e);
+
+                    if (callback != null) {
+                        callback.onImportFailed();
+                    }
+                }
+            }
+        });
     }
 }

@@ -14,8 +14,11 @@
         card_view:cardCornerRadius="4dp">
 
         <LinearLayout
+            android:id="@+id/itemRoot"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
             android:orientation="horizontal"
             android:paddingEnd="5dp"
             android:paddingStart="5dp">

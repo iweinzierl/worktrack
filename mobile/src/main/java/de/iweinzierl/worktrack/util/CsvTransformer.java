@@ -1,10 +1,15 @@
 package de.iweinzierl.worktrack.util;
 
+import com.github.iweinzierl.android.logging.AndroidLoggerFactory;
+import com.google.common.base.Joiner;
+import com.google.common.base.Strings;
+
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
+import org.slf4j.Logger;
 
 import java.io.StringWriter;
 
@@ -17,6 +22,8 @@ import de.iweinzierl.worktrack.persistence.TrackingItem;
 import de.iweinzierl.worktrack.persistence.TrackingItemType;
 
 public class CsvTransformer {
+
+    private static final Logger LOGGER = AndroidLoggerFactory.getInstance().getLogger(CsvTransformer.class.getName());
 
     private static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd";
     private static final String DEFAULT_DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm";
@@ -58,13 +65,19 @@ public class CsvTransformer {
     }
 
     public TrackingItem fromArrayString(String[] columns) {
-        return new TrackingItem(
-                Long.valueOf(columns[0]),
-                Long.valueOf(columns[1]),
-                TrackingItemType.valueOf(columns[2]),
-                CreationType.valueOf(columns[3]),
-                DateTime.parse(columns[4], DateTimeFormat.forPattern(dateTimePattern))
-        );
+        try {
+            return new TrackingItem(
+                    Long.valueOf(columns[0]),
+                    Strings.isNullOrEmpty(columns[1]) || "null".equals(columns[1]) ? null : Long.valueOf(columns[1]),
+                    TrackingItemType.valueOf(columns[2]),
+                    CreationType.valueOf(columns[3]),
+                    DateTime.parse(columns[4], DateTimeFormat.forPattern(dateTimePattern))
+            );
+        } catch (NumberFormatException e) {
+            LOGGER.error("Unable to parse tracking item from string array: " + Joiner.on(",").join(columns), e);
+        }
+
+        return null;
     }
 
     public String transform(Week week) {
