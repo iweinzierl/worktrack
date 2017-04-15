@@ -46,6 +46,13 @@
     <string name="dialog_backup_title_input_confirm">Backup</string>
     <string name="dialog_backup_title_input_cancel">Cancel</string>
 
+    <string name="dialog_authentication_title">Authenticate</string>
+    <string name="dialog_authentication_button_cancel">Cancel</string>
+    <string name="dialog_authentication_button_use_fingerprint">USE FINGERPRINT</string>
+    <string name="dialog_authentication_button_use_password">USE PASSWORD</string>
+    <string name="dialog_authentication_hint_fingerprint">Tab fingerprint sensor</string>
+    <string name="dialog_authentication_button_password_submit">Submit</string>
+
     <string name="settings_category_working_time">Working Time</string>
     <string name="settings_daily_working_hours_title">Daily working hours</string>
     <string name="settings_daily_working_hours_summary">The number of working hours per day.</string>

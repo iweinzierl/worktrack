@@ -31,11 +31,11 @@ import java.util.List;
 import de.iweinzierl.worktrack.model.Backup;
 import de.iweinzierl.worktrack.persistence.LocalTrackingItemRepository;
 import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
-import de.iweinzierl.worktrack.util.BackupHelper;
 import de.iweinzierl.worktrack.view.adapter.BackupAdapter;
+import de.iweinzierl.worktrack.view.dialog.AuthenticationDialogFragment;
 
 @EActivity(R.layout.activity_list_backups)
-public class ListBackupsActivity extends BaseGoogleApiActivity implements BackupHelper.BackupCallback {
+public class ListBackupsActivity extends BaseGoogleApiActivity {
 
     public static final String EXTRA_BACKUP_DRIVE_ID = "ListBackupsActivity.Extra.BackupId";
 
@@ -113,33 +113,28 @@ public class ListBackupsActivity extends BaseGoogleApiActivity implements Backup
     }
 
     @UiThread
-    protected void importBackup(Backup backup) {
-        LOGGER.info("Import backup: {}", backup);
+    protected void importBackup(final Backup backup) {
+        AuthenticationDialogFragment dialogFragment = new AuthenticationDialogFragment();
+        dialogFragment.setCallback(new AuthenticationDialogFragment.Callback() {
+            @Override
+            public void onAuthenticationSucceeded() {
+                LOGGER.info("Import backup: {}", backup);
 
-        Intent data = new Intent();
-        data.putExtra(EXTRA_BACKUP_DRIVE_ID, backup.getDriveId());
+                Intent data = new Intent();
+                data.putExtra(EXTRA_BACKUP_DRIVE_ID, backup.getDriveId());
 
-        setResult(RESULT_OK, data);
-        finish();
-    }
+                setResult(RESULT_OK, data);
+                finish();
+            }
 
-    @Override
-    public void onCreationSuccessful() {
+            @Override
+            public void onAuthenticationFailed() {
+            }
 
-    }
-
-    @Override
-    public void onCreationFailed() {
-
-    }
-
-    @Override
-    public void onImportSuccessful() {
-
-    }
-
-    @Override
-    public void onImportFailed() {
-
+            @Override
+            public void onAuthenticationCancelled() {
+            }
+        });
+        dialogFragment.show(getSupportFragmentManager(), null);
     }
 }
