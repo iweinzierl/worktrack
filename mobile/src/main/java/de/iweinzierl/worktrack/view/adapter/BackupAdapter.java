@@ -11,16 +11,16 @@ import java.util.Collections;
 import java.util.List;
 
 import de.iweinzierl.worktrack.R;
-import de.iweinzierl.worktrack.model.Backup;
+import de.iweinzierl.worktrack.model.BackupMetaData;
 
 public class BackupAdapter extends RecyclerView.Adapter<BackupViewHolder> {
 
     public interface ClickCallback {
 
-        void onClick(int position, Backup backup);
+        void onClick(int position, BackupMetaData backupMetaData);
     }
 
-    private List<Backup> items;
+    private List<BackupMetaData> items;
     private ClickCallback clickCallback;
 
     @SuppressWarnings("unchecked")
@@ -41,14 +41,14 @@ public class BackupAdapter extends RecyclerView.Adapter<BackupViewHolder> {
 
     @Override
     public void onBindViewHolder(final BackupViewHolder holder, final int position) {
-        final Backup backup = items.get(position);
-        holder.apply(backup);
+        final BackupMetaData backupMetaData = items.get(position);
+        holder.apply(backupMetaData);
 
         holder.itemView.findViewById(R.id.itemRoot).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (clickCallback != null) {
-                    clickCallback.onClick(position, backup);
+                    clickCallback.onClick(position, backupMetaData);
                 }
             }
         });
@@ -59,7 +59,7 @@ public class BackupAdapter extends RecyclerView.Adapter<BackupViewHolder> {
         return items.size();
     }
 
-    public void setItems(List<Backup> items) {
+    public void setItems(List<BackupMetaData> items) {
         this.items = Lists.newArrayList(items);
         notifyDataSetChanged();
     }

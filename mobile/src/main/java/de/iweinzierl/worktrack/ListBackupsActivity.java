@@ -2,19 +2,12 @@ package de.iweinzierl.worktrack;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
 import com.github.iweinzierl.android.logging.AndroidLoggerFactory;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveApi;
-import com.google.android.gms.drive.DriveFolder;
-import com.google.android.gms.drive.Metadata;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -22,15 +15,14 @@ import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
-import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import de.iweinzierl.worktrack.model.Backup;
+import de.iweinzierl.worktrack.model.BackupMetaData;
 import de.iweinzierl.worktrack.persistence.LocalTrackingItemRepository;
 import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
+import de.iweinzierl.worktrack.util.BackupHelper;
 import de.iweinzierl.worktrack.view.adapter.BackupAdapter;
 import de.iweinzierl.worktrack.view.dialog.AuthenticationDialogFragment;
 
@@ -40,6 +32,13 @@ public class ListBackupsActivity extends BaseGoogleApiActivity {
     public static final String EXTRA_BACKUP_DRIVE_ID = "ListBackupsActivity.Extra.BackupId";
 
     private static final Logger LOGGER = AndroidLoggerFactory.getInstance().getLogger(ListBackupsActivity.class.getName());
+
+    private final BackupHelper.BackupCallback backupCallback = new BackupHelper.DefaultBackupCallback() {
+        @Override
+        public void onListBackups(List<BackupMetaData> backups) {
+            setBackups(backups);
+        }
+    };
 
     private BackupAdapter backupAdapter;
 
@@ -57,8 +56,8 @@ public class ListBackupsActivity extends BaseGoogleApiActivity {
         super.onCreate(savedInstanceState);
         backupAdapter = new BackupAdapter(new BackupAdapter.ClickCallback() {
             @Override
-            public void onClick(int position, Backup backup) {
-                importBackup(backup);
+            public void onClick(int position, BackupMetaData backupMetaData) {
+                importBackup(backupMetaData);
             }
         });
     }
@@ -82,46 +81,27 @@ public class ListBackupsActivity extends BaseGoogleApiActivity {
 
     @Background
     protected void updateBackups() {
-        LOGGER.info("Start updating backup list Google Drive");
+        LOGGER.info("Start updating writeBackup list Google Drive");
 
-        final DriveFolder appFolder = Drive.DriveApi.getAppFolder(getGoogleApiClient());
-
-        PendingResult<DriveApi.MetadataBufferResult> metadataBufferResultPendingResult = appFolder.listChildren(getGoogleApiClient());
-        metadataBufferResultPendingResult.setResultCallback(new ResultCallback<DriveApi.MetadataBufferResult>() {
-            @Override
-            public void onResult(@NonNull DriveApi.MetadataBufferResult metadataBufferResult) {
-                final List<Backup> backupList = new ArrayList<>();
-
-                for (Metadata metadata : metadataBufferResult.getMetadataBuffer()) {
-                    backupList.add(new Backup(
-                            metadata.getDriveId().encodeToString(),
-                            metadata.getTitle(),
-                            metadata.getFileSize(),
-                            new LocalDateTime(metadata.getModifiedDate().getTime())
-                    ));
-                }
-
-                setBackups(backupList);
-            }
-        });
+        new BackupHelper(backupCallback, trackingItemRepository, getGoogleApiClient()).listBackups();
     }
 
     @UiThread
-    protected void setBackups(List<Backup> backupList) {
-        LOGGER.info("Found {} backups in Google Drive App folder", backupList.size());
-        backupAdapter.setItems(backupList);
+    protected void setBackups(List<BackupMetaData> backupMetaDataList) {
+        LOGGER.info("Found {} backups in Google Drive App folder", backupMetaDataList.size());
+        backupAdapter.setItems(backupMetaDataList);
     }
 
     @UiThread
-    protected void importBackup(final Backup backup) {
+    protected void importBackup(final BackupMetaData backupMetaData) {
         AuthenticationDialogFragment dialogFragment = new AuthenticationDialogFragment();
         dialogFragment.setCallback(new AuthenticationDialogFragment.Callback() {
             @Override
             public void onAuthenticationSucceeded() {
-                LOGGER.info("Import backup: {}", backup);
+                LOGGER.info("Import writeBackup: {}", backupMetaData);
 
                 Intent data = new Intent();
-                data.putExtra(EXTRA_BACKUP_DRIVE_ID, backup.getDriveId());
+                data.putExtra(EXTRA_BACKUP_DRIVE_ID, backupMetaData.getDriveId());
 
                 setResult(RESULT_OK, data);
                 finish();

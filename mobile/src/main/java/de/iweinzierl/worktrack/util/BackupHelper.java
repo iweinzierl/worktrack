@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.github.iweinzierl.android.logging.AndroidLoggerFactory;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi;
@@ -12,8 +13,10 @@ import com.google.android.gms.drive.DriveFolder;
 import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.Metadata;
 import com.google.android.gms.drive.MetadataChangeSet;
+import com.google.android.gms.drive.metadata.CustomPropertyKey;
 import com.google.common.base.Joiner;
 
+import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -21,17 +24,22 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
+import de.iweinzierl.worktrack.model.Backup;
+import de.iweinzierl.worktrack.model.BackupMetaData;
 import de.iweinzierl.worktrack.persistence.TrackingItem;
 import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
 
 public class BackupHelper {
 
     public interface BackupCallback {
+        void onListBackups(List<BackupMetaData> backups);
+
         void onCreationSuccessful();
 
         void onCreationFailed();
@@ -41,8 +49,31 @@ public class BackupHelper {
         void onImportFailed();
     }
 
+    public static class DefaultBackupCallback implements BackupCallback {
+        @Override
+        public void onListBackups(List<BackupMetaData> backups) {
+        }
+
+        @Override
+        public void onCreationSuccessful() {
+        }
+
+        @Override
+        public void onCreationFailed() {
+        }
+
+        @Override
+        public void onImportSuccessful() {
+        }
+
+        @Override
+        public void onImportFailed() {
+        }
+    }
+
     private static final Logger LOGGER = AndroidLoggerFactory.getInstance().getLogger(BackupHelper.class.getName());
 
+    private static final CustomPropertyKey CUSTOM_PROPERTY_ITEM_COUNT = new CustomPropertyKey("item.count", CustomPropertyKey.PUBLIC);
     private static final String MIME_TYPE = "text/plain";
     private static final String BACKUP_ENDING = ".csv";
     private static final char SEPARATOR = ',';
@@ -79,7 +110,44 @@ public class BackupHelper {
         this.googleApiClient = googleApiClient;
     }
 
-    public void backup(@NonNull final String title) {
+    public void listBackups() {
+        final DriveFolder appFolder = Drive.DriveApi.getAppFolder(googleApiClient);
+
+        PendingResult<DriveApi.MetadataBufferResult> metadataBufferResultPendingResult = appFolder.listChildren(googleApiClient);
+        metadataBufferResultPendingResult.setResultCallback(new ResultCallback<DriveApi.MetadataBufferResult>() {
+            @Override
+            public void onResult(@NonNull DriveApi.MetadataBufferResult metadataBufferResult) {
+                final List<BackupMetaData> backupMetaDataList = new ArrayList<>();
+
+                for (Metadata metadata : metadataBufferResult.getMetadataBuffer()) {
+                    int itemCount = 0;
+                    if (metadata.getCustomProperties().containsKey(CUSTOM_PROPERTY_ITEM_COUNT)) {
+                        try {
+                            itemCount = Integer.parseInt(metadata.getCustomProperties().get(CUSTOM_PROPERTY_ITEM_COUNT));
+                        } catch (NumberFormatException e) {
+                            LOGGER.warn("Unable to parse custom property '{}' -> {}",
+                                    CUSTOM_PROPERTY_ITEM_COUNT,
+                                    metadata.getCustomProperties().get(CUSTOM_PROPERTY_ITEM_COUNT), e);
+                        }
+                    }
+                    backupMetaDataList.add(new BackupMetaData.Builder()
+                            .driveId(metadata.getDriveId().encodeToString())
+                            .title(metadata.getTitle())
+                            .size(metadata.getFileSize())
+                            .lastModified(new LocalDateTime(metadata.getModifiedDate().getTime()))
+                            .itemCount(itemCount)
+                            .build()
+                    );
+                }
+
+                if (callback != null) {
+                    callback.onListBackups(backupMetaDataList);
+                }
+            }
+        });
+    }
+
+    public void writeBackup(@NonNull final String title) {
         final String backupTitle = title.endsWith(BACKUP_ENDING) ? title : title + BACKUP_ENDING;
 
         Drive.DriveApi
@@ -92,13 +160,18 @@ public class BackupHelper {
                             return;
                         }
 
+                        Backup backup = createBackup(title, null);
+
                         MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
                                 .setTitle(backupTitle)
                                 .setMimeType(MIME_TYPE)
+                                .setCustomProperty(
+                                        CUSTOM_PROPERTY_ITEM_COUNT,
+                                        String.valueOf(backup.getMetaData().getItemCount()))
                                 .build();
 
                         try {
-                            createBackup(result.getDriveContents().getOutputStream());
+                            writeBackup(result.getDriveContents().getOutputStream(), backup.getTrackingItems());
 
                             Drive.DriveApi.getAppFolder(googleApiClient)
                                     .createFile(googleApiClient, changeSet, result.getDriveContents())
@@ -146,9 +219,20 @@ public class BackupHelper {
         });
     }
 
-    private int createBackup(OutputStream outputStream) throws IOException {
+    private Backup createBackup(String title, String driveId) {
         List<TrackingItem> items = trackingItemRepository.findAll();
 
+        BackupMetaData backupMetaData = new BackupMetaData.Builder()
+                .driveId(driveId)
+                .itemCount(items == null ? 0 : items.size())
+                .lastModified(LocalDateTime.now())
+                .title(title)
+                .build();
+
+        return new Backup(backupMetaData, items);
+    }
+
+    private int writeBackup(OutputStream outputStream, List<TrackingItem> items) throws IOException {
         if (items != null && !items.isEmpty()) {
             CSVWriter csvWriter = new CSVWriter(new OutputStreamWriter(outputStream, "utf-8"), SEPARATOR, QUOTE_CHARACTER);
             CsvTransformer csvTransformer = new CsvTransformer();
@@ -183,7 +267,7 @@ public class BackupHelper {
 
                             LOGGER.debug("Import item -> {}", trackingItem);
                         } else {
-                            LOGGER.warn("Skipped line in backup: {}", Joiner.on(",").join(line));
+                            LOGGER.warn("Skipped line in writeBackup: {}", Joiner.on(",").join(line));
                         }
                     }
 

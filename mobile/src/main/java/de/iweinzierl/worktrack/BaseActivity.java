@@ -19,6 +19,9 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 import org.slf4j.Logger;
 
+import java.util.List;
+
+import de.iweinzierl.worktrack.model.BackupMetaData;
 import de.iweinzierl.worktrack.persistence.LocalTrackingItemRepository;
 import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
 import de.iweinzierl.worktrack.util.BackupHelper;
@@ -138,7 +141,7 @@ public abstract class BaseActivity extends BaseGoogleApiActivity implements Back
         dialog.setCallback(new BackupTitleInputDialog.Callback() {
             @Override
             public void onConfirm(String title) {
-                backupHelper.backup(title);
+                backupHelper.writeBackup(title);
             }
 
             @Override
@@ -163,23 +166,27 @@ public abstract class BaseActivity extends BaseGoogleApiActivity implements Back
     }
 
     @Override
+    public void onListBackups(List<BackupMetaData> backups) {
+    }
+
+    @Override
     public void onCreationSuccessful() {
-        showMessage("Backup creation successful");
+        showMessage("BackupMetaData creation successful");
     }
 
     @Override
     public void onCreationFailed() {
-        showMessage("Backup creation failed");
+        showMessage("BackupMetaData creation failed");
     }
 
     @Override
     public void onImportSuccessful() {
-        showMessage("Backup import successful");
+        showMessage("BackupMetaData import successful");
     }
 
     @Override
     public void onImportFailed() {
-        showMessage("Backup import failed");
+        showMessage("BackupMetaData import failed");
     }
 
     protected void showMessage(String message) {

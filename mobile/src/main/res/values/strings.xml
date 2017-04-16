@@ -62,7 +62,7 @@
     <string name="settings_export_default_mail_title">Default Email Address</string>
     <string name="settings_export_default_mail_summary">The default email address used for mailings.</string>
     <string name="settings_backup_screen_title">Backup</string>
-    <string name="settings_backup_screen_summary">Specify the backup settings in order to save your data.</string>
+    <string name="settings_backup_screen_summary">Specify the backupMetaData settings in order to save your data.</string>
     <string name="settings_backup_category_google_drive">Google Drive Settings</string>
     <string name="settings_backup_frequency">Save on Google Drive</string>
     <string name="settings_backup_frequency_dialogtitle">Save on Google Drive:</string>

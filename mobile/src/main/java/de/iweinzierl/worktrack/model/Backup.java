@@ -1,44 +1,24 @@
 package de.iweinzierl.worktrack.model;
 
-import org.joda.time.LocalDateTime;
+import java.util.List;
+
+import de.iweinzierl.worktrack.persistence.TrackingItem;
 
 public class Backup {
 
-    private String driveId;
-    private String title;
-    private long size;
-    private LocalDateTime lastModified;
+    private BackupMetaData metaData;
+    private List<TrackingItem> trackingItems;
 
-    public Backup(String driveId, String title, long size, LocalDateTime lastModified) {
-        this.driveId = driveId;
-        this.title = title;
-        this.size = size;
-        this.lastModified = lastModified;
+    public Backup(BackupMetaData metaData, List<TrackingItem> trackingItems) {
+        this.metaData = metaData;
+        this.trackingItems = trackingItems;
     }
 
-    public String getDriveId() {
-        return driveId;
+    public BackupMetaData getMetaData() {
+        return metaData;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public long getSize() {
-        return size;
-    }
-
-    public LocalDateTime getLastModified() {
-        return lastModified;
-    }
-
-    @Override
-    public String toString() {
-        return "Backup{" +
-                "driveId='" + driveId + '\'' +
-                ", title='" + title + '\'' +
-                ", size=" + size +
-                ", lastModified=" + lastModified +
-                '}';
+    public List<TrackingItem> getTrackingItems() {
+        return trackingItems;
     }
 }
