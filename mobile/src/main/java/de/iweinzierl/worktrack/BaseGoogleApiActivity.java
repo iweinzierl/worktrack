@@ -5,7 +5,6 @@ import android.content.IntentSender;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 
 import com.github.iweinzierl.android.logging.AndroidLoggerFactory;
 import com.google.android.gms.common.ConnectionResult;
@@ -17,7 +16,7 @@ import org.androidannotations.annotations.EActivity;
 import org.slf4j.Logger;
 
 @EActivity
-public abstract class BaseGoogleApiActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public abstract class BaseGoogleApiActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static final int REQUEST_CODE_RESOLUTION = 1;
 
