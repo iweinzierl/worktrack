@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name=".WorktrackApplication_"
@@ -68,6 +69,11 @@
                 <action android:name="de.iweinzierl.worktrack.STOP_WORK" />
             </intent-filter>
         </receiver>
+
+        <!-- services -->
+        <service
+            android:name=".job.BackupJob"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
