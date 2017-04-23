@@ -53,6 +53,9 @@
     <string name="dialog_authentication_hint_fingerprint">Tab fingerprint sensor</string>
     <string name="dialog_authentication_button_password_submit">Submit</string>
 
+    <string name="dialog_account_picker_title">Choose Account</string>
+    <string name="dialog_account_picker_cancel">Cancel</string>
+
     <string name="settings_category_working_time">Working Time</string>
     <string name="settings_daily_working_hours_title">Daily working hours</string>
     <string name="settings_daily_working_hours_summary">The number of working hours per day.</string>
@@ -74,6 +77,8 @@
     <string name="preference_last_backup">Last Backup</string>
     <string name="preference_last_backup_date">Last Backup Date:</string>
     <string name="preference_last_backup_size">Last Backup Size:</string>
+    <string name="preference_backup_account">preference_backup_account</string>
+    <string name="preference_backup_account_label">Backup Account</string>
 
     <string name="monday">Mon</string>
     <string name="tuesday">Tue</string>

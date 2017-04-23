@@ -26,4 +26,7 @@
         <item>Wifi</item>
         <item>Both</item>
     </array>
+
+    <array name="settings_backup_account_default_entries" />
+    <array name="settings_backup_account_default_entry_values" />
 </resources>

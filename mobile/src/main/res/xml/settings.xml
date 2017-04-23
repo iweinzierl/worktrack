@@ -58,8 +58,11 @@
 
             <ListPreference
                 android:dialogTitle="@string/settings_backup_account_dialogtitle"
-                android:key="settings_backup_account"
-                android:title="@string/settings_backup_account" />
+                android:entries="@array/settings_backup_account_default_entries"
+                android:entryValues="@array/settings_backup_account_default_entry_values"
+                android:key="@string/preference_backup_account"
+                android:summary="%s"
+                android:title="@string/preference_backup_account_label" />
 
             <ListPreference
                 android:defaultValue="@string/settings_backup_required_connection_default"
