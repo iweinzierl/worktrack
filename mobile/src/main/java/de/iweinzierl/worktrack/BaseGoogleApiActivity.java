@@ -2,7 +2,9 @@ package de.iweinzierl.worktrack;
 
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -20,6 +22,8 @@ public abstract class BaseGoogleApiActivity extends BaseActivity implements Goog
 
     private static final int REQUEST_CODE_RESOLUTION = 1;
 
+    private static final String PREFERENCES_BACKUP_ACCOUNT = "preference_backup_account";
+
     private static final Logger LOG = AndroidLoggerFactory.getInstance().getLogger(BaseGoogleApiActivity.class.getName());
 
     private GoogleApiClient googleApiClient;
@@ -29,6 +33,7 @@ public abstract class BaseGoogleApiActivity extends BaseActivity implements Goog
         super.onCreate(savedInstanceState);
 
         googleApiClient = new GoogleApiClient.Builder(this)
+                .setAccountName(getAccount())
                 .addOnConnectionFailedListener(this)
                 .addConnectionCallbacks(this)
                 .addApi(Drive.API)
@@ -90,5 +95,10 @@ public abstract class BaseGoogleApiActivity extends BaseActivity implements Goog
 
     protected GoogleApiClient getGoogleApiClient() {
         return googleApiClient;
+    }
+
+    private String getAccount() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        return preferences.getString(PREFERENCES_BACKUP_ACCOUNT, null);
     }
 }

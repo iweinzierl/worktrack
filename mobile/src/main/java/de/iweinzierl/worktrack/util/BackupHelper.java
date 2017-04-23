@@ -229,28 +229,30 @@ public class BackupHelper {
         pendingResult.setResultCallback(new ResultCallback<DriveApi.MetadataBufferResult>() {
             @Override
             public void onResult(@NonNull DriveApi.MetadataBufferResult metadataBufferResult) {
-                Metadata metadata = metadataBufferResult.getMetadataBuffer().get(0);
-                int itemCount = 0;
-                if (metadata.getCustomProperties().containsKey(CUSTOM_PROPERTY_ITEM_COUNT)) {
-                    try {
-                        itemCount = Integer.parseInt(metadata.getCustomProperties().get(CUSTOM_PROPERTY_ITEM_COUNT));
-                    } catch (NumberFormatException e) {
-                        LOGGER.warn("Unable to parse custom property '{}' -> {}",
-                                CUSTOM_PROPERTY_ITEM_COUNT,
-                                metadata.getCustomProperties().get(CUSTOM_PROPERTY_ITEM_COUNT), e);
+                if (metadataBufferResult.getMetadataBuffer().getCount() > 0) {
+                    Metadata metadata = metadataBufferResult.getMetadataBuffer().get(0);
+                    int itemCount = 0;
+                    if (metadata.getCustomProperties().containsKey(CUSTOM_PROPERTY_ITEM_COUNT)) {
+                        try {
+                            itemCount = Integer.parseInt(metadata.getCustomProperties().get(CUSTOM_PROPERTY_ITEM_COUNT));
+                        } catch (NumberFormatException e) {
+                            LOGGER.warn("Unable to parse custom property '{}' -> {}",
+                                    CUSTOM_PROPERTY_ITEM_COUNT,
+                                    metadata.getCustomProperties().get(CUSTOM_PROPERTY_ITEM_COUNT), e);
+                        }
                     }
-                }
 
-                BackupMetaData lastBackup = new BackupMetaData.Builder()
-                        .driveId(metadata.getDriveId().encodeToString())
-                        .title(metadata.getTitle())
-                        .size(metadata.getFileSize())
-                        .lastModified(new LocalDateTime(metadata.getModifiedDate().getTime()))
-                        .itemCount(itemCount)
-                        .build();
+                    BackupMetaData lastBackup = new BackupMetaData.Builder()
+                            .driveId(metadata.getDriveId().encodeToString())
+                            .title(metadata.getTitle())
+                            .size(metadata.getFileSize())
+                            .lastModified(new LocalDateTime(metadata.getModifiedDate().getTime()))
+                            .itemCount(itemCount)
+                            .build();
 
-                if (callback != null) {
-                    callback.onGetLastBackup(lastBackup);
+                    if (callback != null) {
+                        callback.onGetLastBackup(lastBackup);
+                    }
                 }
             }
         });
