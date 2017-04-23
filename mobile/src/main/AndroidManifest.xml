@@ -46,7 +46,9 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".SettingsActivity_" />
+        <activity
+            android:name=".SettingsActivity_"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name=".ListBackupsActivity_"

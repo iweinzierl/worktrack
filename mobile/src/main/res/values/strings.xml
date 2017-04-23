@@ -71,6 +71,7 @@
     <string name="settings_backup_required_connection">Requires Connection</string>
     <string name="settings_backup_required_connection_dialogtitle">Requires Connection:</string>
     <string name="settings_backup_category_last_backup">Last Backup</string>
+    <string name="preference_last_backup">Last Backup</string>
     <string name="preference_last_backup_date">Last Backup Date:</string>
     <string name="preference_last_backup_size">Last Backup Size:</string>
 

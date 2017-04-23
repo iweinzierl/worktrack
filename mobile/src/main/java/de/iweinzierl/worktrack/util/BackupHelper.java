@@ -14,6 +14,9 @@ import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.Metadata;
 import com.google.android.gms.drive.MetadataChangeSet;
 import com.google.android.gms.drive.metadata.CustomPropertyKey;
+import com.google.android.gms.drive.query.Query;
+import com.google.android.gms.drive.query.SortOrder;
+import com.google.android.gms.drive.query.SortableField;
 import com.google.common.base.Joiner;
 
 import org.joda.time.LocalDateTime;
@@ -40,6 +43,8 @@ public class BackupHelper {
     public interface BackupCallback {
         void onListBackups(List<BackupMetaData> backups);
 
+        void onGetLastBackup(BackupMetaData lastBackup);
+
         void onCreationSuccessful();
 
         void onCreationFailed();
@@ -52,6 +57,10 @@ public class BackupHelper {
     public static class DefaultBackupCallback implements BackupCallback {
         @Override
         public void onListBackups(List<BackupMetaData> backups) {
+        }
+
+        @Override
+        public void onGetLastBackup(BackupMetaData lastBackup) {
         }
 
         @Override
@@ -205,6 +214,46 @@ public class BackupHelper {
                         }
                     }
                 });
+    }
+
+    public void getLastBackup() {
+        final DriveFolder appFolder = Drive.DriveApi.getAppFolder(googleApiClient);
+        final SortOrder sortOrder = new SortOrder.Builder()
+                .addSortDescending(SortableField.CREATED_DATE)
+                .build();
+        final Query query = new Query.Builder()
+                .setSortOrder(sortOrder)
+                .build();
+
+        PendingResult<DriveApi.MetadataBufferResult> pendingResult = appFolder.queryChildren(googleApiClient, query);
+        pendingResult.setResultCallback(new ResultCallback<DriveApi.MetadataBufferResult>() {
+            @Override
+            public void onResult(@NonNull DriveApi.MetadataBufferResult metadataBufferResult) {
+                Metadata metadata = metadataBufferResult.getMetadataBuffer().get(0);
+                int itemCount = 0;
+                if (metadata.getCustomProperties().containsKey(CUSTOM_PROPERTY_ITEM_COUNT)) {
+                    try {
+                        itemCount = Integer.parseInt(metadata.getCustomProperties().get(CUSTOM_PROPERTY_ITEM_COUNT));
+                    } catch (NumberFormatException e) {
+                        LOGGER.warn("Unable to parse custom property '{}' -> {}",
+                                CUSTOM_PROPERTY_ITEM_COUNT,
+                                metadata.getCustomProperties().get(CUSTOM_PROPERTY_ITEM_COUNT), e);
+                    }
+                }
+
+                BackupMetaData lastBackup = new BackupMetaData.Builder()
+                        .driveId(metadata.getDriveId().encodeToString())
+                        .title(metadata.getTitle())
+                        .size(metadata.getFileSize())
+                        .lastModified(new LocalDateTime(metadata.getModifiedDate().getTime()))
+                        .itemCount(itemCount)
+                        .build();
+
+                if (callback != null) {
+                    callback.onGetLastBackup(lastBackup);
+                }
+            }
+        });
     }
 
     public void cleanBackups() {
