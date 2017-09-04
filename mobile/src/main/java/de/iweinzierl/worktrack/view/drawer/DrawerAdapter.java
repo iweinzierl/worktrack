@@ -7,15 +7,17 @@ import android.widget.BaseAdapter;
 
 import de.iweinzierl.worktrack.DayOverviewActivity_;
 import de.iweinzierl.worktrack.ListBackupsActivity_;
+import de.iweinzierl.worktrack.ManageWorkplacesActivity_;
+import de.iweinzierl.worktrack.R;
 import de.iweinzierl.worktrack.SettingsActivity_;
 import de.iweinzierl.worktrack.WeekOverviewActivity_;
-import de.iweinzierl.worktrack.R;
 import de.iweinzierl.worktrack.YearOverviewActivity_;
 
 public class DrawerAdapter extends BaseAdapter {
 
     private static final DrawerItem[] NAV_ITEMS = {
             new DrawerHeaderItem(),
+            new DrawerActivityItem(R.string.activity_manage_workplaces, R.drawable.ic_edit_location_white_32px, ManageWorkplacesActivity_.class),
             new DrawerActivityItem(R.string.activity_dayverview, R.drawable.ic_view_day_white_24px, DayOverviewActivity_.class),
             new DrawerActivityItem(R.string.activity_weekoverview, R.drawable.ic_view_week_white_24px, WeekOverviewActivity_.class),
             new DrawerActivityItem(R.string.activity_yearoverview, R.drawable.ic_view_week_white_24px, YearOverviewActivity_.class),

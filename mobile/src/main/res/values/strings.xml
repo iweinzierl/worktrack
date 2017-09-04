@@ -5,6 +5,12 @@
     <string name="drawer_open">Open Drawer</string>
     <string name="drawer_close">Close Drawer</string>
 
+    <string name="activity_manage_workplaces">Manage Workplaces</string>
+    <string name="activity_manage_workplaces_action_add">Add Workplace</string>
+
+    <string name="activity_pick_location">Choose location</string>
+    <string name="activity_pick_location_action_done">Finish</string>
+
     <string name="activity_dayverview">Daily Overview</string>
     <string name="activity_dayoverview_incorrect_warning">Items are not correct!</string>
     <string name="activity_dayoverview_action_select_date">Choose date</string>
