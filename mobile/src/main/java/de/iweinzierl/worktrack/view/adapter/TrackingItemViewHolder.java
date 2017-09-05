@@ -7,9 +7,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.larvalabs.svgandroid.SVG;
-import com.larvalabs.svgandroid.SVGParser;
-
 import de.iweinzierl.worktrack.R;
 import de.iweinzierl.worktrack.persistence.CreationType;
 import de.iweinzierl.worktrack.persistence.TrackingItem;

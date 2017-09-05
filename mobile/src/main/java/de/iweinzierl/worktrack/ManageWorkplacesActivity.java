@@ -7,6 +7,8 @@ import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -36,6 +38,7 @@ import java.util.UUID;
 import de.iweinzierl.worktrack.persistence.LocalWorkplaceRepository;
 import de.iweinzierl.worktrack.persistence.Workplace;
 import de.iweinzierl.worktrack.receiver.GeofencingTransitionService;
+import de.iweinzierl.worktrack.view.adapter.WorkplaceAdapter;
 
 @EActivity
 public class ManageWorkplacesActivity extends BaseActivity {
@@ -52,10 +55,15 @@ public class ManageWorkplacesActivity extends BaseActivity {
     @ViewById(R.id.addAction)
     protected FloatingActionButton addAction;
 
-    @ViewById(R.id.progressBar)
+    @ViewById
     protected ProgressBar progressBar;
 
+    @ViewById
+    protected RecyclerView cardView;
+
     private PendingIntent geofencePendingIntent;
+
+    private WorkplaceAdapter workplaceAdapter;
 
     @Override
     int getLayoutId() {
@@ -65,12 +73,23 @@ public class ManageWorkplacesActivity extends BaseActivity {
     @AfterViews
     protected void setup() {
         geofencingClient = LocationServices.getGeofencingClient(this);
+        workplaceAdapter = new WorkplaceAdapter();
+
+        cardView.setAdapter(workplaceAdapter);
+        cardView.setHasFixedSize(false);
+        cardView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     @Click(R.id.addAction)
     protected void clickedAddAction() {
         LOGGER.debug("clicked action button: add workplace");
         startActivityForResult(new Intent(this, PickLocationActivity_.class), PickLocationActivity.REQUEST_LOCATION);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateUI();
     }
 
     @Override
@@ -94,6 +113,16 @@ public class ManageWorkplacesActivity extends BaseActivity {
         if (requestCode == REQUEST_UPDATE_GEOFENCES && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             updateGeofences(false);
         }
+    }
+
+    @Background
+    protected void updateUI() {
+        setWorkplaces(workplaceRepository.findAll());
+    }
+
+    @UiThread
+    protected void setWorkplaces(List<Workplace> workplaces) {
+        workplaceAdapter.setWorkplaces(workplaces);
     }
 
     @UiThread
