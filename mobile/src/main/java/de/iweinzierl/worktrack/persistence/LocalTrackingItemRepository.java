@@ -107,7 +107,7 @@ public class LocalTrackingItemRepository implements TrackingItemRepository {
         try {
             return getSession().getTrackingItemDao().loadAll();
         } catch (Exception e) {
-            LOGGER.error("Deleting tracking item failed", e);
+            LOGGER.error("Finding all tracking items failed", e);
         }
 
         return null;

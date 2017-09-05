@@ -23,14 +23,25 @@ public class Workplace {
     @NotNull
     private double radius;
 
-    @Generated(hash = 747322833)
-    public Workplace(Long id, @NotNull String name, double lat, double lon,
-            double radius) {
+    private String geofenceRequestId;
+
+    public Workplace(Long id, @NotNull String name, double lat, double lon, double radius) {
         this.id = id;
         this.name = name;
         this.lat = lat;
         this.lon = lon;
         this.radius = radius;
+    }
+
+    @Generated(hash = 492726427)
+    public Workplace(Long id, @NotNull String name, double lat, double lon,
+            double radius, String geofenceRequestId) {
+        this.id = id;
+        this.name = name;
+        this.lat = lat;
+        this.lon = lon;
+        this.radius = radius;
+        this.geofenceRequestId = geofenceRequestId;
     }
 
     @Generated(hash = 1995917923)
@@ -61,6 +72,7 @@ public class Workplace {
                 ", lat=" + lat +
                 ", lon=" + lon +
                 ", radius=" + radius +
+                ", geofencingRequestId=" + geofenceRequestId +
                 '}';
     }
 
@@ -86,5 +98,13 @@ public class Workplace {
 
     public void setRadius(double radius) {
         this.radius = radius;
+    }
+
+    public String getGeofenceRequestId() {
+        return this.geofenceRequestId;
+    }
+
+    public void setGeofenceRequestId(String geofenceRequestId) {
+        this.geofenceRequestId = geofenceRequestId;
     }
 }
