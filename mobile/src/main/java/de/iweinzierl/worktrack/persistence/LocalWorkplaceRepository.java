@@ -47,4 +47,16 @@ public class LocalWorkplaceRepository implements WorkplaceRepository {
 
         return null;
     }
+
+    @Override
+    public boolean delete(Workplace workplace) {
+        try {
+            getSession().getWorkplaceDao().delete(workplace);
+            return true;
+        } catch (Exception e) {
+            LOGGER.error("Deletion of workplace failed", e);
+        }
+
+        return false;
+    }
 }

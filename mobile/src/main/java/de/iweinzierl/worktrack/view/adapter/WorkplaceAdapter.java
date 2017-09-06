@@ -13,7 +13,7 @@ import java.util.List;
 import de.iweinzierl.worktrack.R;
 import de.iweinzierl.worktrack.persistence.Workplace;
 
-public class WorkplaceAdapter extends RecyclerView.Adapter<WorkplaceViewHolder> {
+public class WorkplaceAdapter extends RecyclerView.Adapter<WorkplaceViewHolder> implements ItemToucheHelperAdapter<Workplace> {
 
     private List<Workplace> workplaces;
 
@@ -42,5 +42,21 @@ public class WorkplaceAdapter extends RecyclerView.Adapter<WorkplaceViewHolder> 
         this.workplaces = Lists.newArrayList();
         this.workplaces.addAll(workplaces);
         this.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+        workplaces.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    @Override
+    public void onItemDismissRevert(int position) {
+        notifyItemChanged(position);
+    }
+
+    @Override
+    public Workplace getItem(int position) {
+        return workplaces.get(position);
     }
 }

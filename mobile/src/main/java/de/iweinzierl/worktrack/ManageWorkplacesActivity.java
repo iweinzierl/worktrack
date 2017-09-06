@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -38,10 +39,11 @@ import java.util.UUID;
 import de.iweinzierl.worktrack.persistence.LocalWorkplaceRepository;
 import de.iweinzierl.worktrack.persistence.Workplace;
 import de.iweinzierl.worktrack.receiver.GeofencingTransitionService;
+import de.iweinzierl.worktrack.util.ItemTouchHelperCallback;
 import de.iweinzierl.worktrack.view.adapter.WorkplaceAdapter;
 
 @EActivity
-public class ManageWorkplacesActivity extends BaseActivity {
+public class ManageWorkplacesActivity extends BaseActivity implements ItemTouchHelperCallback.WorkplaceCallback {
 
     private static final Logger LOGGER = AndroidLoggerFactory.getInstance().getLogger("ManageWorkplacesActivity");
 
@@ -78,6 +80,9 @@ public class ManageWorkplacesActivity extends BaseActivity {
         cardView.setAdapter(workplaceAdapter);
         cardView.setHasFixedSize(false);
         cardView.setLayoutManager(new LinearLayoutManager(this));
+
+        ItemTouchHelper touchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(this, workplaceAdapter, this));
+        touchHelper.attachToRecyclerView(cardView);
     }
 
     @Click(R.id.addAction)
@@ -133,6 +138,16 @@ public class ManageWorkplacesActivity extends BaseActivity {
     @UiThread
     protected void hideProgressBar() {
         progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onDeleteWorkplace(Workplace workplace) {
+        removeWorkplace(workplace);
+    }
+
+    @Background
+    protected void removeWorkplace(Workplace workplace) {
+        workplaceRepository.delete(workplace);
     }
 
     @Background

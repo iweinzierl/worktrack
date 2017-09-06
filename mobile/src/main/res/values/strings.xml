@@ -7,6 +7,10 @@
 
     <string name="activity_manage_workplaces">Manage Workplaces</string>
     <string name="activity_manage_workplaces_action_add">Add Workplace</string>
+    <string name="activity_manage_workplaces_action_delete_title">Delete Workplace</string>
+    <string name="activity_manage_workplaces_action_delete_message">Really delete workplace?</string>
+    <string name="activity_manage_workplaces_action_delete_ok">Delete</string>
+    <string name="activity_manage_workplaces_action_delete_cancel">No</string>
 
     <string name="activity_pick_location">Choose location</string>
     <string name="activity_pick_location_action_done">Finish</string>
