@@ -31,6 +31,12 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ['resourcePackageName': android.defaultConfig.applicationId]
+            }
+        }
     }
 
     signingConfigs {
@@ -40,6 +46,18 @@ android {
             keyAlias "debug-key"
             keyPassword "debugkey"
         }
+        release {
+            storeFile rootProject.file("release.keystore")
+        }
+    }
+
+    productFlavors {
+        free {
+            applicationIdSuffix ".free"
+        }
+        pro {
+            // uses applicationId from defaultConfig
+        }
     }
 
     buildTypes {
@@ -48,7 +66,8 @@ android {
         }
 
         release {
-            minifyEnabled false
+            minifyEnabled true
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

@@ -4,14 +4,24 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import de.iweinzierl.worktrack.R;
+import de.iweinzierl.worktrack.WorktrackApplication;
 
 class DrawerHeaderItem implements DrawerItem {
 
     @Override
     public View getView(View view, ViewGroup viewGroup) {
-        return LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.drawer_header, viewGroup, false);
+        View header = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.drawer_header, viewGroup, false);
+
+        if (WorktrackApplication.getInstance().isPro()) {
+            ((TextView) header.findViewById(R.id.app_name)).setText(R.string.app_name_pro);
+        } else {
+            ((TextView) header.findViewById(R.id.app_name)).setText(R.string.app_name);
+        }
+
+        return header;
     }
 
     @Override

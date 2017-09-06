@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/app_name"
         style="@style/Drawer.Header.Text"
         android:layout_width="match_parent"
         android:layout_height="96dp"
