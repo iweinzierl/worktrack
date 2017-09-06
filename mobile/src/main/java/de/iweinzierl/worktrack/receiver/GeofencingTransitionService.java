@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 
+import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 
 import org.slf4j.Logger;
@@ -26,6 +27,14 @@ public class GeofencingTransitionService extends IntentService {
             return;
         }
 
-        LOGGER.info("Received geofencing transition intent: {}", event.getGeofenceTransition());
+        LOGGER.info("Received geofencing transition intent: {}", event.toString());
+
+        if (event.getGeofenceTransition() == Geofence.GEOFENCE_TRANSITION_ENTER) {
+            sendBroadcast(new Intent("de.iweinzierl.worktrack.START_WORK"));
+        } else if (event.getGeofenceTransition() == Geofence.GEOFENCE_TRANSITION_EXIT) {
+            sendBroadcast(new Intent("de.iweinzierl.worktrack.STOP_WORK"));
+        } else {
+            LOGGER.warn("Received unknown transition: {}", event.getGeofenceTransition());
+        }
     }
 }
