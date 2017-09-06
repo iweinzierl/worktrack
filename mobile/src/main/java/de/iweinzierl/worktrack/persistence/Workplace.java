@@ -25,17 +25,16 @@ public class Workplace {
 
     private String geofenceRequestId;
 
-    public Workplace(Long id, @NotNull String name, double lat, double lon, double radius) {
-        this.id = id;
-        this.name = name;
+    public Workplace(double lat, double lon, double radius, String geofenceRequestId) {
         this.lat = lat;
         this.lon = lon;
         this.radius = radius;
+        this.geofenceRequestId = geofenceRequestId;
     }
 
     @Generated(hash = 492726427)
     public Workplace(Long id, @NotNull String name, double lat, double lon,
-            double radius, String geofenceRequestId) {
+                     double radius, String geofenceRequestId) {
         this.id = id;
         this.name = name;
         this.lat = lat;

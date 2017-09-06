@@ -66,6 +66,13 @@
     <string name="dialog_account_picker_title">Choose Account</string>
     <string name="dialog_account_picker_cancel">Cancel</string>
 
+    <string name="dialog_workplace_title_query_title">Set Workplace Name</string>
+    <string name="dialog_workplace_title_query_button_ok">Save</string>
+    <string name="dialog_workplace_title_query_button_cancel">Cancel</string>
+    <string name="dialog_workplace_title_query_label_location">Location:</string>
+    <string name="dialog_workplace_title_query_label_radius">Radius:</string>
+    <string name="dialog_workplace_title_query_hint_name">Name</string>
+
     <string name="settings_category_working_time">Working Time</string>
     <string name="settings_daily_working_hours_title">Daily working hours</string>
     <string name="settings_daily_working_hours_summary">The number of working hours per day.</string>

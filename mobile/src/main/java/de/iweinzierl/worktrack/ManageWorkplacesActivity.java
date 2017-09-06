@@ -41,6 +41,7 @@ import de.iweinzierl.worktrack.persistence.Workplace;
 import de.iweinzierl.worktrack.receiver.GeofencingTransitionService;
 import de.iweinzierl.worktrack.util.ItemTouchHelperCallback;
 import de.iweinzierl.worktrack.view.adapter.WorkplaceAdapter;
+import de.iweinzierl.worktrack.view.dialog.WorkplaceTitleQueryDialog;
 
 @EActivity
 public class ManageWorkplacesActivity extends BaseActivity implements ItemTouchHelperCallback.WorkplaceCallback {
@@ -102,12 +103,26 @@ public class ManageWorkplacesActivity extends BaseActivity implements ItemTouchH
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PickLocationActivity.REQUEST_LOCATION && resultCode == RESULT_OK) {
-            addWorkplace(
-                    data.getStringExtra(PickLocationActivity.EXTRA_TITLE),
-                    data.getDoubleExtra(PickLocationActivity.EXTRA_LAT, Double.NaN),
-                    data.getDoubleExtra(PickLocationActivity.EXTRA_LON, Double.NaN),
-                    data.getDoubleExtra(PickLocationActivity.EXTRA_RADIUS, Double.NaN)
-            );
+            new WorkplaceTitleQueryDialog(
+                    new Workplace(
+                            data.getDoubleExtra(PickLocationActivity.EXTRA_LAT, Double.NaN),
+                            data.getDoubleExtra(PickLocationActivity.EXTRA_LON, Double.NaN),
+                            data.getDoubleExtra(PickLocationActivity.EXTRA_RADIUS, Double.NaN),
+                            UUID.randomUUID().toString()
+                    ),
+                    this,
+                    new WorkplaceTitleQueryDialog.Callback() {
+                        @Override
+                        public void onSubmit(Workplace workplace) {
+                            addWorkplace(workplace);
+                        }
+
+                        @Override
+                        public void onCancel(Workplace workplace) {
+                            // do nothing
+                        }
+                    }
+            ).show();
         }
     }
 
@@ -151,12 +166,13 @@ public class ManageWorkplacesActivity extends BaseActivity implements ItemTouchH
     }
 
     @Background
-    protected void addWorkplace(String title, double lat, double lon, double radius) {
-        Workplace workplace = new Workplace(null, "TEST", lat, lon, radius, UUID.randomUUID().toString());
+    protected void addWorkplace(Workplace workplace) {
         LOGGER.info("Received new workplace: {}", workplace);
 
         workplaceRepository.save(workplace);
         updateGeofences(true);
+
+        updateUI();
     }
 
     private void updateGeofences(boolean requestPermission) {
