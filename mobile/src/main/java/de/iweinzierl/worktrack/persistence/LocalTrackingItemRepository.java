@@ -20,6 +20,7 @@ import de.iweinzierl.worktrack.persistence.converter.DateTimeConverter;
 public class LocalTrackingItemRepository implements TrackingItemRepository {
 
     private static final Logger LOGGER = AndroidLoggerFactory.getInstance().getLogger("LocalTrackingItemRepository");
+    private static final String DATETIME_FORMAT_NO_SECONDS = "yyyy-MM-dd HH:mm";
 
     @Bean
     DaoSessionFactory sessionFactory;
@@ -37,7 +38,19 @@ public class LocalTrackingItemRepository implements TrackingItemRepository {
     @Override
     public TrackingItem save(TrackingItem item) {
         try {
-            getSession().getTrackingItemDao().save(item);
+            TrackingItemDao trackingItemDao = getSession().getTrackingItemDao();
+            String eventTime = item.getEventTime().toString(DATETIME_FORMAT_NO_SECONDS) + "%";
+
+            String where = "WHERE " +
+                    TrackingItemDao.Properties.Type.columnName + " = " + item.getType().id + " AND " +
+                    TrackingItemDao.Properties.EventTime.columnName + " LIKE ?";
+
+            List<TrackingItem> trackingItems = trackingItemDao.queryRaw(where, eventTime);
+
+            if (trackingItems == null || trackingItems.isEmpty()) {
+                trackingItemDao.save(item);
+            }
+
             return item;
         } catch (Exception e) {
             LOGGER.error("Saving tracking item failed", e);
