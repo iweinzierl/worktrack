@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.SeekBar;
 
 import com.github.iweinzierl.android.logging.AndroidLoggerFactory;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -26,7 +27,10 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.UiThread;
+import org.androidannotations.annotations.ViewById;
 import org.slf4j.Logger;
 
 @EActivity
@@ -38,10 +42,12 @@ public class PickLocationActivity extends AppCompatActivity implements OnMapRead
 
     public static final int REQUEST_LOCATION = 100;
 
-    public static final String EXTRA_TITLE = "PickLocationActivity.extra.title";
     public static final String EXTRA_LAT = "PickLocationActivity.extra.lat";
     public static final String EXTRA_LON = "PickLocationActivity.extra.lon";
     public static final String EXTRA_RADIUS = "PickLocationActivity.extra.radius";
+
+    @ViewById
+    protected SeekBar radiusBar;
 
     private FusedLocationProviderClient locationProviderClient;
     private GoogleMap googleMap;
@@ -65,6 +71,24 @@ public class PickLocationActivity extends AppCompatActivity implements OnMapRead
         mapFragment.getMapAsync(this);
 
         locationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+    }
+
+    @AfterViews
+    protected void setupViews() {
+        radiusBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                setRadius(seekBar.getProgress());
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
     }
 
     @Override
@@ -99,6 +123,13 @@ public class PickLocationActivity extends AppCompatActivity implements OnMapRead
         }
 
         return false;
+    }
+
+    @UiThread
+    protected void setRadius(int radius) {
+        if (selectedLocation != null) {
+            selectedLocation.setRadius(radius);
+        }
     }
 
     protected void finishSelection() {

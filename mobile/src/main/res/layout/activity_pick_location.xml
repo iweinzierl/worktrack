@@ -31,16 +31,7 @@
 
             </android.support.design.widget.AppBarLayout>
 
-            <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/map"
-                class="com.google.android.gms.maps.SupportMapFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                map:uiRotateGestures="true"
-                map:uiScrollGestures="true"
-                map:uiTiltGestures="true"
-                map:uiZoomControls="true"
-                map:uiZoomGestures="true" />
+            <include layout="@layout/content_pick_location" />
 
         </android.support.design.widget.CoordinatorLayout>
     </FrameLayout>
