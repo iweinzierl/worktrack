@@ -44,7 +44,7 @@ import de.iweinzierl.worktrack.view.adapter.WorkplaceAdapter;
 import de.iweinzierl.worktrack.view.dialog.WorkplaceTitleQueryDialog;
 
 @EActivity
-public class ManageWorkplacesActivity extends BaseActivity implements ItemTouchHelperCallback.WorkplaceCallback {
+public class ManageWorkplacesActivity extends BaseActivity implements ItemTouchHelperCallback.ItemCallback<Workplace> {
 
     private static final Logger LOGGER = AndroidLoggerFactory.getInstance().getLogger("ManageWorkplacesActivity");
 
@@ -82,7 +82,7 @@ public class ManageWorkplacesActivity extends BaseActivity implements ItemTouchH
         cardView.setHasFixedSize(false);
         cardView.setLayoutManager(new LinearLayoutManager(this));
 
-        ItemTouchHelper touchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(this, workplaceAdapter, this));
+        ItemTouchHelper touchHelper = new ItemTouchHelper(new ItemTouchHelperCallback<>(this, workplaceAdapter, this));
         touchHelper.attachToRecyclerView(cardView);
     }
 
@@ -156,7 +156,7 @@ public class ManageWorkplacesActivity extends BaseActivity implements ItemTouchH
     }
 
     @Override
-    public void onDeleteWorkplace(Workplace workplace) {
+    public void onDeleteItem(Workplace workplace) {
         removeWorkplace(workplace);
     }
 

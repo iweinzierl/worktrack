@@ -1,36 +1,35 @@
 package de.iweinzierl.worktrack.util;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
-import de.iweinzierl.worktrack.ManageWorkplacesActivity;
 import de.iweinzierl.worktrack.R;
-import de.iweinzierl.worktrack.persistence.Workplace;
 import de.iweinzierl.worktrack.view.adapter.ItemToucheHelperAdapter;
 
 /**
  * Item touch helper to remove existing workplaces.
  */
-public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
+public class ItemTouchHelperCallback<T> extends ItemTouchHelper.Callback {
 
     /**
      * Callback for removal of workplaces.
      */
-    public interface WorkplaceCallback {
-        void onDeleteWorkplace(Workplace item);
+    public interface ItemCallback<T> {
+        void onDeleteItem(T item);
     }
 
-    private ManageWorkplacesActivity manageWorkplacesActivity;
+    private Context context;
 
-    private final ItemToucheHelperAdapter<Workplace> adapter;
-    private final WorkplaceCallback workplaceCallback;
+    private final ItemToucheHelperAdapter<T> adapter;
+    private final ItemCallback<T> itemCallback;
 
-    public ItemTouchHelperCallback(ManageWorkplacesActivity manageWorkplacesActivity, ItemToucheHelperAdapter<Workplace> adapter, WorkplaceCallback workplaceCallback) {
-        this.manageWorkplacesActivity = manageWorkplacesActivity;
+    public ItemTouchHelperCallback(Context context, ItemToucheHelperAdapter<T> adapter, ItemCallback<T> itemCallback) {
+        this.context = context;
         this.adapter = adapter;
-        this.workplaceCallback = workplaceCallback;
+        this.itemCallback = itemCallback;
     }
 
 
@@ -46,9 +45,9 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
-        final Workplace workplace = adapter.getItem(viewHolder.getAdapterPosition());
+        final T item = adapter.getItem(viewHolder.getAdapterPosition());
 
-        new AlertDialog.Builder(manageWorkplacesActivity)
+        new AlertDialog.Builder(context)
                 .setTitle(R.string.activity_manage_workplaces_action_delete_title)
                 .setMessage(R.string.activity_manage_workplaces_action_delete_message)
                 .setNegativeButton(R.string.activity_manage_workplaces_action_delete_cancel, new DialogInterface.OnClickListener() {
@@ -67,7 +66,7 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
                 .setPositiveButton(R.string.activity_manage_workplaces_action_delete_ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        workplaceCallback.onDeleteWorkplace(workplace);
+                        itemCallback.onDeleteItem(item);
                         adapter.onItemDismiss(viewHolder.getAdapterPosition());
                     }
                 })

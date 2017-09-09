@@ -13,7 +13,7 @@ import java.util.List;
 import de.iweinzierl.worktrack.R;
 import de.iweinzierl.worktrack.model.BackupMetaData;
 
-public class BackupAdapter extends RecyclerView.Adapter<BackupViewHolder> {
+public class BackupAdapter extends RecyclerView.Adapter<BackupViewHolder> implements ItemToucheHelperAdapter<BackupMetaData> {
 
     public interface ClickCallback {
 
@@ -62,5 +62,21 @@ public class BackupAdapter extends RecyclerView.Adapter<BackupViewHolder> {
     public void setItems(List<BackupMetaData> items) {
         this.items = Lists.newArrayList(items);
         notifyDataSetChanged();
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+        items.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    @Override
+    public void onItemDismissRevert(int position) {
+        notifyItemChanged(position);
+    }
+
+    @Override
+    public BackupMetaData getItem(int position) {
+        return items.get(position);
     }
 }

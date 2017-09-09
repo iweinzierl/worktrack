@@ -6,6 +6,8 @@ import com.github.iweinzierl.android.logging.AndroidLoggerFactory;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.ResultCallbacks;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi;
 import com.google.android.gms.drive.DriveFile;
@@ -52,6 +54,10 @@ public class BackupHelper {
         void onImportSuccessful();
 
         void onImportFailed();
+
+        void onRemovalSuccessful();
+
+        void onRemovalFailed();
     }
 
     public static class DefaultBackupCallback implements BackupCallback {
@@ -77,6 +83,14 @@ public class BackupHelper {
 
         @Override
         public void onImportFailed() {
+        }
+
+        @Override
+        public void onRemovalSuccessful() {
+        }
+
+        @Override
+        public void onRemovalFailed() {
         }
     }
 
@@ -211,6 +225,29 @@ public class BackupHelper {
                             if (callback != null) {
                                 callback.onImportFailed();
                             }
+                        }
+                    }
+                });
+    }
+
+    public void removeBackup(@NonNull final String backupDriveId) {
+        Objects.requireNonNull(backupDriveId, "backupDriveId must not be null");
+
+        DriveId.decodeFromString(backupDriveId)
+                .asDriveFile()
+                .delete(googleApiClient)
+                .setResultCallback(new ResultCallbacks<Status>() {
+                    @Override
+                    public void onSuccess(@NonNull Status status) {
+                        if (callback != null) {
+                            callback.onRemovalSuccessful();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Status status) {
+                        if (callback != null) {
+                            callback.onRemovalFailed();
                         }
                     }
                 });
