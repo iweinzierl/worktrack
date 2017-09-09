@@ -15,11 +15,14 @@ import java.util.List;
 import de.iweinzierl.worktrack.persistence.LocalTrackingItemRepository;
 import de.iweinzierl.worktrack.persistence.TrackingItem;
 import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
+import de.iweinzierl.worktrack.util.ProductFlavor;
 
 @EApplication
 public class WorktrackApplication extends Application {
 
     public static final String PACKAGE_NAME_PRO = "de.iweinzierl.worktrack";
+    public static final String PACKAGE_NAME_FREE = "de.iweinzierl.worktrack.free";
+
     public static final String LOG_TAG = "[WT]";
 
     private static WorktrackApplication INSTANCE;
@@ -48,7 +51,15 @@ public class WorktrackApplication extends Application {
         LOGGER.info("Found {} tracking items in database", trackingItems.size());
     }
 
-    public boolean isPro() {
-        return getPackageName().equals(PACKAGE_NAME_PRO);
+    public ProductFlavor getProductFlavor() {
+        if (getPackageName().equals(PACKAGE_NAME_PRO)) {
+            return ProductFlavor.PRO;
+        }
+        else if (getPackageName().equals(PACKAGE_NAME_FREE)) {
+            return ProductFlavor.FREE;
+        }
+        else {
+            return ProductFlavor.DEV;
+        }
     }
 }

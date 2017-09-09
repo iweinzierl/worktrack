@@ -38,37 +38,25 @@ android {
                 arguments = ['resourcePackageName': android.defaultConfig.applicationId]
             }
         }
-    }
-
-    signingConfigs {
-        debug {
-            storeFile rootProject.file("debug.keystore")
-            storePassword "debugkey"
-            keyAlias "debug-key"
-            keyPassword "debugkey"
-        }
-        release {
-            storeFile rootProject.file("release.keystore")
-        }
+        signingConfig signingConfigs.debug
     }
 
     productFlavors {
+        dev {
+            applicationIdSuffix ".dev"
+        }
         free {
             applicationIdSuffix ".free"
         }
         pro {
-            // uses applicationId from defaultConfig
+            applicationId 'de.iweinzierl.worktrack'
         }
     }
 
     buildTypes {
-        debug {
-            signingConfig signingConfigs.debug
-        }
-
         release {
+            debuggable false
             minifyEnabled false
-            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -111,10 +99,13 @@ dependencies {
     compile 'com.hudomju:swipe-to-dismiss-undo:1.0'
     compile 'net.sf.opencsv:opencsv:2.3'
     compile 'com.github.lecho:hellocharts-library:1.5.8@aar'
-
+    compile 'com.google.firebase:firebase-core:10.0.1'
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:2.0.42-beta'
     testCompile 'org.powermock:powermock-core:1.6.6'
     testCompile 'org.powermock:powermock-module-junit4:1.6.6'
     testCompile 'org.powermock:powermock-api-mockito2:1.6.6'
 }
+
+// needs to stay at the bottom of the file
+apply plugin: 'com.google.gms.google-services'

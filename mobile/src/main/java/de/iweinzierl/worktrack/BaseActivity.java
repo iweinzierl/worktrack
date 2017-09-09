@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.widget.ListView;
 
 import com.github.iweinzierl.android.logging.AndroidLoggerFactory;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
@@ -27,6 +28,8 @@ import de.iweinzierl.worktrack.view.drawer.DrawerAdapter;
 public abstract class BaseActivity extends AppCompatActivity {
 
     private static final Logger LOGGER = AndroidLoggerFactory.getInstance().getLogger("BaseActivity");
+
+    FirebaseAnalytics firebaseAnalytics;
 
     DrawerLayout drawerLayout;
 
@@ -56,6 +59,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close);
 
         drawerLayout.addDrawerListener(drawerToggle);
+
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
