@@ -20,6 +20,8 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 import org.slf4j.Logger;
 
+import de.iweinzierl.worktrack.analytics.AnalyticsEvents;
+import de.iweinzierl.worktrack.analytics.AnalyticsParams;
 import de.iweinzierl.worktrack.persistence.LocalTrackingItemRepository;
 import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
 import de.iweinzierl.worktrack.view.drawer.DrawerAdapter;
@@ -81,7 +83,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        firebaseAnalytics.logEvent("Resume -> " + getClass().getName(), null);
+        Bundle bundle = new Bundle();
+        bundle.putString(AnalyticsParams.ACTIVITY.name(), getClass().getCanonicalName());
+        firebaseAnalytics.logEvent(AnalyticsEvents.ACTIVITY_RESUMED.name(), bundle);
     }
 
     @Override
@@ -94,7 +98,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
 
-        firebaseAnalytics.logEvent("Pause -> " + getClass().getName(), null);
+        Bundle bundle = new Bundle();
+        bundle.putString(AnalyticsParams.ACTIVITY.name(), getClass().getCanonicalName());
+        firebaseAnalytics.logEvent(AnalyticsEvents.ACTIVITY_PAUSED.name(), bundle);
     }
 
     @Override

@@ -2,6 +2,9 @@ package de.iweinzierl.worktrack.analytics;
 
 public enum AnalyticsEvents {
 
+    ACTIVITY_RESUMED,
+    ACTIVITY_PAUSED,
+
     TRACKING_ITEM_SAVE,
     TRACKING_ITEM_SAVE_DUPLICATE,
     TRACKING_ITEM_SAVE_SUCCESS,

@@ -1,3 +1,12 @@
+debug-free.keystore
+debug-pro.keystore
+release-free.keystore
+release-pro.keystore
+
+mobile/src/dev/google-services.json
+mobile/src/free/google-services.json
+mobile/src/pro/google-services.json
+
 *.apk
 *.iml
 .gradle
