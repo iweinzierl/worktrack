@@ -78,9 +78,23 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        firebaseAnalytics.logEvent("Resume -> " + getClass().getName(), null);
+    }
+
+    @Override
     protected void onPostResume() {
         super.onPostResume();
         drawerLayout.closeDrawers();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        firebaseAnalytics.logEvent("Pause -> " + getClass().getName(), null);
     }
 
     @Override

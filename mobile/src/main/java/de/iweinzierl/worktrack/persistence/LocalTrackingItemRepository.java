@@ -1,9 +1,14 @@
 package de.iweinzierl.worktrack.persistence;
 
+import android.content.Context;
+import android.os.Bundle;
+
 import com.github.iweinzierl.android.logging.AndroidLoggerFactory;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.RootContext;
 import org.greenrobot.greendao.query.WhereCondition;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -11,6 +16,8 @@ import org.slf4j.Logger;
 
 import java.util.List;
 
+import de.iweinzierl.worktrack.analytics.AnalyticsEvents;
+import de.iweinzierl.worktrack.analytics.AnalyticsParams;
 import de.iweinzierl.worktrack.model.Week;
 import de.iweinzierl.worktrack.model.WeekDay;
 import de.iweinzierl.worktrack.model.Year;
@@ -20,12 +27,17 @@ import de.iweinzierl.worktrack.persistence.converter.DateTimeConverter;
 public class LocalTrackingItemRepository implements TrackingItemRepository {
 
     private static final Logger LOGGER = AndroidLoggerFactory.getInstance().getLogger("LocalTrackingItemRepository");
+
     private static final String DATETIME_FORMAT_NO_SECONDS = "yyyy-MM-dd HH:mm";
+
+    @RootContext
+    protected Context context;
 
     @Bean
     DaoSessionFactory sessionFactory;
 
     private DaoSession session;
+    private FirebaseAnalytics analytics;
 
     public DaoSession getSession() {
         if (session == null) {
@@ -35,8 +47,18 @@ public class LocalTrackingItemRepository implements TrackingItemRepository {
         return session;
     }
 
+    public FirebaseAnalytics getAnalytics() {
+        if (analytics == null) {
+            analytics = FirebaseAnalytics.getInstance(context);
+        }
+
+        return analytics;
+    }
+
     @Override
     public TrackingItem save(TrackingItem item) {
+        getAnalytics().logEvent(AnalyticsEvents.TRACKING_ITEM_SAVE.name(), null);
+
         try {
             TrackingItemDao trackingItemDao = getSession().getTrackingItemDao();
             String eventTime = item.getEventTime().toString(DATETIME_FORMAT_NO_SECONDS) + "%";
@@ -49,11 +71,18 @@ public class LocalTrackingItemRepository implements TrackingItemRepository {
 
             if (trackingItems == null || trackingItems.isEmpty()) {
                 trackingItemDao.save(item);
+                getAnalytics().logEvent(AnalyticsEvents.TRACKING_ITEM_SAVE_SUCCESS.name(), null);
+            } else {
+                getAnalytics().logEvent(AnalyticsEvents.TRACKING_ITEM_SAVE_DUPLICATE.name(), null);
             }
 
             return item;
         } catch (Exception e) {
             LOGGER.error("Saving tracking item failed", e);
+
+            Bundle bundle = new Bundle();
+            bundle.putString(AnalyticsParams.ERROR_MESSAGE.name(), e.getMessage());
+            getAnalytics().logEvent(AnalyticsEvents.TRACKING_ITEM_SAVE_FAILURE.name(), bundle);
         }
 
         return null;
@@ -61,11 +90,18 @@ public class LocalTrackingItemRepository implements TrackingItemRepository {
 
     @Override
     public boolean delete(TrackingItem item) {
+        getAnalytics().logEvent(AnalyticsEvents.TRACKING_ITEM_DELETE.name(), null);
+
         try {
             getSession().getTrackingItemDao().delete(item);
+            getAnalytics().logEvent(AnalyticsEvents.TRACKING_ITEM_DELETE_SUCCESS.name(), null);
             return true;
         } catch (Exception e) {
             LOGGER.error("Deleting tracking item failed", e);
+
+            Bundle bundle = new Bundle();
+            bundle.putString(AnalyticsParams.ERROR_MESSAGE.name(), e.getMessage());
+            getAnalytics().logEvent(AnalyticsEvents.TRACKING_ITEM_DELETE_FAILURE.name(), bundle);
         }
 
         return false;
