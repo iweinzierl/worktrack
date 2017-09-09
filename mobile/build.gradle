@@ -24,6 +24,15 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.1"
 
+    signingConfigs {
+        debug {
+            keyAlias 'debug-key'
+            keyPassword 'debugkey'
+            storeFile rootProject.file('debug.keystore')
+            storePassword 'debugkey'
+        }
+    }
+
     defaultConfig {
         applicationId "de.iweinzierl.worktrack"
         minSdkVersion 24
@@ -79,6 +88,7 @@ dependencies {
     apt "org.androidannotations:androidannotations:$AAVersion"
     compile "org.androidannotations:androidannotations-api:$AAVersion"
 
+    compile "com.google.android.gms:play-services-auth:$GPlayVersion"
     compile "com.google.android.gms:play-services-drive:$GPlayVersion"
     compile "com.google.android.gms:play-services-maps:$GPlayVersion"
     compile "com.google.android.gms:play-services-location:$GPlayVersion"

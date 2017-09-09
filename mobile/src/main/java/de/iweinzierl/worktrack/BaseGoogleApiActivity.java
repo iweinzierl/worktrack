@@ -17,6 +17,9 @@ import com.google.android.gms.drive.Drive;
 import org.androidannotations.annotations.EActivity;
 import org.slf4j.Logger;
 
+import de.iweinzierl.worktrack.analytics.AnalyticsEvents;
+import de.iweinzierl.worktrack.analytics.AnalyticsParams;
+
 @EActivity
 public abstract class BaseGoogleApiActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -64,6 +67,10 @@ public abstract class BaseGoogleApiActivity extends BaseActivity implements Goog
         LOG.error("Connection to Google API failed -> {} -> {}",
                 connectionResult.getErrorMessage(),
                 connectionResult.getErrorCode());
+
+        Bundle bundle = new Bundle();
+        bundle.putString(AnalyticsParams.ERROR_CODE.name(), String.valueOf(connectionResult.getErrorCode()));
+        firebaseAnalytics.logEvent(AnalyticsEvents.GOOGLE_API_CONNECT_FAILURE.name(), bundle);
 
         if (!connectionResult.hasResolution()) {
             LOG.warn("Unable to resolve Google API connection error.");
