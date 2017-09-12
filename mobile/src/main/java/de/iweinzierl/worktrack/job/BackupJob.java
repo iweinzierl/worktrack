@@ -7,51 +7,43 @@ import android.app.job.JobService;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.github.iweinzierl.android.logging.AndroidLoggerFactory;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.drive.Drive;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.util.ExponentialBackOff;
+import com.google.api.services.drive.DriveScopes;
 
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 
+import java.util.Arrays;
+
 import de.iweinzierl.worktrack.model.BackupFrequency;
+import de.iweinzierl.worktrack.model.BackupMetaData;
 import de.iweinzierl.worktrack.persistence.LocalTrackingItemRepository;
 import de.iweinzierl.worktrack.persistence.LocalTrackingItemRepository_;
-import de.iweinzierl.worktrack.util.BackupHelper;
+import de.iweinzierl.worktrack.persistence.LocalWorkplaceRepository_;
+import de.iweinzierl.worktrack.persistence.WorkplaceRepository;
+import de.iweinzierl.worktrack.util.GoogleDriveBackupHelper;
 
-public class BackupJob extends JobService implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class BackupJob extends JobService {
 
     private static final Logger LOGGER = AndroidLoggerFactory.getInstance().getLogger(BackupJob.class.getName());
 
     public static final int JOB_ID = 901;
+
+    private static final String[] SCOPES = {DriveScopes.DRIVE_APPDATA, DriveScopes.DRIVE_METADATA};
 
     public static final String PREFS_LAST_BACKUP = "backup.job.last.backup";
     public static final String PREFS_BACKUP_FREQUENCY = "settings_backup_frequency";
 
     public static final long INTERVAL_DAILY = 1000L * 60 * 60 * 24;
 
-    private GoogleApiClient googleApiClient;
-    private JobParameters jobParameters;
-
     @Override
     public boolean onStartJob(JobParameters params) {
-        jobParameters = params;
-        googleApiClient = new GoogleApiClient.Builder(getApplicationContext())
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addScope(Drive.SCOPE_FILE)
-                .addScope(Drive.SCOPE_APPFOLDER)
-                .addApi(Drive.API)
-                .build();
-
-        googleApiClient.connect();
-
+        LOGGER.info("Backup job started");
+        backup(params);
         return true;
     }
 
@@ -142,13 +134,23 @@ public class BackupJob extends JobService implements GoogleApiClient.ConnectionC
 
         LocalTrackingItemRepository repository =
                 LocalTrackingItemRepository_.getInstance_(getApplicationContext());
+        WorkplaceRepository workplaceRepository =
+                LocalWorkplaceRepository_.getInstance_(getApplicationContext());
 
-        new BackupHelper(new BackupHelper.DefaultBackupCallback() {
-            @Override
-            public void onCreationSuccessful() {
-                updateLastBackupTime();
-            }
-        }, repository, googleApiClient).writeBackup("automatic-backup.csv");
+        GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(this, Arrays.asList(SCOPES))
+                .setBackOff(new ExponentialBackOff());
+
+        new GoogleDriveBackupHelper(getApplicationContext(), credential).createBackup(
+                "automatic-backup",
+                repository.findAll(),
+                workplaceRepository.findAll(),
+                new GoogleDriveBackupHelper.Callback<BackupMetaData>() {
+                    @Override
+                    public void onSuccess(BackupMetaData result) {
+                        updateLastBackupTime();
+                    }
+                }
+        );
 
         LOGGER.info("Successfully finished backupJob.");
     }
@@ -158,20 +160,5 @@ public class BackupJob extends JobService implements GoogleApiClient.ConnectionC
         prefs.edit()
                 .putLong(PREFS_LAST_BACKUP, DateTime.now().getMillis())
                 .apply();
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        backup(jobParameters);
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        jobFinished(jobParameters, false);
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        jobFinished(jobParameters, true);
     }
 }

@@ -93,11 +93,22 @@ dependencies {
     compile "com.google.android.gms:play-services-maps:$GPlayVersion"
     compile "com.google.android.gms:play-services-location:$GPlayVersion"
 
+    compile('com.google.api-client:google-api-client-android:1.22.0') {
+        exclude group: 'org.apache.httpcomponents'
+        exclude group: 'com.google.code.findbugs'
+    }
+    compile('com.google.apis:google-api-services-drive:v3-rev81-1.22.0') {
+        exclude group: 'org.apache.httpcomponents'
+        exclude group: 'com.google.code.findbugs'
+    }
+
     compile 'com.android.support:cardview-v7:25.3.1'
     compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
     compile 'com.google.guava:guava:20.0'
+    compile 'com.google.code.gson:gson:2.8.1'
+    compile 'pub.devrel:easypermissions:0.3.0'
     compile 'org.greenrobot:greendao:3.2.2'
     compile 'joda-time:joda-time:2.9.7'
     compile 'com.github.iweinzierl:android-logging:1.0'

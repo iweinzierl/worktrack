@@ -1,5 +1,7 @@
 package de.iweinzierl.worktrack.model;
 
+import android.os.Build;
+
 import org.joda.time.LocalDateTime;
 
 public class BackupMetaData {
@@ -8,6 +10,8 @@ public class BackupMetaData {
     private String title;
 
     private int itemCount;
+
+    private int workplaceCount;
 
     private long size;
     private LocalDateTime lastModified;
@@ -23,6 +27,7 @@ public class BackupMetaData {
         driveId = builder.driveId;
         title = builder.title;
         itemCount = builder.itemCount;
+        workplaceCount = builder.workplaceCount;
         size = builder.size;
         lastModified = builder.lastModified;
     }
@@ -37,6 +42,10 @@ public class BackupMetaData {
 
     public int getItemCount() {
         return itemCount;
+    }
+
+    public int getWorkplaceCount() {
+        return workplaceCount;
     }
 
     public long getSize() {
@@ -63,6 +72,7 @@ public class BackupMetaData {
         private String driveId;
         private String title;
         private int itemCount;
+        private int workplaceCount;
         private long size;
         private LocalDateTime lastModified;
 
@@ -81,6 +91,11 @@ public class BackupMetaData {
 
         public Builder itemCount(int val) {
             itemCount = val;
+            return this;
+        }
+
+        public Builder workplaceCount(int val) {
+            workplaceCount = val;
             return this;
         }
 

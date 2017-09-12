@@ -40,6 +40,10 @@
     <string name="activity_yearoverview_chart_yaxis_label">Hours per week</string>
 
     <string name="activity_list_backups">Backups</string>
+    <string name="activity_list_backups_error_loading_backups">Error while loading backups.</string>
+    <string name="activity_list_backups_error_deleting_backup">Error while deleting backup.</string>
+    <string name="activity_list_backups_error_importing_backup">Error while importing backup.</string>
+    <string name="activity_list_backups_import_backup_succeeded">Import of backup succeeded.</string>
 
     <string name="activity_settings">Settings</string>
 
@@ -91,9 +95,12 @@
     <string name="settings_backup_required_connection">Requires Connection</string>
     <string name="settings_backup_required_connection_dialogtitle">Requires Connection:</string>
     <string name="settings_backup_category_last_backup">Last Backup</string>
+
     <string name="preference_last_backup">Last Backup</string>
-    <string name="preference_last_backup_date">Last Backup Date:</string>
-    <string name="preference_last_backup_size">Last Backup Size:</string>
+    <string name="preference_last_backup_date">Date:</string>
+    <string name="preference_last_backup_size">Size:</string>
+    <string name="preference_last_backup_items">Tracking Items:</string>
+    <string name="preference_last_backup_workplaces">Workplaces:</string>
     <string name="preference_backup_account">preference_backup_account</string>
     <string name="preference_backup_account_label">Backup Account</string>
 

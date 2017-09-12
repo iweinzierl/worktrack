@@ -16,8 +16,12 @@ public final class FileUtil {
     private static final Logger LOGGER = AndroidLoggerFactory.getInstance().getLogger("FileUtil");
 
     public static File toFile(String filename, String content) throws IOException {
-        File dir = Environment.getExternalStorageDirectory();
-        File file = new File(dir, filename);
+        File dir = Environment.getRootDirectory();
+        return toFile(dir, filename, content);
+    }
+
+    public static File toFile(File parent, String filename, String content) throws IOException {
+        File file = new File(parent, filename);
 
         LOGGER.debug("Write to file: {}", file.getAbsolutePath());
         LOGGER.debug("Content: {}", content);

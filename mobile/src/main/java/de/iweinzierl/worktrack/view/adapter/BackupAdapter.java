@@ -12,6 +12,7 @@ import java.util.List;
 
 import de.iweinzierl.worktrack.R;
 import de.iweinzierl.worktrack.model.BackupMetaData;
+import de.iweinzierl.worktrack.persistence.comparator.BackupLastModifiedComparator;
 
 public class BackupAdapter extends RecyclerView.Adapter<BackupViewHolder> implements ItemToucheHelperAdapter<BackupMetaData> {
 
@@ -24,7 +25,7 @@ public class BackupAdapter extends RecyclerView.Adapter<BackupViewHolder> implem
     private ClickCallback clickCallback;
 
     @SuppressWarnings("unchecked")
-    public BackupAdapter() {
+    private BackupAdapter() {
         this.items = Collections.EMPTY_LIST;
     }
 
@@ -61,6 +62,18 @@ public class BackupAdapter extends RecyclerView.Adapter<BackupViewHolder> implem
 
     public void setItems(List<BackupMetaData> items) {
         this.items = Lists.newArrayList(items);
+        Collections.sort(this.items, new BackupLastModifiedComparator());
+        notifyDataSetChanged();
+    }
+
+    public void addItem(BackupMetaData backupMetaData) {
+        this.items.add(backupMetaData);
+        Collections.sort(this.items, new BackupLastModifiedComparator());
+        notifyDataSetChanged();
+    }
+
+    public void removeItem(BackupMetaData backupMetaData) {
+        this.items.remove(backupMetaData);
         notifyDataSetChanged();
     }
 

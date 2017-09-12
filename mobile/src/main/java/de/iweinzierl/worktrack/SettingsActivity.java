@@ -4,27 +4,21 @@ import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.content.PermissionChecker;
 
 import com.github.iweinzierl.android.logging.AndroidLoggerFactory;
 
-import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.FragmentById;
-import org.androidannotations.annotations.UiThread;
 import org.slf4j.Logger;
 
 import de.iweinzierl.worktrack.job.BackupJob;
 import de.iweinzierl.worktrack.model.BackupFrequency;
-import de.iweinzierl.worktrack.model.BackupMetaData;
-import de.iweinzierl.worktrack.util.BackupHelper;
 
 @EActivity
-public class SettingsActivity extends BaseGoogleApiActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsActivity extends BaseGoogleApiAvailabilityActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final Logger LOGGER = AndroidLoggerFactory.getInstance().getLogger(SettingsActivity.class.getName());
 
@@ -59,12 +53,6 @@ public class SettingsActivity extends BaseGoogleApiActivity implements SharedPre
     }
 
     @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        super.onConnected(bundle);
-        updateLastBackupSize();
-    }
-
-    @Override
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
         switch (key) {
             case "settings_backup_frequency":
@@ -95,22 +83,6 @@ public class SettingsActivity extends BaseGoogleApiActivity implements SharedPre
         settingsFragment.setAccounts(accounts);
     }
 
-    @Background
-    protected void updateLastBackupSize() {
-        new BackupHelper(new BackupHelper.DefaultBackupCallback() {
-            @Override
-            public void onGetLastBackup(BackupMetaData lastBackup) {
-                updateLastBackupSize(lastBackup.getSize());
-            }
-        }, trackingItemRepository, getGoogleApiClient()
-        ).getLastBackup();
-    }
-
-    @UiThread
-    protected void updateLastBackupSize(long size) {
-        settingsFragment.setLastBackupSize(size / 1024f);
-    }
-
     private void backupFrequencyChanged(String newValue) {
         BackupFrequency frequency = BackupFrequency.valueOf(newValue);
 
@@ -121,5 +93,13 @@ public class SettingsActivity extends BaseGoogleApiActivity implements SharedPre
             default:
                 BackupJob.scheduleBackups(this, frequency);
         }
+    }
+
+    @Override
+    void onConnected() {
+    }
+
+    @Override
+    void onFailure() {
     }
 }

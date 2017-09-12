@@ -19,8 +19,6 @@ import java.text.NumberFormat;
 
 import de.iweinzierl.worktrack.R;
 
-import static de.iweinzierl.worktrack.job.BackupJob.PREFS_LAST_BACKUP;
-
 public class LastBackupPreference extends Preference {
 
     private static final NumberFormat NUMBER_FORMAT_SIZE = new DecimalFormat();
@@ -29,11 +27,6 @@ public class LastBackupPreference extends Preference {
         NUMBER_FORMAT_SIZE.setMaximumFractionDigits(2);
         NUMBER_FORMAT_SIZE.setMinimumFractionDigits(2);
     }
-
-    private TextView backupDateView;
-    private TextView backupSizeView;
-
-    private float lastBackupSizeKb;
 
     public LastBackupPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
@@ -57,34 +50,41 @@ public class LastBackupPreference extends Preference {
 
         View view = LayoutInflater.from(getContext()).inflate(R.layout.preference_last_back, parent, false);
 
-        backupDateView = UiUtils.getGeneric(TextView.class, view, R.id.backup_date_value);
-        backupSizeView = UiUtils.getGeneric(TextView.class, view, R.id.backup_size_value);
+        TextView backupDateView = UiUtils.getGeneric(TextView.class, view, R.id.backup_date_value);
+        TextView backupSizeView = UiUtils.getGeneric(TextView.class, view, R.id.backup_size_value);
+        TextView backupTrackingItems = UiUtils.getGeneric(TextView.class, view, R.id.backup_tracking_items_value);
+        TextView backupWorkplaces = UiUtils.getGeneric(TextView.class, view, R.id.backup_workplaces_value);
 
-
+        backupSizeView.setText(NUMBER_FORMAT_SIZE.format(getLastBackupSize() / 1000d) + " kB");
         backupDateView.setText(getLastBackupTime());
-        updateLastBackupSize();
+        backupTrackingItems.setText(String.valueOf(getLastBackupItems()));
+        backupWorkplaces.setText(String.valueOf(getLastBackupWorkplaces()));
 
         return view;
     }
 
+
     private String getLastBackupTime() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        long lastBackupTime = prefs.getLong(PREFS_LAST_BACKUP, 0);
+        long lastBackupTime = prefs.getLong(LastBackupPreferences.DATE.getProperty(), 0);
 
         return lastBackupTime > 0
                 ? new DateTime(lastBackupTime).toString("yyyy-MM-dd  HH:mm")
                 : "unknown";
     }
 
-    public void setLastBackupSize(float kiloBytes) {
-        this.lastBackupSizeKb = kiloBytes;
-        updateLastBackupSize();
+    private long getLastBackupSize() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        return prefs.getLong(LastBackupPreferences.SIZE.getProperty(), 0);
     }
 
-    private void updateLastBackupSize() {
-        if (lastBackupSizeKb >= 0 && backupSizeView != null) {
-            String size = NUMBER_FORMAT_SIZE.format(lastBackupSizeKb) + " kB";
-            backupSizeView.setText(size);
-        }
+    private int getLastBackupItems() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        return prefs.getInt(LastBackupPreferences.ITEMS.getProperty(), 0);
+    }
+
+    private int getLastBackupWorkplaces() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        return prefs.getInt(LastBackupPreferences.WORKPLACES.getProperty(), 0);
     }
 }

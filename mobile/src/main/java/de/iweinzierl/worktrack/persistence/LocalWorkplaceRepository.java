@@ -59,4 +59,13 @@ public class LocalWorkplaceRepository implements WorkplaceRepository {
 
         return false;
     }
+
+    @Override
+    public void deleteAll() {
+        try {
+            getSession().getWorkplaceDao().deleteAll();
+        } catch (Exception e) {
+            LOGGER.error("Delete of all workplaces failed", e);
+        }
+    }
 }

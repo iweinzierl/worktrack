@@ -9,4 +9,6 @@ public interface WorkplaceRepository {
     List<Workplace> findAll();
 
     boolean delete(Workplace workplace);
+
+    void deleteAll();
 }

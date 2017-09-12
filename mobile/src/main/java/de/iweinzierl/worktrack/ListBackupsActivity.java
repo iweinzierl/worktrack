@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.github.iweinzierl.android.logging.AndroidLoggerFactory;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -22,69 +23,38 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.slf4j.Logger;
 
+import java.io.IOException;
 import java.util.List;
 
+import de.iweinzierl.worktrack.analytics.AnalyticsEvents;
+import de.iweinzierl.worktrack.analytics.AnalyticsParams;
+import de.iweinzierl.worktrack.model.Backup;
 import de.iweinzierl.worktrack.model.BackupMetaData;
 import de.iweinzierl.worktrack.persistence.LocalTrackingItemRepository;
+import de.iweinzierl.worktrack.persistence.LocalWorkplaceRepository;
 import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
+import de.iweinzierl.worktrack.persistence.WorkplaceRepository;
 import de.iweinzierl.worktrack.util.BackupHelper;
+import de.iweinzierl.worktrack.util.GoogleDriveBackupHelper;
 import de.iweinzierl.worktrack.util.ItemTouchHelperCallback;
 import de.iweinzierl.worktrack.view.adapter.BackupAdapter;
 import de.iweinzierl.worktrack.view.dialog.AuthenticationDialogFragment;
 import de.iweinzierl.worktrack.view.dialog.BackupTitleInputDialog;
 
 @EActivity
-public class ListBackupsActivity extends BaseGoogleApiActivity implements ItemTouchHelperCallback.ItemCallback<BackupMetaData> {
+public class ListBackupsActivity extends BaseGoogleApiAvailabilityActivity implements ItemTouchHelperCallback.ItemCallback<BackupMetaData> {
 
     private static final Logger LOGGER = AndroidLoggerFactory.getInstance().getLogger(ListBackupsActivity.class.getName());
 
-    private final BackupHelper.BackupCallback backupCallback = new BackupHelper.DefaultBackupCallback() {
-        @Override
-        public void onCreationSuccessful() {
-            showMessage("Backup creation successful");
-            updateBackups();
-        }
-
-        @Override
-        public void onCreationFailed() {
-            showMessage("Backup creation successful");
-        }
-
-        @Override
-        public void onImportFailed() {
-            showMessage("Backup import failed");
-            hideProgressBar();
-        }
-
-        @Override
-        public void onImportSuccessful() {
-            showMessage("Backup import successful");
-            hideProgressBar();
-        }
-
-        @Override
-        public void onListBackups(List<BackupMetaData> backups) {
-            setBackups(backups);
-            hideProgressBar();
-        }
-
-        @Override
-        public void onRemovalSuccessful() {
-            showMessage("Backup removed successful");
-            hideProgressBar();
-        }
-
-        @Override
-        public void onRemovalFailed() {
-            showMessage("Backup removal failed");
-            hideProgressBar();
-        }
-    };
-
     private BackupAdapter backupAdapter;
+
+    private FirebaseAnalytics analytics;
 
     @Bean(LocalTrackingItemRepository.class)
     TrackingItemRepository trackingItemRepository;
+
+    @Bean(LocalWorkplaceRepository.class)
+    WorkplaceRepository workplaceRepository;
 
     @ViewById
     RecyclerView backups;
@@ -101,9 +71,27 @@ public class ListBackupsActivity extends BaseGoogleApiActivity implements ItemTo
     }
 
     @Override
+    void onConnected() {
+        //updateBackups();
+    }
+
+    @Override
+    void onFailure() {
+        showMessage("Authentication Error!");
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        analytics = FirebaseAnalytics.getInstance(this);
         setupAdapter();
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        updateBackups();
     }
 
     @Override
@@ -124,6 +112,11 @@ public class ListBackupsActivity extends BaseGoogleApiActivity implements ItemTo
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onDeleteItem(final BackupMetaData item) {
+        deleteBackup(item);
     }
 
     @AfterViews
@@ -162,29 +155,22 @@ public class ListBackupsActivity extends BaseGoogleApiActivity implements ItemTo
         }
     }
 
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        super.onConnected(bundle);
-
-        updateBackups();
-    }
-
-    @Background
-    protected void updateBackups() {
-        LOGGER.info("Start updating backup list Google Drive");
-
-        showProgressBar();
-
-        new BackupHelper(
-                backupCallback,
-                trackingItemRepository,
-                getGoogleApiClient()).listBackups();
-    }
-
     @UiThread
     protected void setBackups(List<BackupMetaData> backupMetaDataList) {
         LOGGER.info("Found {} backups in Google Drive App folder", backupMetaDataList.size());
         backupAdapter.setItems(backupMetaDataList);
+    }
+
+    @UiThread
+    protected void addBackup(BackupMetaData backupMetaData) {
+        LOGGER.info("Add further backup to backup list: {}", backupMetaData.getDriveId());
+        backupAdapter.addItem(backupMetaData);
+    }
+
+    @UiThread
+    protected void removeBackup(BackupMetaData backupMetaData) {
+        LOGGER.info("Remove backup from backup list: {}", backupMetaData.getDriveId());
+        backupAdapter.removeItem(backupMetaData);
     }
 
     @UiThread
@@ -194,6 +180,7 @@ public class ListBackupsActivity extends BaseGoogleApiActivity implements ItemTo
         dialog.setCallback(new BackupTitleInputDialog.Callback() {
             @Override
             public void onConfirm(String title) {
+                showProgressBar();
                 createBackup(title);
             }
 
@@ -204,14 +191,6 @@ public class ListBackupsActivity extends BaseGoogleApiActivity implements ItemTo
         });
 
         dialog.show(getSupportFragmentManager(), null);
-    }
-
-    @Background
-    protected void createBackup(String title) {
-        new BackupHelper(
-                backupCallback,
-                trackingItemRepository,
-                getGoogleApiClient()).writeBackup(title);
     }
 
     @UiThread
@@ -240,24 +219,142 @@ public class ListBackupsActivity extends BaseGoogleApiActivity implements ItemTo
     }
 
     @Background
-    protected void importBackup(String backupDriveId) {
+    protected void updateBackups() {
+        LOGGER.info("Start updating backup list Google Drive");
+
         showProgressBar();
 
-        new BackupHelper(
-                backupCallback,
-                trackingItemRepository,
-                getGoogleApiClient()
-        ).importBackup(backupDriveId);
+        executeAction(new BaseGoogleApiAvailabilityActivity.Action() {
+            @Override
+            public void execute() {
+                try {
+                    GoogleDriveBackupHelper googleDriveBackupHelper = new GoogleDriveBackupHelper(
+                            ListBackupsActivity.this, getCredential());
+
+                    googleDriveBackupHelper.listBackups(new GoogleDriveBackupHelper.Callback<List<BackupMetaData>>() {
+                        @Override
+                        public void onSuccess(List<BackupMetaData> result) {
+                            setBackups(result);
+                            hideProgressBar();
+                        }
+                    });
+                } catch (IOException e) {
+                    LOGGER.error("Error while loading backups", e);
+                    hideProgressBar();
+                    showMessage(getString(R.string.activity_list_backups_error_loading_backups));
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString(AnalyticsParams.ERROR_MESSAGE.name(), e.getMessage());
+                    analytics.logEvent(AnalyticsEvents.BACKUP_LOADING_FAILED.name(), bundle);
+                }
+            }
+        });
     }
 
-    @Override
-    public void onDeleteItem(BackupMetaData item) {
+    @Background
+    protected void createBackup(final String title) {
+        LOGGER.info("Start creating backup for Google Drive");
+
+        executeAction(new BaseGoogleApiAvailabilityActivity.Action() {
+            @Override
+            public void execute() {
+                try {
+                    GoogleDriveBackupHelper googleDriveBackupHelper = new GoogleDriveBackupHelper(
+                            ListBackupsActivity.this, getCredential());
+
+                    googleDriveBackupHelper.createBackup(
+                            title,
+                            trackingItemRepository.findAll(),
+                            workplaceRepository.findAll(),
+                            new GoogleDriveBackupHelper.Callback<BackupMetaData>() {
+                                @Override
+                                public void onSuccess(BackupMetaData result) {
+                                    addBackup(result);
+                                    hideProgressBar();
+                                }
+                            });
+                } catch (IOException e) {
+                    LOGGER.error("Error while loading backups", e);
+                    hideProgressBar();
+                    showMessage(getString(R.string.activity_list_backups_error_loading_backups));
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString(AnalyticsParams.ERROR_MESSAGE.name(), e.getMessage());
+                    analytics.logEvent(AnalyticsEvents.BACKUP_LOADING_FAILED.name(), bundle);
+                }
+            }
+        });
+    }
+
+    @Background
+    protected void importBackup(final String backupDriveId) {
         showProgressBar();
 
-        new BackupHelper(
-                backupCallback,
-                trackingItemRepository,
-                getGoogleApiClient()
-        ).removeBackup(item.getDriveId());
+        executeAction(new Action() {
+            @Override
+            public void execute() {
+                try {
+                    GoogleDriveBackupHelper googleDriveBackupHelper = new GoogleDriveBackupHelper(
+                            ListBackupsActivity.this, getCredential());
+
+                    googleDriveBackupHelper.getBackup(backupDriveId, new GoogleDriveBackupHelper.Callback<Backup>() {
+                        @Override
+                        public void onSuccess(Backup result) {
+                            new BackupHelper(trackingItemRepository, workplaceRepository)
+                                    .importBackup(result, new BackupHelper.Callback() {
+                                        @Override
+                                        public void onSuccess() {
+                                            showMessage(getString(R.string.activity_list_backups_import_backup_succeeded));
+                                            hideProgressBar();
+                                        }
+
+                                        @Override
+                                        public void onFailure() {
+                                            showMessage(getString(R.string.activity_list_backups_error_importing_backup));
+                                            hideProgressBar();
+                                        }
+                                    });
+                        }
+                    });
+                } catch (IOException e) {
+                    LOGGER.error("Error while importing backup", e);
+                    hideProgressBar();
+                    showMessage(getString(R.string.activity_list_backups_error_importing_backup));
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString(AnalyticsParams.ERROR_MESSAGE.name(), e.getMessage());
+                    analytics.logEvent(AnalyticsEvents.BACKUP_IMPORT_FAILED.name(), bundle);
+                }
+            }
+        });
+    }
+
+    @Background
+    public void deleteBackup(final BackupMetaData item) {
+        showProgressBar();
+
+        executeAction(new Action() {
+            @Override
+            public void execute() {
+                try {
+                    new GoogleDriveBackupHelper(ListBackupsActivity.this, getCredential())
+                            .deleteBackup(item.getDriveId(), new GoogleDriveBackupHelper.Callback<String>() {
+                                @Override
+                                public void onSuccess(String result) {
+                                    removeBackup(item);
+                                    hideProgressBar();
+                                }
+                            });
+                } catch (IOException e) {
+                    LOGGER.error("Error while loading backups", e);
+                    hideProgressBar();
+                    showMessage(getString(R.string.activity_list_backups_error_deleting_backup));
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString(AnalyticsParams.ERROR_MESSAGE.name(), e.getMessage());
+                    analytics.logEvent(AnalyticsEvents.BACKUP_DELETION_FAILED.name(), bundle);
+                }
+            }
+        });
     }
 }

@@ -28,10 +28,6 @@ public class SettingsFragment extends PreferenceFragment {
         addPreferencesFromResource(R.xml.settings);
     }
 
-    public void setLastBackupSize(float kiloBytes) {
-        lastBackupPreference.setLastBackupSize(kiloBytes);
-    }
-
     public void setAccounts(Account[] accounts) {
         CharSequence[] values = new CharSequence[accounts.length];
         for (int i = 0; i < accounts.length; i++) {
