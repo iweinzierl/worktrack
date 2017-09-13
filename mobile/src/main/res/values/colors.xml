@@ -15,4 +15,6 @@
 
     <color name="barChartOverHours">#FFC70B1B</color>
     <color name="barChartNormalHours">#091ad6</color>
+
+    <color name="colorMapSearch">#ffffff</color>
 </resources>

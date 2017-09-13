@@ -13,11 +13,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.SeekBar;
 
 import com.github.iweinzierl.android.logging.AndroidLoggerFactory;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -87,6 +92,26 @@ public class PickLocationActivity extends AppCompatActivity implements OnMapRead
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+        SupportPlaceAutocompleteFragment placeAutocompleteFragment =
+                (SupportPlaceAutocompleteFragment) getSupportFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+
+        placeAutocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                LOGGER.info("Selected place -> {}", place.getName());
+                googleMap.moveCamera(
+                        CameraUpdateFactory.newLatLngZoom(
+                                place.getLatLng(),
+                                17
+                        ));
+            }
+
+            @Override
+            public void onError(Status status) {
+                LOGGER.error("Unable to select place", status);
             }
         });
     }
@@ -170,8 +195,6 @@ public class PickLocationActivity extends AppCompatActivity implements OnMapRead
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-
-            googleMap.setMyLocationEnabled(true);
 
             locationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
                 @Override

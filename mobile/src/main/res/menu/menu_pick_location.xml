@@ -4,6 +4,13 @@
     tools:context="de.iweinzierl.worktrack.DayOverviewActivity">
 
     <item
+        android:id="@+id/action_search"
+        android:actionViewClass="android.widget.SearchView"
+        android:icon="@drawable/ic_search_white_36dp"
+        android:title="@string/activity_pick_location_action_search"
+        app:showAsAction="collapseActionView|ifRoom" />
+
+    <item
         android:id="@+id/action_pick_location"
         android:icon="@drawable/ic_done_white_32px"
         android:orderInCategory="100"
