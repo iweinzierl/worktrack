@@ -3,40 +3,39 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:id="@+id/place_autocomplete_container"
+    <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/map"
+        class="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="64dp">
+        map:uiRotateGestures="true"
+        map:uiScrollGestures="true"
+        map:uiTiltGestures="true" />
 
-        <SeekBar
-            android:id="@+id/radiusBar"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_alignParentBottom="true"
-            android:max="500"
-            android:padding="16dp"
-            android:progress="100" />
-
-        <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/map"
-            class="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/radiusBar"
-            map:uiRotateGestures="true"
-            map:uiScrollGestures="true"
-            map:uiTiltGestures="true" />
-    </RelativeLayout>
+    <SeekBar
+        android:id="@+id/radiusBar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="24dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:max="500"
+        android:maxHeight="6dp"
+        android:maxWidth="6dp"
+        android:minHeight="6dp"
+        android:minWidth="6dp"
+        android:padding="16dp"
+        android:progress="100" />
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:elevation="24dp"
-        android:background="@color/colorMapSearch">
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:background="@color/colorMapSearch"
+        android:elevation="24dp">
 
         <fragment
             android:id="@+id/place_autocomplete_fragment"

@@ -10,10 +10,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.SeekBar;
 
 import com.github.iweinzierl.android.logging.AndroidLoggerFactory;
@@ -33,6 +29,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
@@ -130,26 +127,6 @@ public class PickLocationActivity extends AppCompatActivity implements OnMapRead
         setupMap();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_pick_location, menu);
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_pick_location) {
-            finishSelection();
-            return true;
-        }
-
-        return false;
-    }
-
     @UiThread
     protected void setRadius(int radius) {
         if (selectedLocation != null) {
@@ -157,6 +134,7 @@ public class PickLocationActivity extends AppCompatActivity implements OnMapRead
         }
     }
 
+    @Click(R.id.confirm)
     protected void finishSelection() {
         LOGGER.info("clicked action: select location");
 

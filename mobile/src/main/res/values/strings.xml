@@ -13,8 +13,7 @@
     <string name="activity_manage_workplaces_action_delete_cancel">No</string>
 
     <string name="activity_pick_location">Choose location</string>
-    <string name="activity_pick_location_action_done">Finish</string>
-    <string name="activity_pick_location_action_search">Search</string>
+    <string name="activity_pick_location_action_confirm">OK</string>
 
     <string name="activity_dayverview">Daily Overview</string>
     <string name="activity_dayoverview_incorrect_warning">Items are not correct!</string>

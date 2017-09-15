@@ -3,6 +3,7 @@ debug-pro.keystore
 release-free.keystore
 release-pro.keystore
 
+mobile/src/dev/res/raw/client_secret.json
 mobile/src/dev/google-services.json
 mobile/src/free/google-services.json
 mobile/src/pro/google-services.json
