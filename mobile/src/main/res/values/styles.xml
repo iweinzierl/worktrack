@@ -42,4 +42,12 @@
         <item name="android:textColor">@color/drawerFontColor</item>
     </style>
 
+    <style name="CardView.Title">
+        <item name="android:textSize">@dimen/cardTitleFontSize</item>
+    </style>
+
+    <style name="CardView.Button" parent="android:Widget.Material.Button.Borderless">
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
 </resources>

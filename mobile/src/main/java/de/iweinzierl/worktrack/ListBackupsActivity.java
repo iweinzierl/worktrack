@@ -130,7 +130,10 @@ public class ListBackupsActivity extends BaseGoogleApiAvailabilityActivity imple
         toolbar.setTitle(R.string.activity_list_backups);
         setSupportActionBar(toolbar);
 
-        ItemTouchHelper touchHelper = new ItemTouchHelper(new ItemTouchHelperCallback<>(this, backupAdapter, this));
+        ItemTouchHelperCallback<BackupMetaData> callback = new ItemTouchHelperCallback<>(this, backupAdapter, this);
+        callback.setDiscardDialogTitle(R.string.activity_list_backups_dialog_discard_title);
+
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(backups);
     }
 

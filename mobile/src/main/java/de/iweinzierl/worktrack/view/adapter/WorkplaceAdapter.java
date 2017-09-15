@@ -13,19 +13,21 @@ import java.util.List;
 import de.iweinzierl.worktrack.R;
 import de.iweinzierl.worktrack.persistence.Workplace;
 
-public class WorkplaceAdapter extends RecyclerView.Adapter<WorkplaceViewHolder> implements ItemToucheHelperAdapter<Workplace> {
+public class WorkplaceAdapter extends RecyclerView.Adapter<WorkplaceViewHolder> {
 
+    private final ActionCallback<Workplace> actionCallback;
     private List<Workplace> workplaces;
 
     @SuppressWarnings("unchecked")
-    public WorkplaceAdapter() {
+    public WorkplaceAdapter(ActionCallback<Workplace> actionCallback) {
+        this.actionCallback = actionCallback;
         this.workplaces = Collections.EMPTY_LIST;
     }
 
     @Override
     public WorkplaceViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_workplace, parent, false);
-        return new WorkplaceViewHolder(parent.getContext(), view);
+        return new WorkplaceViewHolder(parent.getContext(), view, actionCallback);
     }
 
     @Override
@@ -42,21 +44,5 @@ public class WorkplaceAdapter extends RecyclerView.Adapter<WorkplaceViewHolder> 
         this.workplaces = Lists.newArrayList();
         this.workplaces.addAll(workplaces);
         this.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onItemDismiss(int position) {
-        workplaces.remove(position);
-        notifyItemRemoved(position);
-    }
-
-    @Override
-    public void onItemDismissRevert(int position) {
-        notifyItemChanged(position);
-    }
-
-    @Override
-    public Workplace getItem(int position) {
-        return workplaces.get(position);
     }
 }

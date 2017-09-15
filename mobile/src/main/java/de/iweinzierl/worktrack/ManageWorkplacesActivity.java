@@ -2,14 +2,15 @@ package de.iweinzierl.worktrack;
 
 import android.Manifest;
 import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -39,12 +40,12 @@ import java.util.UUID;
 import de.iweinzierl.worktrack.persistence.LocalWorkplaceRepository;
 import de.iweinzierl.worktrack.persistence.Workplace;
 import de.iweinzierl.worktrack.receiver.GeofencingTransitionService;
-import de.iweinzierl.worktrack.util.ItemTouchHelperCallback;
+import de.iweinzierl.worktrack.view.adapter.ActionCallback;
 import de.iweinzierl.worktrack.view.adapter.WorkplaceAdapter;
 import de.iweinzierl.worktrack.view.dialog.WorkplaceTitleQueryDialog;
 
 @EActivity
-public class ManageWorkplacesActivity extends BaseActivity implements ItemTouchHelperCallback.ItemCallback<Workplace> {
+public class ManageWorkplacesActivity extends BaseActivity implements ActionCallback<Workplace> {
 
     private static final Logger LOGGER = AndroidLoggerFactory.getInstance().getLogger("ManageWorkplacesActivity");
 
@@ -76,14 +77,11 @@ public class ManageWorkplacesActivity extends BaseActivity implements ItemTouchH
     @AfterViews
     protected void setup() {
         geofencingClient = LocationServices.getGeofencingClient(this);
-        workplaceAdapter = new WorkplaceAdapter();
+        workplaceAdapter = new WorkplaceAdapter(this);
 
         cardView.setAdapter(workplaceAdapter);
         cardView.setHasFixedSize(false);
         cardView.setLayoutManager(new LinearLayoutManager(this));
-
-        ItemTouchHelper touchHelper = new ItemTouchHelper(new ItemTouchHelperCallback<>(this, workplaceAdapter, this));
-        touchHelper.attachToRecyclerView(cardView);
     }
 
     @Click(R.id.addAction)
@@ -156,13 +154,51 @@ public class ManageWorkplacesActivity extends BaseActivity implements ItemTouchH
     }
 
     @Override
-    public void onDeleteItem(Workplace workplace) {
-        removeWorkplace(workplace);
+    public void onRenameItem(Workplace workplace) {
+        new WorkplaceTitleQueryDialog(
+                workplace,
+                this,
+                new WorkplaceTitleQueryDialog.Callback() {
+                    @Override
+                    public void onSubmit(Workplace workplace) {
+                        workplaceAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancel(Workplace workplace) {
+                        // do nothing
+                    }
+                }
+        ).show();
+    }
+
+    @Override
+    public void onDeleteItem(final Workplace workplace) {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.activity_manage_workplaces_dialog_delete_title)
+                .setPositiveButton(R.string.activity_manage_workplaces_dialog_delete_confirm, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        removeWorkplace(workplace);
+                        dialogInterface.dismiss();
+                    }
+                })
+                .setNegativeButton(R.string.activity_manage_workplaces_dialog_delete_cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                }).show();
     }
 
     @Background
     protected void removeWorkplace(Workplace workplace) {
+        showProgressBar();
         workplaceRepository.delete(workplace);
+        updateGeofences(true);
+        updateUI();
+
+        hideProgressBar();
     }
 
     @Background

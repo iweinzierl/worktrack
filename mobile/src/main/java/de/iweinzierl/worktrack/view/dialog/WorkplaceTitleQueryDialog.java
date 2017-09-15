@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.api.client.repackaged.com.google.common.base.Strings;
+
 import de.iweinzierl.worktrack.R;
 import de.iweinzierl.worktrack.persistence.Workplace;
 
@@ -44,6 +46,7 @@ public class WorkplaceTitleQueryDialog {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         fireOnCancel();
+                        dialogInterface.dismiss();
                     }
                 })
                 .show();
@@ -51,6 +54,10 @@ public class WorkplaceTitleQueryDialog {
         ((TextView) dialog.findViewById(R.id.location)).setText(createLocationString());
         ((TextView) dialog.findViewById(R.id.radius)).setText(String.valueOf(workplace.getRadius()));
         nameView = (EditText) dialog.findViewById(R.id.name);
+
+        if (!Strings.isNullOrEmpty(workplace.getName())) {
+            nameView.setText(workplace.getName());
+        }
     }
 
     private String createLocationString() {

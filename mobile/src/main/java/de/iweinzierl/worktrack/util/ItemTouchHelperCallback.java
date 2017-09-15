@@ -23,6 +23,10 @@ public class ItemTouchHelperCallback<T> extends ItemTouchHelper.Callback {
 
     private Context context;
 
+    private int discardDialogTitle = R.string.util_swipe_delete_title;
+    private int discardConfirmButtonTitle = R.string.util_swipe_delete_confirm;
+    private int discardCancelButtonTitle = R.string.util_swipe_delete_cancel;
+
     private final ItemToucheHelperAdapter<T> adapter;
     private final ItemCallback<T> itemCallback;
 
@@ -48,9 +52,8 @@ public class ItemTouchHelperCallback<T> extends ItemTouchHelper.Callback {
         final T item = adapter.getItem(viewHolder.getAdapterPosition());
 
         new AlertDialog.Builder(context)
-                .setTitle(R.string.activity_manage_workplaces_action_delete_title)
-                .setMessage(R.string.activity_manage_workplaces_action_delete_message)
-                .setNegativeButton(R.string.activity_manage_workplaces_action_delete_cancel, new DialogInterface.OnClickListener() {
+                .setTitle(discardDialogTitle)
+                .setNegativeButton(discardCancelButtonTitle, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -63,7 +66,7 @@ public class ItemTouchHelperCallback<T> extends ItemTouchHelper.Callback {
                         adapter.onItemDismissRevert(viewHolder.getAdapterPosition());
                     }
                 })
-                .setPositiveButton(R.string.activity_manage_workplaces_action_delete_ok, new DialogInterface.OnClickListener() {
+                .setPositiveButton(discardConfirmButtonTitle, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         itemCallback.onDeleteItem(item);
@@ -71,5 +74,17 @@ public class ItemTouchHelperCallback<T> extends ItemTouchHelper.Callback {
                     }
                 })
                 .show();
+    }
+
+    public void setDiscardDialogTitle(int discardDialogTitle) {
+        this.discardDialogTitle = discardDialogTitle;
+    }
+
+    public void setDiscardConfirmButtonTitle(int discardConfirmButtonTitle) {
+        this.discardConfirmButtonTitle = discardConfirmButtonTitle;
+    }
+
+    public void setDiscardCancelButtonTitle(int discardCancelButtonTitle) {
+        this.discardCancelButtonTitle = discardCancelButtonTitle;
     }
 }

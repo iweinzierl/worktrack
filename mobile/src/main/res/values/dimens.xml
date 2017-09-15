@@ -6,7 +6,8 @@
     <dimen name="actionBarHeight">56dp</dimen>
     <dimen name="activityComponentMarginTop">64dp</dimen>
 
-    <dimen name="cardview_vertical_margin">8dp</dimen>
+    <dimen name="cardVerticalMargin">8dp</dimen>
+    <dimen name="cardTitleFontSize">16sp</dimen>
 
     <dimen name="dialog_content_horizontal_margin">24dp</dimen>
     <dimen name="dialog_content_vertical_margin">24dp</dimen>

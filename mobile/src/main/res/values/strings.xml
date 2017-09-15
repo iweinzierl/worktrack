@@ -7,10 +7,11 @@
 
     <string name="activity_manage_workplaces">Manage Workplaces</string>
     <string name="activity_manage_workplaces_action_add">Add Workplace</string>
-    <string name="activity_manage_workplaces_action_delete_title">Delete Workplace</string>
-    <string name="activity_manage_workplaces_action_delete_message">Really delete workplace?</string>
-    <string name="activity_manage_workplaces_action_delete_ok">Delete</string>
-    <string name="activity_manage_workplaces_action_delete_cancel">No</string>
+    <string name="activity_manage_workplaces_action_rename">Rename</string>
+    <string name="activity_manage_workplaces_action_delete">Delete</string>
+    <string name="activity_manage_workplaces_dialog_delete_title">Discard workplace?</string>
+    <string name="activity_manage_workplaces_dialog_delete_confirm">Discard</string>
+    <string name="activity_manage_workplaces_dialog_delete_cancel">Cancel</string>
 
     <string name="activity_pick_location">Choose location</string>
     <string name="activity_pick_location_action_confirm">OK</string>
@@ -44,6 +45,7 @@
     <string name="activity_list_backups_error_deleting_backup">Error while deleting backup.</string>
     <string name="activity_list_backups_error_importing_backup">Error while importing backup.</string>
     <string name="activity_list_backups_import_backup_succeeded">Import of backup succeeded.</string>
+    <string name="activity_list_backups_dialog_discard_title">Discard Backup?</string>
 
     <string name="activity_settings">Settings</string>
 
@@ -95,6 +97,16 @@
     <string name="settings_backup_required_connection">Requires Connection</string>
     <string name="settings_backup_required_connection_dialogtitle">Requires Connection:</string>
     <string name="settings_backup_category_last_backup">Last Backup</string>
+
+    <string name="workplace_viewholder_label_location">Location:</string>
+    <string name="workplace_viewholder_label_radius">Radius:</string>
+
+    <string name="location_template">%1$.3f x %2$.3f</string>
+    <string name="radius_template">%1$.0f</string>
+
+    <string name="util_swipe_delete_title">Discard Item?</string>
+    <string name="util_swipe_delete_confirm">Discard</string>
+    <string name="util_swipe_delete_cancel">Cancel</string>
 
     <string name="preference_last_backup">Last Backup</string>
     <string name="preference_last_backup_date">Date:</string>

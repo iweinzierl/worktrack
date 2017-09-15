@@ -1,5 +1,7 @@
 package de.iweinzierl.worktrack.persistence;
 
+import com.google.common.base.Objects;
+
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
@@ -105,5 +107,23 @@ public class Workplace {
 
     public void setGeofenceRequestId(String geofenceRequestId) {
         this.geofenceRequestId = geofenceRequestId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Workplace workplace = (Workplace) o;
+        return Double.compare(workplace.lat, lat) == 0 &&
+                Double.compare(workplace.lon, lon) == 0 &&
+                Double.compare(workplace.radius, radius) == 0 &&
+                Objects.equal(id, workplace.id) &&
+                Objects.equal(name, workplace.name) &&
+                Objects.equal(geofenceRequestId, workplace.geofenceRequestId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id, name, lat, lon, radius, geofenceRequestId);
     }
 }
