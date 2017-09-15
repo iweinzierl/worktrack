@@ -20,6 +20,13 @@ import de.iweinzierl.worktrack.persistence.TrackingItemType;
 @EReceiver
 public class StartWorkReceiver extends BroadcastReceiver {
 
+    public static final String EXTRA_WORKPLACE_ID = "de.iweinzierl.worktrack.receiver.extra.workplace_id";
+    public static final String EXTRA_WORKPLACE_NAME = "de.iweinzierl.worktrack.receiver.extra.workplace_name";
+    public static final String EXTRA_WORKPLACE_LAT = "de.iweinzierl.worktrack.receiver.extra.workplace_lat";
+    public static final String EXTRA_WORKPLACE_LON = "de.iweinzierl.worktrack.receiver.extra.workplace_lon";
+    public static final String EXTRA_EVENT_LAT = "de.iweinzierl.worktrack.receiver.extra.event.lat";
+    public static final String EXTRA_EVENT_LON = "de.iweinzierl.worktrack.receiver.extra.event.lon";
+
     private static final Logger LOGGER = AndroidLoggerFactory.getInstance().getLogger("StartWorkReceiver");
 
     @Bean(LocalTrackingItemRepository.class)
@@ -30,6 +37,31 @@ public class StartWorkReceiver extends BroadcastReceiver {
         LOGGER.info("Received START_WORK broadcast");
 
         TrackingItem item = new TrackingItem(TrackingItemType.CHECKIN, DateTime.now(), CreationType.AUTO);
+
+        if (intent.hasExtra(EXTRA_WORKPLACE_NAME)) {
+            item.setWorkplaceName(intent.getStringExtra(EXTRA_WORKPLACE_NAME));
+        }
+
+        if (intent.hasExtra(EXTRA_WORKPLACE_ID)) {
+            item.setWorkplaceId(intent.getLongExtra(EXTRA_WORKPLACE_ID, 0));
+        }
+
+        if (intent.hasExtra(EXTRA_WORKPLACE_LAT)) {
+            item.setWorkplaceLat(intent.getDoubleExtra(EXTRA_WORKPLACE_LAT, 0));
+        }
+
+        if (intent.hasExtra(EXTRA_WORKPLACE_LON)) {
+            item.setWorkplaceLon(intent.getDoubleExtra(EXTRA_WORKPLACE_LON, 0));
+        }
+
+        if (intent.hasExtra(EXTRA_EVENT_LAT)) {
+            item.setTriggerEventLat(intent.getDoubleExtra(EXTRA_EVENT_LAT, 0));
+        }
+
+        if (intent.hasExtra(EXTRA_EVENT_LON)) {
+            item.setTriggerEventLon(intent.getDoubleExtra(EXTRA_EVENT_LON, 0));
+        }
+
         TrackingItem save = trackingItemRepository.save(item);
 
         if (save.getId() > 0) {

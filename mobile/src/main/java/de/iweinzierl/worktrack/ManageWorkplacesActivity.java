@@ -195,7 +195,7 @@ public class ManageWorkplacesActivity extends BaseActivity implements ActionCall
     protected void removeWorkplace(Workplace workplace) {
         showProgressBar();
         workplaceRepository.delete(workplace);
-        updateGeofences(true);
+        removeGeofence(workplace);
         updateUI();
 
         hideProgressBar();
@@ -241,6 +241,10 @@ public class ManageWorkplacesActivity extends BaseActivity implements ActionCall
                         hideProgressBar();
                     }
                 });
+    }
+
+    private void removeGeofence(Workplace workplace) {
+        geofencingClient.removeGeofences(Lists.newArrayList(workplace.getGeofenceRequestId()));
     }
 
     private Geofence buildGeofence(Workplace workplace) {

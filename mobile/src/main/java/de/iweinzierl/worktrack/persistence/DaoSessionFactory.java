@@ -9,6 +9,8 @@ import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
 import org.slf4j.Logger;
 
+import de.iweinzierl.worktrack.persistence.migration.UpgradeHelper;
+
 @EBean(scope = EBean.Scope.Singleton)
 public class DaoSessionFactory {
 
@@ -24,7 +26,7 @@ public class DaoSessionFactory {
     public void init() {
         LOGGER.info("Initialize session factory");
 
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(context, DB_NAME);
+        UpgradeHelper helper = new UpgradeHelper(context, DB_NAME);
         daoMaster = new DaoMaster(helper.getWritableDb());
     }
 
