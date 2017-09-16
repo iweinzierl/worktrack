@@ -108,6 +108,9 @@
     <string name="util_swipe_delete_confirm">Discard</string>
     <string name="util_swipe_delete_cancel">Cancel</string>
 
+    <string name="cardview_trackingitem_not_available">n/a</string>
+    <string name="cardview_trackingitem_action_discard">Discard</string>
+
     <string name="preference_last_backup">Last Backup</string>
     <string name="preference_last_backup_date">Date:</string>
     <string name="preference_last_backup_size">Size:</string>

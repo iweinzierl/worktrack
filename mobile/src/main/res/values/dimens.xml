@@ -7,7 +7,10 @@
     <dimen name="activityComponentMarginTop">64dp</dimen>
 
     <dimen name="cardVerticalMargin">8dp</dimen>
+    <dimen name="cardContentFontSize">14sp</dimen>
     <dimen name="cardTitleFontSize">16sp</dimen>
+    <dimen name="cardTopPadding">8dp</dimen>
+    <dimen name="cardTitlePaddingBottom">16dp</dimen>
 
     <dimen name="dialog_content_horizontal_margin">24dp</dimen>
     <dimen name="dialog_content_vertical_margin">24dp</dimen>

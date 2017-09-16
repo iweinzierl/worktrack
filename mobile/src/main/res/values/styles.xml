@@ -44,6 +44,14 @@
 
     <style name="CardView.Title">
         <item name="android:textSize">@dimen/cardTitleFontSize</item>
+        <item name="android:textColor">@color/cardViewTextTitle</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:paddingBottom">@dimen/cardTitlePaddingBottom</item>
+    </style>
+
+    <style name="CardView.Text">
+        <item name="android:textColor">@color/cardViewTextContent</item>
+        <item name="android:textSize">@dimen/cardContentFontSize</item>
     </style>
 
     <style name="CardView.Button" parent="android:Widget.Material.Button.Borderless">

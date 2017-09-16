@@ -16,5 +16,11 @@
     <color name="barChartOverHours">#FFC70B1B</color>
     <color name="barChartNormalHours">#091ad6</color>
 
+    <color name="colorCheckIn">#1caf02</color>
+    <color name="colorCheckOut">#a71a16</color>
+
     <color name="colorMapSearch">#ffffff</color>
+
+    <color name="cardViewTextTitle">#000</color>
+    <color name="cardViewTextContent">#a1a1a1</color>
 </resources>

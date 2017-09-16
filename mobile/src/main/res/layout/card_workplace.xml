@@ -22,11 +22,11 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:scaleType="fitXY"
                 android:paddingBottom="16dp"
                 android:paddingEnd="16dp"
                 android:paddingStart="16dp"
-                android:paddingTop="16dp" />
+                android:paddingTop="16dp"
+                android:scaleType="fitXY" />
 
             <LinearLayout
                 android:id="@+id/container"
@@ -50,8 +50,7 @@
                         style="@style/CardView.Title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingBottom="16dp"
-                        android:textStyle="bold" />
+                        android:paddingBottom="16dp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -59,6 +58,7 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            style="@style/CardView.Text"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="2"
@@ -66,6 +66,7 @@
 
                         <TextView
                             android:id="@+id/location"
+                            style="@style/CardView.Text"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1" />
@@ -77,6 +78,7 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            style="@style/CardView.Text"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="2"
@@ -84,6 +86,7 @@
 
                         <TextView
                             android:id="@+id/radius"
+                            style="@style/CardView.Text"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1" />

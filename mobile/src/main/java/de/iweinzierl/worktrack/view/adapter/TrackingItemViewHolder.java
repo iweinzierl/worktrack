@@ -1,10 +1,9 @@
 package de.iweinzierl.worktrack.view.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import de.iweinzierl.worktrack.R;
@@ -14,13 +13,16 @@ import de.iweinzierl.worktrack.persistence.TrackingItemType;
 
 class TrackingItemViewHolder extends RecyclerView.ViewHolder {
 
-    private static final String DATETIME_PATTERN = "yyyy-MM-dd HH:mm";
+    private static final String DATE_PATTERN = "yyyy-MM-dd";
+    private static final String TIME_PATTERN = "HH:mm";
 
     private final Context context;
 
-    private final ImageView iconView;
-    private final ImageView manualIconView;
+    private final View typeIndicator;
+    private final TextView eventDateView;
     private final TextView eventTimeView;
+    private final TextView eventLocationView;
+    private final TextView workplaceNameView;
     private final TextView typeView;
 
     TrackingItemViewHolder(Context context, View itemView) {
@@ -28,23 +30,37 @@ class TrackingItemViewHolder extends RecyclerView.ViewHolder {
 
         this.context = context;
 
-        iconView = (ImageView) itemView.findViewById(R.id.iconView);
-        manualIconView = (ImageView) itemView.findViewById(R.id.manualIconView);
-        eventTimeView = (TextView) itemView.findViewById(R.id.eventtime);
+        typeIndicator = itemView.findViewById(R.id.typeIndicator);
+        eventDateView = (TextView) itemView.findViewById(R.id.eventDate);
+        eventTimeView = (TextView) itemView.findViewById(R.id.eventTime);
+        eventLocationView = (TextView) itemView.findViewById(R.id.eventLocation);
+        workplaceNameView = (TextView) itemView.findViewById(R.id.workplaceName);
         typeView = (TextView) itemView.findViewById(R.id.type);
     }
 
     void apply(TrackingItem item) {
-        Drawable drawable = item.getType() == TrackingItemType.CHECKIN
-                ? context.getDrawable(R.drawable.ic_arrow_forward_green_32px)
-                : context.getDrawable(R.drawable.ic_arrow_backward_red_32px);
+        Resources.Theme theme = context.getTheme();
 
-        iconView.setImageDrawable(drawable);
-        eventTimeView.setText(item.getEventTime().toString(DATETIME_PATTERN));
+        eventDateView.setText(item.getEventTime().toString(DATE_PATTERN));
+        eventTimeView.setText(item.getEventTime().toString(TIME_PATTERN));
         typeView.setText(item.getType().name());
 
-        if (item.getCreationType() == CreationType.MANUAL) {
-            manualIconView.setImageDrawable(context.getDrawable(R.drawable.ic_person_add_black_32px));
+        if (item.getTriggerEventLat() != 0 && item.getTriggerEventLon() != 0) {
+            eventLocationView.setText(context.getString(R.string.location_template,
+                    item.getTriggerEventLat(), item.getTriggerEventLon()));
+            workplaceNameView.setText(item.getWorkplaceName());
+        }
+
+        if (item.getType() == TrackingItemType.CHECKIN) {
+            typeIndicator.setBackgroundColor(context.getResources().getColor(R.color.colorCheckIn, theme));
+        } else {
+            typeIndicator.setBackgroundColor(context.getResources().getColor(R.color.colorCheckOut, theme));
+        }
+
+        if (item.getCreationType() == CreationType.AUTO) {
+            typeView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_auto_added_black_24px, 0, 0, 0);
+        } else {
+            typeView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_manual_added_24dp, 0, 0, 0);
         }
     }
 }
