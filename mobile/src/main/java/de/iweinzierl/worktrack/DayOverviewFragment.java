@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -35,70 +34,21 @@ import de.iweinzierl.worktrack.persistence.TrackingItem;
 import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
 import de.iweinzierl.worktrack.persistence.TrackingItemType;
 import de.iweinzierl.worktrack.util.SettingsHelper;
-import de.iweinzierl.worktrack.view.adapter.ItemToucheHelperAdapter;
+import de.iweinzierl.worktrack.view.adapter.ActionCallback;
 import de.iweinzierl.worktrack.view.adapter.TrackingItemAdapter;
 
 @EFragment(R.layout.fragment_day_overview)
-public class DayOverviewFragment extends Fragment {
+public class DayOverviewFragment extends Fragment implements ActionCallback<TrackingItem> {
 
     public static final String ARGS_YEAR = "dayoverviewfragment.args.year";
     public static final String ARGS_MONTH = "dayoverviewfragment.args.month";
     public static final String ARGS_DAY = "dayoverviewfragment.args.day";
 
-    public interface TrackingItemCallback {
+    interface TrackingItemCallback {
         void onDeleteItem(TrackingItem item);
     }
 
-    private class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
-        private final ItemToucheHelperAdapter<TrackingItem> adapter;
-        private final TrackingItemCallback trackingItemCallback;
-
-        private ItemTouchHelperCallback(ItemToucheHelperAdapter<TrackingItem> adapter, TrackingItemCallback trackingItemCallback) {
-            this.adapter = adapter;
-            this.trackingItemCallback = trackingItemCallback;
-        }
-
-
-        @Override
-        public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-            return makeMovementFlags(0, ItemTouchHelper.START | ItemTouchHelper.END);
-        }
-
-        @Override
-        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-            return false;
-        }
-
-        @Override
-        public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
-            final TrackingItem item = adapter.getItem(viewHolder.getAdapterPosition());
-
-            new AlertDialog.Builder(getActivity())
-                    .setTitle(R.string.activity_dayoverview_action_delete_title)
-                    .setMessage(R.string.activity_dayoverview_action_delete_message)
-                    .setNegativeButton(R.string.activity_dayoverview_action_delete_cancel, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-                            dialog.dismiss();
-                            adapter.onItemDismissRevert(viewHolder.getAdapterPosition());
-                        }
-                    })
-                    .setPositiveButton(R.string.activity_dayoverview_action_delete_ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            trackingItemCallback.onDeleteItem(item);
-                            adapter.onItemDismiss(viewHolder.getAdapterPosition());
-                        }
-                    })
-                    .show();
-        }
-    }
+    private TrackingItemCallback trackingItemCallback;
 
     @Bean(LocalTrackingItemRepository.class)
     TrackingItemRepository trackingItemRepository;
@@ -122,8 +72,6 @@ public class DayOverviewFragment extends Fragment {
 
     private TrackingItemAdapter trackingItemAdapter;
 
-    private TrackingItemCallback trackingItemCallback;
-
     private static final PeriodFormatter periodFormatter = new PeriodFormatterBuilder()
             .appendHours()
             .printZeroNever()
@@ -134,7 +82,7 @@ public class DayOverviewFragment extends Fragment {
             .toFormatter();
 
     public DayOverviewFragment() {
-        trackingItemAdapter = new TrackingItemAdapter();
+        trackingItemAdapter = new TrackingItemAdapter(this);
     }
 
     @Override
@@ -149,9 +97,6 @@ public class DayOverviewFragment extends Fragment {
 
     @AfterViews
     protected void setupUI() {
-        ItemTouchHelper touchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(trackingItemAdapter, trackingItemCallback));
-        touchHelper.attachToRecyclerView(cardView);
-
         cardView.setAdapter(trackingItemAdapter);
         cardView.setHasFixedSize(false);
         cardView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -220,6 +165,38 @@ public class DayOverviewFragment extends Fragment {
     @UiThread
     protected void setDateView(LocalDate date) {
         dateView.setText(date.toString("yyyy-MM-dd"));
+    }
+
+    @Override
+    public void onDeleteItem(final TrackingItem item) {
+        new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.activity_dayoverview_action_delete_title)
+                .setMessage(R.string.activity_dayoverview_action_delete_message)
+                .setNegativeButton(R.string.activity_dayoverview_action_delete_cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton(R.string.activity_dayoverview_action_delete_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        trackingItemCallback.onDeleteItem(item);
+                        trackingItemAdapter.removeItem(item);
+                    }
+                })
+                .show();
+    }
+
+    @Override
+    public void onRenameItem(TrackingItem item) {
+
     }
 
     private void setTrackingItemsCorrect(boolean trackingItemsCorrect) {

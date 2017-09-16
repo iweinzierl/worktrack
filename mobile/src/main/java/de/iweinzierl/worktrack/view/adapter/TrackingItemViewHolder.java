@@ -16,6 +16,7 @@ class TrackingItemViewHolder extends RecyclerView.ViewHolder {
     private static final String DATE_PATTERN = "yyyy-MM-dd";
     private static final String TIME_PATTERN = "HH:mm";
 
+    private final ActionCallback<TrackingItem> actionCallback;
     private final Context context;
 
     private final View typeIndicator;
@@ -24,11 +25,13 @@ class TrackingItemViewHolder extends RecyclerView.ViewHolder {
     private final TextView eventLocationView;
     private final TextView workplaceNameView;
     private final TextView typeView;
+    private final View discardButton;
 
-    TrackingItemViewHolder(Context context, View itemView) {
+    TrackingItemViewHolder(Context context, View itemView, ActionCallback<TrackingItem> actionCallback) {
         super(itemView);
 
         this.context = context;
+        this.actionCallback = actionCallback;
 
         typeIndicator = itemView.findViewById(R.id.typeIndicator);
         eventDateView = (TextView) itemView.findViewById(R.id.eventDate);
@@ -36,9 +39,10 @@ class TrackingItemViewHolder extends RecyclerView.ViewHolder {
         eventLocationView = (TextView) itemView.findViewById(R.id.eventLocation);
         workplaceNameView = (TextView) itemView.findViewById(R.id.workplaceName);
         typeView = (TextView) itemView.findViewById(R.id.type);
+        discardButton = itemView.findViewById(R.id.discard);
     }
 
-    void apply(TrackingItem item) {
+    void apply(final TrackingItem item) {
         Resources.Theme theme = context.getTheme();
 
         eventDateView.setText(item.getEventTime().toString(DATE_PATTERN));
@@ -62,5 +66,12 @@ class TrackingItemViewHolder extends RecyclerView.ViewHolder {
         } else {
             typeView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_manual_added_24dp, 0, 0, 0);
         }
+
+        discardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                actionCallback.onDeleteItem(item);
+            }
+        });
     }
 }

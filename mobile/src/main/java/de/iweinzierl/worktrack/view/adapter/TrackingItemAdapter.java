@@ -16,19 +16,21 @@ import de.iweinzierl.worktrack.persistence.TrackingItem;
 
 public class TrackingItemAdapter extends RecyclerView.Adapter<TrackingItemViewHolder> implements ItemToucheHelperAdapter<TrackingItem> {
 
+    private ActionCallback<TrackingItem> actionCallback;
     private Context context;
 
     private List<TrackingItem> items;
 
     @SuppressWarnings("unchecked")
-    public TrackingItemAdapter() {
+    public TrackingItemAdapter(ActionCallback<TrackingItem> actionCallback) {
+        this.actionCallback = actionCallback;
         this.items = Collections.EMPTY_LIST;
     }
 
     @Override
     public TrackingItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_trackingitem, parent, false);
-        return new TrackingItemViewHolder(context, view);
+        return new TrackingItemViewHolder(context, view, actionCallback);
     }
 
     @Override
@@ -63,5 +65,10 @@ public class TrackingItemAdapter extends RecyclerView.Adapter<TrackingItemViewHo
 
     public void setContext(Context context) {
         this.context = context;
+    }
+
+    public void removeItem(TrackingItem item) {
+        items.remove(item);
+        notifyDataSetChanged();
     }
 }
