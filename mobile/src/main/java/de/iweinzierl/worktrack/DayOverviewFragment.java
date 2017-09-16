@@ -171,7 +171,6 @@ public class DayOverviewFragment extends Fragment implements ActionCallback<Trac
     public void onDeleteItem(final TrackingItem item) {
         new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.activity_dayoverview_action_delete_title)
-                .setMessage(R.string.activity_dayoverview_action_delete_message)
                 .setNegativeButton(R.string.activity_dayoverview_action_delete_cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

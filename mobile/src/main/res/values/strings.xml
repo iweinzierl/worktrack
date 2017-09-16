@@ -23,10 +23,9 @@
     <string name="activity_dayoverview_action_checkin_specified">Check-In At</string>
     <string name="activity_dayoverview_action_checkout_now">Check-Out Now</string>
     <string name="activity_dayoverview_action_checkout_specified">Check-Out At</string>
-    <string name="activity_dayoverview_action_delete_title">Delete Item</string>
-    <string name="activity_dayoverview_action_delete_message">Really delete tracking item?</string>
-    <string name="activity_dayoverview_action_delete_ok">Delete</string>
-    <string name="activity_dayoverview_action_delete_cancel">No</string>
+    <string name="activity_dayoverview_action_delete_title">Discard Tracking Item?</string>
+    <string name="activity_dayoverview_action_delete_ok">Discard</string>
+    <string name="activity_dayoverview_action_delete_cancel">Cancel</string>
     <string name="activity_dayoverview_action_import_data">Import Data</string>
     <string name="activity_dayoverview_action_create_backup">Create Backup</string>
 
