@@ -93,9 +93,6 @@ public class DayOverviewActivity extends BaseActivity implements DayOverviewFrag
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_demo_data:
-                addDemoData();
-                return true;
             case R.id.action_select_date:
                 showDatePickerDialog();
                 return true;
@@ -317,64 +314,5 @@ public class DayOverviewActivity extends BaseActivity implements DayOverviewFrag
         while (!current.isAfter(last));
 
         return dates;
-    }
-
-    private void addDemoData() {
-        new AlertDialog.Builder(this)
-                .setTitle("Demo Data")
-                .setMessage("Really delete existing data to add demo data?")
-                .setCancelable(true)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        eraseDataAndAddDemoData();
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.cancel();
-                    }
-                })
-                .show();
-    }
-
-    protected void eraseDataAndAddDemoData() {
-        trackingItemRepository.deleteAll();
-
-        LocalDate mon = DateTime.now().toLocalDate().dayOfWeek().withMinimumValue();
-        trackingItemRepository.save(new TrackingItem(TrackingItemType.CHECKIN, new DateTime(mon.getYear(), mon.getMonthOfYear(), mon.getDayOfMonth(), 7, 55), CreationType.AUTO));
-        trackingItemRepository.save(new TrackingItem(TrackingItemType.CHECKOUT, new DateTime(mon.getYear(), mon.getMonthOfYear(), mon.getDayOfMonth(), 12, 10), CreationType.AUTO));
-        trackingItemRepository.save(new TrackingItem(TrackingItemType.CHECKIN, new DateTime(mon.getYear(), mon.getMonthOfYear(), mon.getDayOfMonth(), 13, 25), CreationType.AUTO));
-        trackingItemRepository.save(new TrackingItem(TrackingItemType.CHECKOUT, new DateTime(mon.getYear(), mon.getMonthOfYear(), mon.getDayOfMonth(), 18, 20), CreationType.AUTO));
-
-        LocalDate tue = mon.minusDays(1);
-        trackingItemRepository.save(new TrackingItem(TrackingItemType.CHECKIN, new DateTime(tue.getYear(), tue.getMonthOfYear(), tue.getDayOfMonth(), 8, 30), CreationType.AUTO));
-        trackingItemRepository.save(new TrackingItem(TrackingItemType.CHECKOUT, new DateTime(tue.getYear(), tue.getMonthOfYear(), tue.getDayOfMonth(), 12, 25), CreationType.AUTO));
-        trackingItemRepository.save(new TrackingItem(TrackingItemType.CHECKIN, new DateTime(tue.getYear(), tue.getMonthOfYear(), tue.getDayOfMonth(), 13, 5), CreationType.AUTO));
-        trackingItemRepository.save(new TrackingItem(TrackingItemType.CHECKOUT, new DateTime(tue.getYear(), tue.getMonthOfYear(), tue.getDayOfMonth(), 18, 9), CreationType.AUTO));
-
-        LocalDate wed = tue.minusDays(1);
-        trackingItemRepository.save(new TrackingItem(TrackingItemType.CHECKIN, new DateTime(wed.getYear(), wed.getMonthOfYear(), wed.getDayOfMonth(), 8, 53), CreationType.AUTO));
-        trackingItemRepository.save(new TrackingItem(TrackingItemType.CHECKOUT, new DateTime(wed.getYear(), wed.getMonthOfYear(), wed.getDayOfMonth(), 13, 10), CreationType.AUTO));
-        trackingItemRepository.save(new TrackingItem(TrackingItemType.CHECKIN, new DateTime(wed.getYear(), wed.getMonthOfYear(), wed.getDayOfMonth(), 13, 28), CreationType.AUTO));
-        trackingItemRepository.save(new TrackingItem(TrackingItemType.CHECKOUT, new DateTime(wed.getYear(), wed.getMonthOfYear(), wed.getDayOfMonth(), 19, 5), CreationType.AUTO));
-
-        LocalDate thu = wed.minusDays(1);
-        trackingItemRepository.save(new TrackingItem(TrackingItemType.CHECKIN, new DateTime(thu.getYear(), thu.getMonthOfYear(), thu.getDayOfMonth(), 5, 50), CreationType.AUTO));
-        trackingItemRepository.save(new TrackingItem(TrackingItemType.CHECKOUT, new DateTime(thu.getYear(), thu.getMonthOfYear(), thu.getDayOfMonth(), 12, 7), CreationType.AUTO));
-        trackingItemRepository.save(new TrackingItem(TrackingItemType.CHECKIN, new DateTime(thu.getYear(), thu.getMonthOfYear(), thu.getDayOfMonth(), 13, 5), CreationType.AUTO));
-        trackingItemRepository.save(new TrackingItem(TrackingItemType.CHECKOUT, new DateTime(thu.getYear(), thu.getMonthOfYear(), thu.getDayOfMonth(), 20, 10), CreationType.AUTO));
-
-        LocalDate fri = thu.minusDays(1);
-        trackingItemRepository.save(new TrackingItem(TrackingItemType.CHECKIN, new DateTime(fri.getYear(), fri.getMonthOfYear(), fri.getDayOfMonth(), 9, 2), CreationType.AUTO));
-        trackingItemRepository.save(new TrackingItem(TrackingItemType.CHECKOUT, new DateTime(fri.getYear(), fri.getMonthOfYear(), fri.getDayOfMonth(), 13, 7), CreationType.AUTO));
-        trackingItemRepository.save(new TrackingItem(TrackingItemType.CHECKIN, new DateTime(fri.getYear(), fri.getMonthOfYear(), fri.getDayOfMonth(), 14, 0), CreationType.AUTO));
-        trackingItemRepository.save(new TrackingItem(TrackingItemType.CHECKOUT, new DateTime(fri.getYear(), fri.getMonthOfYear(), fri.getDayOfMonth(), 15, 38), CreationType.AUTO));
-
-        Snackbar.make(findViewById(android.R.id.content), "Erased existing and added demo data", BaseTransientBottomBar.LENGTH_SHORT).show();
-
-        setupPager();
-        updateUi();
     }
 }

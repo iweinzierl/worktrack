@@ -10,9 +10,4 @@
         android:title="@string/activity_dayoverview_action_select_date"
         app:showAsAction="ifRoom" />
 
-    <item
-        android:id="@+id/action_demo_data"
-        android:orderInCategory="100"
-        android:title="Add Demo Data"
-        app:showAsAction="never" />
 </menu>
