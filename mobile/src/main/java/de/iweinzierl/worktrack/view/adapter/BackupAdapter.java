@@ -16,43 +16,30 @@ import de.iweinzierl.worktrack.persistence.comparator.BackupLastModifiedComparat
 
 public class BackupAdapter extends RecyclerView.Adapter<BackupViewHolder> implements ItemToucheHelperAdapter<BackupMetaData> {
 
-    public interface ClickCallback {
 
-        void onClick(int position, BackupMetaData backupMetaData);
-    }
-
+    private ActionCallback<BackupMetaData> actionCallback;
     private List<BackupMetaData> items;
-    private ClickCallback clickCallback;
 
     @SuppressWarnings("unchecked")
     private BackupAdapter() {
         this.items = Collections.EMPTY_LIST;
     }
 
-    public BackupAdapter(ClickCallback clickCallback) {
+    public BackupAdapter(ActionCallback<BackupMetaData> actionCallback) {
         this();
-        this.clickCallback = clickCallback;
+        this.actionCallback = actionCallback;
     }
 
     @Override
     public BackupViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_backup, parent, false);
-        return new BackupViewHolder(view);
+        return new BackupViewHolder(view, actionCallback);
     }
 
     @Override
     public void onBindViewHolder(final BackupViewHolder holder, final int position) {
         final BackupMetaData backupMetaData = items.get(position);
         holder.apply(backupMetaData);
-
-        holder.itemView.findViewById(R.id.itemRoot).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (clickCallback != null) {
-                    clickCallback.onClick(position, backupMetaData);
-                }
-            }
-        });
     }
 
     @Override

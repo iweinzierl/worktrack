@@ -1,11 +1,12 @@
 package de.iweinzierl.worktrack;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -36,18 +37,28 @@ import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
 import de.iweinzierl.worktrack.persistence.WorkplaceRepository;
 import de.iweinzierl.worktrack.util.BackupHelper;
 import de.iweinzierl.worktrack.util.GoogleDriveBackupHelper;
-import de.iweinzierl.worktrack.util.ItemTouchHelperCallback;
 import de.iweinzierl.worktrack.view.adapter.BackupAdapter;
-import de.iweinzierl.worktrack.view.dialog.AuthenticationDialogFragment;
+import de.iweinzierl.worktrack.view.adapter.NoOpActionCallback;
 import de.iweinzierl.worktrack.view.dialog.BackupTitleInputDialog;
 
 @EActivity
-public class ListBackupsActivity extends BaseGoogleApiAvailabilityActivity implements ItemTouchHelperCallback.ItemCallback<BackupMetaData> {
+public class ManageBackupsActivity extends BaseGoogleApiAvailabilityActivity {
 
-    private static final Logger LOGGER = AndroidLoggerFactory.getInstance().getLogger(ListBackupsActivity.class.getName());
+    private class BackupsActionCallback extends NoOpActionCallback<BackupMetaData> {
+        @Override
+        public void onSelectItem(BackupMetaData item) {
+            importBackupWithConfirmation(item);
+        }
+
+        @Override
+        public void onDeleteItem(BackupMetaData item) {
+            removeBackupWithConfirmation(item);
+        }
+    }
+
+    private static final Logger LOGGER = AndroidLoggerFactory.getInstance().getLogger(ManageBackupsActivity.class.getName());
 
     private BackupAdapter backupAdapter;
-
     private FirebaseAnalytics analytics;
 
     @Bean(LocalTrackingItemRepository.class)
@@ -114,11 +125,6 @@ public class ListBackupsActivity extends BaseGoogleApiAvailabilityActivity imple
         }
     }
 
-    @Override
-    public void onDeleteItem(final BackupMetaData item) {
-        deleteBackup(item);
-    }
-
     @AfterViews
     void setupViews() {
         setupAdapter();
@@ -127,14 +133,8 @@ public class ListBackupsActivity extends BaseGoogleApiAvailabilityActivity imple
         backups.setHasFixedSize(false);
         backups.setLayoutManager(new LinearLayoutManager(this));
 
-        toolbar.setTitle(R.string.activity_list_backups);
+        toolbar.setTitle(R.string.activity_manage_backups);
         setSupportActionBar(toolbar);
-
-        ItemTouchHelperCallback<BackupMetaData> callback = new ItemTouchHelperCallback<>(this, backupAdapter, this);
-        callback.setDiscardDialogTitle(R.string.activity_list_backups_dialog_discard_title);
-
-        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
-        touchHelper.attachToRecyclerView(backups);
     }
 
     @UiThread
@@ -149,12 +149,7 @@ public class ListBackupsActivity extends BaseGoogleApiAvailabilityActivity imple
 
     private void setupAdapter() {
         if (backupAdapter == null) {
-            backupAdapter = new BackupAdapter(new BackupAdapter.ClickCallback() {
-                @Override
-                public void onClick(int position, BackupMetaData backupMetaData) {
-                    importBackup(backupMetaData);
-                }
-            });
+            backupAdapter = new BackupAdapter(new BackupsActionCallback());
         }
     }
 
@@ -171,9 +166,31 @@ public class ListBackupsActivity extends BaseGoogleApiAvailabilityActivity imple
     }
 
     @UiThread
+    protected void removeBackupWithConfirmation(final BackupMetaData backupMetaData) {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.activity_manage_backups_dialog_discard_title)
+                .setNegativeButton(R.string.util_delete_action_cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        hideProgressBar();
+                    }
+                })
+                .setPositiveButton(R.string.util_delete_action_confirm, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        deleteBackup(backupMetaData);
+                        hideProgressBar();
+                    }
+                }).show();
+    }
+
+    @UiThread
     protected void removeBackup(BackupMetaData backupMetaData) {
         LOGGER.info("Remove backup from backup list: {}", backupMetaData.getDriveId());
         backupAdapter.removeItem(backupMetaData);
+        showMessage(getString(R.string.activity_manage_backups_discard_backup_succeeded));
     }
 
     @UiThread
@@ -197,28 +214,25 @@ public class ListBackupsActivity extends BaseGoogleApiAvailabilityActivity imple
     }
 
     @UiThread
-    protected void importBackup(final BackupMetaData backupMetaData) {
+    protected void importBackupWithConfirmation(final BackupMetaData backupMetaData) {
         showProgressBar();
 
-        final AuthenticationDialogFragment dialogFragment = new AuthenticationDialogFragment();
-        dialogFragment.setCallback(new AuthenticationDialogFragment.Callback() {
-            @Override
-            public void onAuthenticationSucceeded() {
-                LOGGER.info("Import Backup: {}", backupMetaData);
-                importBackup(backupMetaData.getDriveId());
-                dialogFragment.dismiss();
-            }
-
-            @Override
-            public void onAuthenticationFailed() {
-            }
-
-            @Override
-            public void onAuthenticationCancelled() {
-                dialogFragment.dismiss();
-            }
-        });
-        dialogFragment.show(getSupportFragmentManager(), null);
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.activity_manage_backups_dialog_import_title)
+                .setNegativeButton(R.string.util_import_action_cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        hideProgressBar();
+                    }
+                })
+                .setPositiveButton(R.string.util_import_action_confirm, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        importBackup(backupMetaData.getDriveId());
+                    }
+                }).show();
     }
 
     @Background
@@ -232,7 +246,7 @@ public class ListBackupsActivity extends BaseGoogleApiAvailabilityActivity imple
             public void execute() {
                 try {
                     GoogleDriveBackupHelper googleDriveBackupHelper = new GoogleDriveBackupHelper(
-                            ListBackupsActivity.this, getCredential());
+                            ManageBackupsActivity.this, getCredential());
 
                     googleDriveBackupHelper.listBackups(new GoogleDriveBackupHelper.Callback<List<BackupMetaData>>() {
                         @Override
@@ -244,7 +258,7 @@ public class ListBackupsActivity extends BaseGoogleApiAvailabilityActivity imple
                 } catch (IOException e) {
                     LOGGER.error("Error while loading backups", e);
                     hideProgressBar();
-                    showMessage(getString(R.string.activity_list_backups_error_loading_backups));
+                    showMessage(getString(R.string.activity_manage_backups_error_loading_backups));
 
                     Bundle bundle = new Bundle();
                     bundle.putString(AnalyticsParams.ERROR_MESSAGE.name(), e.getMessage());
@@ -263,7 +277,7 @@ public class ListBackupsActivity extends BaseGoogleApiAvailabilityActivity imple
             public void execute() {
                 try {
                     GoogleDriveBackupHelper googleDriveBackupHelper = new GoogleDriveBackupHelper(
-                            ListBackupsActivity.this, getCredential());
+                            ManageBackupsActivity.this, getCredential());
 
                     googleDriveBackupHelper.createBackup(
                             title,
@@ -273,13 +287,14 @@ public class ListBackupsActivity extends BaseGoogleApiAvailabilityActivity imple
                                 @Override
                                 public void onSuccess(BackupMetaData result) {
                                     addBackup(result);
+                                    showMessage(getString(R.string.activity_manage_backups_create_backup_succeeded));
                                     hideProgressBar();
                                 }
                             });
                 } catch (IOException e) {
                     LOGGER.error("Error while loading backups", e);
                     hideProgressBar();
-                    showMessage(getString(R.string.activity_list_backups_error_loading_backups));
+                    showMessage(getString(R.string.activity_manage_backups_error_loading_backups));
 
                     Bundle bundle = new Bundle();
                     bundle.putString(AnalyticsParams.ERROR_MESSAGE.name(), e.getMessage());
@@ -298,7 +313,7 @@ public class ListBackupsActivity extends BaseGoogleApiAvailabilityActivity imple
             public void execute() {
                 try {
                     GoogleDriveBackupHelper googleDriveBackupHelper = new GoogleDriveBackupHelper(
-                            ListBackupsActivity.this, getCredential());
+                            ManageBackupsActivity.this, getCredential());
 
                     googleDriveBackupHelper.getBackup(backupDriveId, new GoogleDriveBackupHelper.Callback<Backup>() {
                         @Override
@@ -307,13 +322,13 @@ public class ListBackupsActivity extends BaseGoogleApiAvailabilityActivity imple
                                     .importBackup(result, new BackupHelper.Callback() {
                                         @Override
                                         public void onSuccess() {
-                                            showMessage(getString(R.string.activity_list_backups_import_backup_succeeded));
+                                            showMessage(getString(R.string.activity_manage_backups_import_backup_succeeded));
                                             hideProgressBar();
                                         }
 
                                         @Override
                                         public void onFailure() {
-                                            showMessage(getString(R.string.activity_list_backups_error_importing_backup));
+                                            showMessage(getString(R.string.activity_manage_backups_error_importing_backup));
                                             hideProgressBar();
                                         }
                                     });
@@ -322,7 +337,7 @@ public class ListBackupsActivity extends BaseGoogleApiAvailabilityActivity imple
                 } catch (IOException e) {
                     LOGGER.error("Error while importing backup", e);
                     hideProgressBar();
-                    showMessage(getString(R.string.activity_list_backups_error_importing_backup));
+                    showMessage(getString(R.string.activity_manage_backups_error_importing_backup));
 
                     Bundle bundle = new Bundle();
                     bundle.putString(AnalyticsParams.ERROR_MESSAGE.name(), e.getMessage());
@@ -340,7 +355,7 @@ public class ListBackupsActivity extends BaseGoogleApiAvailabilityActivity imple
             @Override
             public void execute() {
                 try {
-                    new GoogleDriveBackupHelper(ListBackupsActivity.this, getCredential())
+                    new GoogleDriveBackupHelper(ManageBackupsActivity.this, getCredential())
                             .deleteBackup(item.getDriveId(), new GoogleDriveBackupHelper.Callback<String>() {
                                 @Override
                                 public void onSuccess(String result) {
@@ -351,7 +366,7 @@ public class ListBackupsActivity extends BaseGoogleApiAvailabilityActivity imple
                 } catch (IOException e) {
                     LOGGER.error("Error while loading backups", e);
                     hideProgressBar();
-                    showMessage(getString(R.string.activity_list_backups_error_deleting_backup));
+                    showMessage(getString(R.string.activity_manage_backups_error_deleting_backup));
 
                     Bundle bundle = new Bundle();
                     bundle.putString(AnalyticsParams.ERROR_MESSAGE.name(), e.getMessage());

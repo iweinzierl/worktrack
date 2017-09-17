@@ -11,6 +11,7 @@
     <dimen name="cardTitleFontSize">16sp</dimen>
     <dimen name="cardTopPadding">8dp</dimen>
     <dimen name="cardTitlePaddingBottom">16dp</dimen>
+    <dimen name="cardIconPaddingEnd">8dp</dimen>
 
     <dimen name="dialog_content_horizontal_margin">24dp</dimen>
     <dimen name="dialog_content_vertical_margin">24dp</dimen>

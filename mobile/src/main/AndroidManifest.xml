@@ -72,8 +72,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".ListBackupsActivity_"
-            android:label="@string/activity_list_backups"
+            android:name=".ManageBackupsActivity_"
+            android:label="@string/activity_manage_backups"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar" />
 

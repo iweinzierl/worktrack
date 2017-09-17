@@ -34,19 +34,26 @@ import de.iweinzierl.worktrack.persistence.TrackingItem;
 import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
 import de.iweinzierl.worktrack.persistence.TrackingItemType;
 import de.iweinzierl.worktrack.util.SettingsHelper;
-import de.iweinzierl.worktrack.view.adapter.ActionCallback;
+import de.iweinzierl.worktrack.view.adapter.NoOpActionCallback;
 import de.iweinzierl.worktrack.view.adapter.TrackingItemAdapter;
 
 @EFragment(R.layout.fragment_day_overview)
-public class DayOverviewFragment extends Fragment implements ActionCallback<TrackingItem> {
+public class DayOverviewFragment extends Fragment {
 
-    public static final String ARGS_YEAR = "dayoverviewfragment.args.year";
-    public static final String ARGS_MONTH = "dayoverviewfragment.args.month";
-    public static final String ARGS_DAY = "dayoverviewfragment.args.day";
+    private class TrackingItemActionCallback extends NoOpActionCallback<TrackingItem> {
+        @Override
+        public void onDeleteItem(TrackingItem item) {
+            deleteItem(item);
+        }
+    }
 
     interface TrackingItemCallback {
         void onDeleteItem(TrackingItem item);
     }
+
+    public static final String ARGS_YEAR = "dayoverviewfragment.args.year";
+    public static final String ARGS_MONTH = "dayoverviewfragment.args.month";
+    public static final String ARGS_DAY = "dayoverviewfragment.args.day";
 
     private TrackingItemCallback trackingItemCallback;
 
@@ -82,7 +89,7 @@ public class DayOverviewFragment extends Fragment implements ActionCallback<Trac
             .toFormatter();
 
     public DayOverviewFragment() {
-        trackingItemAdapter = new TrackingItemAdapter(this);
+        trackingItemAdapter = new TrackingItemAdapter(new TrackingItemActionCallback());
     }
 
     @Override
@@ -167,19 +174,12 @@ public class DayOverviewFragment extends Fragment implements ActionCallback<Trac
         dateView.setText(date.toString("yyyy-MM-dd"));
     }
 
-    @Override
-    public void onDeleteItem(final TrackingItem item) {
+    public void deleteItem(final TrackingItem item) {
         new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.activity_dayoverview_action_delete_title)
                 .setNegativeButton(R.string.activity_dayoverview_action_delete_cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
                         dialog.dismiss();
                     }
                 })
@@ -191,11 +191,6 @@ public class DayOverviewFragment extends Fragment implements ActionCallback<Trac
                     }
                 })
                 .show();
-    }
-
-    @Override
-    public void onRenameItem(TrackingItem item) {
-
     }
 
     private void setTrackingItemsCorrect(boolean trackingItemsCorrect) {

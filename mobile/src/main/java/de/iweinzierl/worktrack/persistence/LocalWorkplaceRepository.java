@@ -28,7 +28,14 @@ public class LocalWorkplaceRepository implements WorkplaceRepository {
     @Override
     public Workplace save(Workplace workplace) {
         try {
-            getSession().getWorkplaceDao().insert(workplace);
+            WorkplaceDao workplaceDao = getSession().getWorkplaceDao();
+
+            if (workplace.getId() != null) {
+                workplaceDao.update(workplace);
+            } else {
+                workplaceDao.insert(workplace);
+            }
+
             return workplace;
         } catch (Exception e) {
             LOGGER.error("Saving workplace item failed", e);

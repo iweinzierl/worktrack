@@ -17,32 +17,55 @@ import de.iweinzierl.worktrack.model.BackupMetaData;
 class BackupViewHolder extends RecyclerView.ViewHolder {
 
     private static final NumberFormat DECIMAL_FORMAT = NumberFormat.getNumberInstance();
-    private static final String DATETIME_PATTERN = "yyyy-MM-dd HH:mm";
 
     static {
         DECIMAL_FORMAT.setMinimumFractionDigits(2);
         DECIMAL_FORMAT.setMaximumFractionDigits(2);
     }
 
+    private final ActionCallback<BackupMetaData> actionCallback;
+
     private final TextView titleView;
     private final TextView lastModifiedView;
     private final TextView sizeView;
-    private final TextView itemCountView;
+    private final TextView itemsView;
+    private final TextView workplacesView;
+    private final View restoreButton;
+    private final View discardButton;
 
-    BackupViewHolder(View itemView) {
+    BackupViewHolder(View itemView, ActionCallback<BackupMetaData> actionCallback) {
         super(itemView);
+        this.actionCallback = actionCallback;
 
         this.titleView = UiUtils.getGeneric(TextView.class, itemView, R.id.title);
-        this.lastModifiedView = UiUtils.getGeneric(TextView.class, itemView, R.id.last_modified);
+        this.lastModifiedView = UiUtils.getGeneric(TextView.class, itemView, R.id.lastModified);
         this.sizeView = UiUtils.getGeneric(TextView.class, itemView, R.id.size);
-        this.itemCountView = UiUtils.getGeneric(TextView.class, itemView, R.id.item_count);
+        this.itemsView = UiUtils.getGeneric(TextView.class, itemView, R.id.items);
+        this.workplacesView = UiUtils.getGeneric(TextView.class, itemView, R.id.workplaces);
+        this.restoreButton = UiUtils.getView(itemView, R.id.restore);
+        this.discardButton = UiUtils.getView(itemView, R.id.discard);
     }
 
-    void apply(BackupMetaData backupMetaData) {
+    void apply(final BackupMetaData backupMetaData) {
         titleView.setText(backupMetaData.getTitle());
         lastModifiedView.setText(formatLastModified(backupMetaData.getLastModified()));
         sizeView.setText(formatSize(backupMetaData.getSize()));
-        itemCountView.setText(String.valueOf(backupMetaData.getItemCount()));
+        itemsView.setText(String.valueOf(backupMetaData.getItemCount()));
+        workplacesView.setText(String.valueOf(backupMetaData.getWorkplaceCount()));
+
+        restoreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                actionCallback.onSelectItem(backupMetaData);
+            }
+        });
+
+        discardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                actionCallback.onDeleteItem(backupMetaData);
+            }
+        });
     }
 
     private String formatLastModified(LocalDateTime lastModified) {

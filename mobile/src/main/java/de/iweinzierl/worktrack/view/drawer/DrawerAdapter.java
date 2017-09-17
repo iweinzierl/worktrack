@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import de.iweinzierl.worktrack.DayOverviewActivity_;
-import de.iweinzierl.worktrack.ListBackupsActivity_;
+import de.iweinzierl.worktrack.ManageBackupsActivity_;
 import de.iweinzierl.worktrack.ManageWorkplacesActivity_;
 import de.iweinzierl.worktrack.R;
 import de.iweinzierl.worktrack.SettingsActivity_;
@@ -21,7 +21,7 @@ public class DrawerAdapter extends BaseAdapter {
             new DrawerActivityItem(R.string.activity_dayverview, R.drawable.ic_view_day_white_24px, DayOverviewActivity_.class),
             new DrawerActivityItem(R.string.activity_weekoverview, R.drawable.ic_view_week_white_24px, WeekOverviewActivity_.class),
             new DrawerActivityItem(R.string.activity_yearoverview, R.drawable.ic_view_week_white_24px, YearOverviewActivity_.class),
-            new DrawerActivityItem(R.string.activity_list_backups, R.drawable.ic_backup_white_32dp, ListBackupsActivity_.class),
+            new DrawerActivityItem(R.string.activity_manage_backups, R.drawable.ic_backup_white_32dp, ManageBackupsActivity_.class),
             new DrawerActivityItem(R.string.activity_settings, R.drawable.ic_settings_white_36px, SettingsActivity_.class)
     };
 

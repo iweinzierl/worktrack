@@ -40,12 +40,24 @@ import java.util.UUID;
 import de.iweinzierl.worktrack.persistence.LocalWorkplaceRepository;
 import de.iweinzierl.worktrack.persistence.Workplace;
 import de.iweinzierl.worktrack.receiver.GeofencingTransitionService;
-import de.iweinzierl.worktrack.view.adapter.ActionCallback;
+import de.iweinzierl.worktrack.view.adapter.NoOpActionCallback;
 import de.iweinzierl.worktrack.view.adapter.WorkplaceAdapter;
 import de.iweinzierl.worktrack.view.dialog.WorkplaceTitleQueryDialog;
 
 @EActivity
-public class ManageWorkplacesActivity extends BaseActivity implements ActionCallback<Workplace> {
+public class ManageWorkplacesActivity extends BaseActivity {
+
+    private class WorkplaceActionCallback extends NoOpActionCallback<Workplace> {
+        @Override
+        public void onRenameItem(Workplace item) {
+            renameItem(item);
+        }
+
+        @Override
+        public void onDeleteItem(Workplace item) {
+            deleteItem(item);
+        }
+    }
 
     private static final Logger LOGGER = AndroidLoggerFactory.getInstance().getLogger("ManageWorkplacesActivity");
 
@@ -77,7 +89,7 @@ public class ManageWorkplacesActivity extends BaseActivity implements ActionCall
     @AfterViews
     protected void setup() {
         geofencingClient = LocationServices.getGeofencingClient(this);
-        workplaceAdapter = new WorkplaceAdapter(this);
+        workplaceAdapter = new WorkplaceAdapter(new WorkplaceActionCallback());
 
         cardView.setAdapter(workplaceAdapter);
         cardView.setHasFixedSize(false);
@@ -153,14 +165,15 @@ public class ManageWorkplacesActivity extends BaseActivity implements ActionCall
         progressBar.setVisibility(View.INVISIBLE);
     }
 
-    @Override
-    public void onRenameItem(Workplace workplace) {
+    @UiThread
+    public void renameItem(final Workplace workplace) {
         new WorkplaceTitleQueryDialog(
                 workplace,
                 this,
                 new WorkplaceTitleQueryDialog.Callback() {
                     @Override
                     public void onSubmit(Workplace workplace) {
+                        renameWorkplace(workplace);
                         workplaceAdapter.notifyDataSetChanged();
                     }
 
@@ -172,8 +185,7 @@ public class ManageWorkplacesActivity extends BaseActivity implements ActionCall
         ).show();
     }
 
-    @Override
-    public void onDeleteItem(final Workplace workplace) {
+    public void deleteItem(final Workplace workplace) {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.activity_manage_workplaces_dialog_delete_title)
                 .setPositiveButton(R.string.activity_manage_workplaces_dialog_delete_confirm, new DialogInterface.OnClickListener() {
@@ -189,6 +201,13 @@ public class ManageWorkplacesActivity extends BaseActivity implements ActionCall
                         dialogInterface.dismiss();
                     }
                 }).show();
+    }
+
+    @Background
+    protected void renameWorkplace(Workplace workplace) {
+        showProgressBar();
+        workplaceRepository.save(workplace);
+        hideProgressBar();
     }
 
     @Background

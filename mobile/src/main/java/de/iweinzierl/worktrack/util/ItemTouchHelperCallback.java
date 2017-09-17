@@ -23,9 +23,9 @@ public class ItemTouchHelperCallback<T> extends ItemTouchHelper.Callback {
 
     private Context context;
 
-    private int discardDialogTitle = R.string.util_swipe_delete_title;
-    private int discardConfirmButtonTitle = R.string.util_swipe_delete_confirm;
-    private int discardCancelButtonTitle = R.string.util_swipe_delete_cancel;
+    private int discardDialogTitle = R.string.util_delete_title;
+    private int discardConfirmButtonTitle = R.string.util_delete_action_confirm;
+    private int discardCancelButtonTitle = R.string.util_delete_action_cancel;
 
     private final ItemToucheHelperAdapter<T> adapter;
     private final ItemCallback<T> itemCallback;

@@ -39,12 +39,15 @@
     <string name="activity_yearoverview_chart_xaxis_label">Calendar weeks</string>
     <string name="activity_yearoverview_chart_yaxis_label">Hours per week</string>
 
-    <string name="activity_list_backups">Backups</string>
-    <string name="activity_list_backups_error_loading_backups">Error while loading backups.</string>
-    <string name="activity_list_backups_error_deleting_backup">Error while deleting backup.</string>
-    <string name="activity_list_backups_error_importing_backup">Error while importing backup.</string>
-    <string name="activity_list_backups_import_backup_succeeded">Import of backup succeeded.</string>
-    <string name="activity_list_backups_dialog_discard_title">Discard Backup?</string>
+    <string name="activity_manage_backups">Backups</string>
+    <string name="activity_manage_backups_error_loading_backups">Error while loading backups.</string>
+    <string name="activity_manage_backups_error_deleting_backup">Error while deleting backup.</string>
+    <string name="activity_manage_backups_error_importing_backup">Error while importing backup.</string>
+    <string name="activity_manage_backups_create_backup_succeeded">Backup successfully created.</string>
+    <string name="activity_manage_backups_import_backup_succeeded">Import of backup succeeded.</string>
+    <string name="activity_manage_backups_discard_backup_succeeded">Backup successfully discarded.</string>
+    <string name="activity_manage_backups_dialog_discard_title">Discard Backup?</string>
+    <string name="activity_manage_backups_dialog_import_title">Import Backup?</string>
 
     <string name="activity_settings">Settings</string>
 
@@ -103,12 +106,16 @@
     <string name="location_template">%1$.3f x %2$.3f</string>
     <string name="radius_template">%1$.0f</string>
 
-    <string name="util_swipe_delete_title">Discard Item?</string>
-    <string name="util_swipe_delete_confirm">Discard</string>
-    <string name="util_swipe_delete_cancel">Cancel</string>
+    <string name="util_delete_title">Discard Item?</string>
+    <string name="util_delete_action_confirm">Discard</string>
+    <string name="util_delete_action_cancel">Cancel</string>
+    <string name="util_import_action_confirm">Import</string>
+    <string name="util_import_action_cancel">Cancel</string>
 
     <string name="cardview_trackingitem_not_available">n/a</string>
     <string name="cardview_trackingitem_action_discard">Discard</string>
+    <string name="cardview_backup_action_restore">Restore</string>
+    <string name="cardview_backup_action_discard">Discard</string>
 
     <string name="preference_last_backup">Last Backup</string>
     <string name="preference_last_backup_date">Date:</string>
