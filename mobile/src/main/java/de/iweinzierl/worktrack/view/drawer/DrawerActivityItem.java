@@ -6,9 +6,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-
-import com.github.iweinzierl.android.utils.UiUtils;
+import android.widget.TextView;
 
 import de.iweinzierl.worktrack.R;
 
@@ -38,10 +36,9 @@ class DrawerActivityItem implements DrawerItem {
         Context context = viewGroup.getContext();
         View item = LayoutInflater.from(context).inflate(R.layout.drawer_activity_item, viewGroup, false);
 
-        ImageView iconView = (ImageView) item.findViewById(R.id.icon);
-        iconView.setImageResource(icon);
-
-        UiUtils.setSafeText(item, R.id.label, context.getString(getLabel()));
+        TextView labelView = (TextView) item.findViewById(R.id.label);
+        labelView.setCompoundDrawablesWithIntrinsicBounds(icon, 0, 0, 0);
+        labelView.setText(context.getString(getLabel()));
 
         return item;
     }

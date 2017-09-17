@@ -33,9 +33,8 @@
 
     <dimen name="drawerItemLeftPadding">16dp</dimen>
     <dimen name="drawerItemRightPadding">16dp</dimen>
-    <dimen name="drawerItemHeight">48dp</dimen>
-    <dimen name="drawerItemTopPadding">8dp</dimen>
-    <dimen name="drawerItemBottomPadding">8dp</dimen>
+    <dimen name="drawerItemTopPadding">20dp</dimen>
+    <dimen name="drawerItemBottomPadding">20dp</dimen>
     <dimen name="drawerItemTextLeftPadding">24dp</dimen>
     <dimen name="drawerFontSize">14sp</dimen>
     <dimen name="drawerHeaderFontSize">18sp</dimen>

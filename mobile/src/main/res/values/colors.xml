@@ -27,9 +27,11 @@
     <color name="toolbarOverHours">#A71A16</color>
 
     <!-- drawer colors -->
-    <color name="drawerBackgroundColor">#383838</color>
+    <color name="drawerBackgroundColor">@color/backgroundColor</color>
     <color name="drawerHeaderBackgroundColor">#303F9F</color>
-    <color name="drawerFontColor">#FFF</color>
+    <color name="drawerHeaderLabelTextColor">@color/colorPrimaryLight</color>
+    <color name="drawerIconColor">@color/colorSecondaryText</color>
+    <color name="drawerFontColor">@color/colorSecondaryText</color>
 
     <!-- chart colors -->
     <color name="barChartOverHours">#A71A16</color>

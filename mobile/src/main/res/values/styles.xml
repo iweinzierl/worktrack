@@ -31,15 +31,17 @@
     </style>
 
     <style name="Drawer.Item">
-        <item name="android:paddingStart">@dimen/drawerItemLeftPadding</item>
-        <item name="android:paddingEnd">@dimen/drawerItemRightPadding</item>
-        <item name="android:paddingTop">@dimen/drawerItemTopPadding</item>
-        <item name="android:paddingBottom">@dimen/drawerItemBottomPadding</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_marginStart">@dimen/drawerItemLeftPadding</item>
+        <item name="android:layout_marginEnd">@dimen/drawerItemRightPadding</item>
     </style>
 
     <style name="Drawer.Item.Text">
         <item name="android:textSize">@dimen/drawerFontSize</item>
         <item name="android:textColor">@color/drawerFontColor</item>
+        <item name="android:paddingTop">@dimen/drawerItemTopPadding</item>
+        <item name="android:paddingBottom">@dimen/drawerItemBottomPadding</item>
     </style>
 
     <style name="CardView.Title">

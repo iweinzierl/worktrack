@@ -4,6 +4,8 @@
 
     <string name="drawer_open">Open Drawer</string>
     <string name="drawer_close">Close Drawer</string>
+    <string name="drawer_label_pro">Worktrack PRO</string>
+    <string name="drawer_label_dev">Worktrack DEV</string>
 
     <string name="activity_manage_workplaces">Manage Workplaces</string>
     <string name="activity_manage_workplaces_action_add">Add Workplace</string>
