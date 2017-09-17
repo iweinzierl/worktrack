@@ -27,7 +27,7 @@
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                    android:background="?attr/colorPrimary"
+                    android:background="@color/colorPrimary"
                     app:popupTheme="@style/AppTheme.PopupOverlay" />
 
             </android.support.design.widget.AppBarLayout>
@@ -43,7 +43,7 @@
                 android:layout_marginEnd="8dp"
                 android:src="@drawable/ic_add_white_32px"
                 fab:fabSize="mini"
-                fab:fab_colorNormal="#1c8f04"
+                fab:fab_colorNormal="@color/floatingButtonNormal"
                 fab:fab_label="@string/activity_manage_workplaces_action_add" />
 
         </android.support.design.widget.CoordinatorLayout>

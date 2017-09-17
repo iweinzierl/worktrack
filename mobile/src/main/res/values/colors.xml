@@ -2,25 +2,44 @@
 <resources>
     <color name="backgroundColor">#e1e1e1</color>
 
+    <!-- color scheme -->
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimaryLight">#C5CAE9</color>
+    <color name="colorAccent">#4CAF50</color>
+    <color name="colorAccentDark">#38813b</color>
+    <color name="colorPrimaryText">#212121</color>
+    <color name="colorSecondaryText">#757575</color>
+    <color name="colorIcons">#FFFFFF</color>
+    <color name="colorDivider">#BDBDBD</color>
 
-    <color name="toolbarFont">#FFF</color>
-    <color name="toolbarOverHours">#FFC70B1B</color>
+    <!-- floating button colors -->
+    <color name="floatingButtonNormal">@color/colorAccent</color>
+    <color name="floatingButtonPressed">@color/colorAccentDark</color>
+    <color name="floatingButtonRipple">@color/colorPrimaryDark</color>
+    <color name="floatingButtonLabelText">@color/colorPrimaryLight</color>
+    <color name="floatingButtonLabelNormal">@color/colorPrimaryText</color>
+    <color name="floatingButtonLabelPressed">@color/colorSecondaryText</color>
+    <color name="floatingButtonLabelRipple">@color/colorIcons</color>
 
+    <!-- toolbar colors -->
+    <color name="toolbarFont">@color/colorPrimaryLight</color>
+    <color name="toolbarOverHours">#A71A16</color>
+
+    <!-- drawer colors -->
     <color name="drawerBackgroundColor">#383838</color>
     <color name="drawerHeaderBackgroundColor">#303F9F</color>
     <color name="drawerFontColor">#FFF</color>
 
-    <color name="barChartOverHours">#FFC70B1B</color>
+    <!-- chart colors -->
+    <color name="barChartOverHours">#A71A16</color>
     <color name="barChartNormalHours">#091ad6</color>
 
-    <color name="colorCheckIn">#1caf02</color>
-    <color name="colorCheckOut">#a71a16</color>
+    <color name="colorCheckIn">#4CAF50</color>
+    <color name="colorCheckOut">#A71A16</color>
 
-    <color name="colorMapSearch">#ffffff</color>
+    <color name="colorMapSearch">@color/colorIcons</color>
 
-    <color name="cardViewTextTitle">#000</color>
-    <color name="cardViewTextContent">#a1a1a1</color>
+    <color name="cardViewTextTitle">@color/colorPrimaryText</color>
+    <color name="cardViewTextContent">@color/colorSecondaryText</color>
 </resources>

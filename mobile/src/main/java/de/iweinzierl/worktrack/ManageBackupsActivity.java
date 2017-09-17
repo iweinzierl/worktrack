@@ -7,9 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -19,6 +16,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
@@ -105,26 +103,6 @@ public class ManageBackupsActivity extends BaseGoogleApiAvailabilityActivity {
         updateBackups();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_list_backups, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_create_backup:
-                createBackup();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
     @AfterViews
     void setupViews() {
         setupAdapter();
@@ -135,6 +113,11 @@ public class ManageBackupsActivity extends BaseGoogleApiAvailabilityActivity {
 
         toolbar.setTitle(R.string.activity_manage_backups);
         setSupportActionBar(toolbar);
+    }
+
+    @Click(R.id.manualBackup)
+    protected void clickedManualBack() {
+        createBackup();
     }
 
     @UiThread
