@@ -85,7 +85,7 @@
                         android:drawableLeft="@drawable/ic_business_24dp"
                         android:drawablePadding="4dp"
                         android:gravity="center_vertical"
-                        android:text="@string/cardview_trackingitem_not_available" />
+                        android:text="@string/util_not_available" />
 
                     <TextView
                         android:id="@+id/eventLocation"
@@ -96,7 +96,7 @@
                         android:drawableLeft="@drawable/ic_location_on_24dp"
                         android:drawablePadding="4dp"
                         android:gravity="center_vertical"
-                        android:text="@string/cardview_trackingitem_not_available" />
+                        android:text="@string/util_not_available" />
                 </LinearLayout>
 
             </LinearLayout>

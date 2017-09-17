@@ -25,6 +25,9 @@ class BackupViewHolder extends RecyclerView.ViewHolder {
 
     private final ActionCallback<BackupMetaData> actionCallback;
 
+    private final String abbreviationHours;
+    private final String abbreviationDays;
+
     private final TextView titleView;
     private final TextView lastModifiedView;
     private final TextView sizeView;
@@ -36,6 +39,9 @@ class BackupViewHolder extends RecyclerView.ViewHolder {
     BackupViewHolder(View itemView, ActionCallback<BackupMetaData> actionCallback) {
         super(itemView);
         this.actionCallback = actionCallback;
+
+        abbreviationHours = itemView.getContext().getString(R.string.util_abbreviation_hours);
+        abbreviationDays = itemView.getContext().getString(R.string.util_abbreviation_days);
 
         this.titleView = UiUtils.getGeneric(TextView.class, itemView, R.id.title);
         this.lastModifiedView = UiUtils.getGeneric(TextView.class, itemView, R.id.lastModified);
@@ -72,7 +78,9 @@ class BackupViewHolder extends RecyclerView.ViewHolder {
         LocalDateTime now = LocalDateTime.now();
         Period period = new Period(lastModified, now);
 
-        return period.getDays() == 0 ? period.getHours() + " h" : period.getDays() + " d";
+        return period.getDays() == 0
+                ? period.getHours() + " " + abbreviationHours
+                : period.getDays() + " " + abbreviationDays;
     }
 
     private String formatSize(long bytes) {

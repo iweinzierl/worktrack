@@ -21,6 +21,9 @@
     <string name="activity_dayverview">Daily Overview</string>
     <string name="activity_dayoverview_incorrect_warning">Items are not correct!</string>
     <string name="activity_dayoverview_action_select_date">Choose date</string>
+    <string name="activity_dayoverview_action_select_datetime">Choose date and time</string>
+    <string name="activity_dayoverview_action_select_date_confirm">OK</string>
+    <string name="activity_dayoverview_action_select_date_cancel">Cancel</string>
     <string name="activity_dayoverview_action_checkin_now">Check-In Now</string>
     <string name="activity_dayoverview_action_checkin_specified">Check-In At</string>
     <string name="activity_dayoverview_action_checkout_now">Check-Out Now</string>
@@ -28,8 +31,9 @@
     <string name="activity_dayoverview_action_delete_title">Discard Tracking Item?</string>
     <string name="activity_dayoverview_action_delete_ok">Discard</string>
     <string name="activity_dayoverview_action_delete_cancel">Cancel</string>
-    <string name="activity_dayoverview_action_import_data">Import Data</string>
-    <string name="activity_dayoverview_action_create_backup">Create Backup</string>
+    <string name="activity_dayoverview_message_event_deleted">Event deleted.</string>
+    <string name="activity_dayoverview_message_event_added">Event added.</string>
+    <string name="activity_dayoverview_message_unable_jump_into_future">Unable to jump into future.</string>
 
     <string name="activity_weekoverview">Weekly Overview</string>
     <string name="activity_weekoverview_action_export_mail">Export</string>
@@ -113,8 +117,14 @@
     <string name="util_delete_action_cancel">Cancel</string>
     <string name="util_import_action_confirm">Import</string>
     <string name="util_import_action_cancel">Cancel</string>
+    <string name="util_not_available">n/a</string>
 
-    <string name="cardview_trackingitem_not_available">n/a</string>
+    <string name="util_datetime_format">yyyy-MM-dd HH:mm</string>
+    <string name="util_date_format">yyyy-MM-dd</string>
+    <string name="util_time_format">HH:mm</string>
+    <string name="util_abbreviation_hours">h</string>
+    <string name="util_abbreviation_days">d</string>
+
     <string name="cardview_trackingitem_action_discard">Discard</string>
     <string name="cardview_backup_action_restore">Restore</string>
     <string name="cardview_backup_action_discard">Discard</string>

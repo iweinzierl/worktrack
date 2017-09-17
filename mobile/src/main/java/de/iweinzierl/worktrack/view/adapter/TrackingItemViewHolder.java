@@ -13,11 +13,11 @@ import de.iweinzierl.worktrack.persistence.TrackingItemType;
 
 class TrackingItemViewHolder extends RecyclerView.ViewHolder {
 
-    private static final String DATE_PATTERN = "yyyy-MM-dd";
-    private static final String TIME_PATTERN = "HH:mm";
-
     private final ActionCallback<TrackingItem> actionCallback;
     private final Context context;
+
+    private String dateFormat;
+    private String timeFormat;
 
     private final View typeIndicator;
     private final TextView eventDateView;
@@ -33,6 +33,9 @@ class TrackingItemViewHolder extends RecyclerView.ViewHolder {
         this.context = context;
         this.actionCallback = actionCallback;
 
+        dateFormat = context.getString(R.string.util_date_format);
+        timeFormat = context.getString(R.string.util_time_format);
+
         typeIndicator = itemView.findViewById(R.id.typeIndicator);
         eventDateView = (TextView) itemView.findViewById(R.id.eventDate);
         eventTimeView = (TextView) itemView.findViewById(R.id.eventTime);
@@ -45,8 +48,8 @@ class TrackingItemViewHolder extends RecyclerView.ViewHolder {
     void apply(final TrackingItem item) {
         Resources.Theme theme = context.getTheme();
 
-        eventDateView.setText(item.getEventTime().toString(DATE_PATTERN));
-        eventTimeView.setText(item.getEventTime().toString(TIME_PATTERN));
+        eventDateView.setText(item.getEventTime().toString(dateFormat));
+        eventTimeView.setText(item.getEventTime().toString(timeFormat));
         typeView.setText(item.getType().name());
 
         if (item.getTriggerEventLat() != 0 && item.getTriggerEventLon() != 0) {

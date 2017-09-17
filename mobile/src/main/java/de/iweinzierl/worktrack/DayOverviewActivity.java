@@ -1,7 +1,6 @@
 package de.iweinzierl.worktrack;
 
 import android.content.DialogInterface;
-import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -107,7 +106,7 @@ public class DayOverviewActivity extends BaseActivity implements DayOverviewFrag
             @Override
             public void callback() {
                 updateUi();
-                Snackbar.make(findViewById(android.R.id.content), "Deleted Event", BaseTransientBottomBar.LENGTH_SHORT).show();
+                showMessage(getString(R.string.activity_dayoverview_message_event_deleted));
             }
         });
     }
@@ -119,7 +118,7 @@ public class DayOverviewActivity extends BaseActivity implements DayOverviewFrag
             @Override
             public void callback() {
                 updateUi();
-                Snackbar.make(findViewById(android.R.id.content), "Added Event", BaseTransientBottomBar.LENGTH_SHORT).show();
+                showMessage(getString(R.string.activity_dayoverview_message_event_added));
             }
         });
     }
@@ -138,7 +137,7 @@ public class DayOverviewActivity extends BaseActivity implements DayOverviewFrag
                     @Override
                     public void callback() {
                         updateUi();
-                        Snackbar.make(findViewById(android.R.id.content), "Added Event", BaseTransientBottomBar.LENGTH_SHORT).show();
+                        showMessage(getString(R.string.activity_dayoverview_message_event_added));
                     }
                 });
             }
@@ -156,7 +155,7 @@ public class DayOverviewActivity extends BaseActivity implements DayOverviewFrag
             @Override
             public void callback() {
                 updateUi();
-                Snackbar.make(findViewById(android.R.id.content), "Added Event", BaseTransientBottomBar.LENGTH_SHORT).show();
+                showMessage(getString(R.string.activity_dayoverview_message_event_added));
             }
         });
     }
@@ -175,7 +174,7 @@ public class DayOverviewActivity extends BaseActivity implements DayOverviewFrag
                     @Override
                     public void callback() {
                         updateUi();
-                        Snackbar.make(findViewById(android.R.id.content), "Added Event", BaseTransientBottomBar.LENGTH_SHORT).show();
+                        showMessage(getString(R.string.activity_dayoverview_message_event_added));
                     }
                 });
             }
@@ -235,9 +234,9 @@ public class DayOverviewActivity extends BaseActivity implements DayOverviewFrag
         LocalDateTime now = LocalDateTime.now();
 
         SwitchDateTimeDialogFragment dateTimeFragment = SwitchDateTimeDialogFragment.newInstance(
-                "Title example",
-                "OK",
-                "Cancel"
+                getString(R.string.activity_dayoverview_action_select_datetime),
+                getString(R.string.activity_dayoverview_action_select_date_confirm),
+                getString(R.string.activity_dayoverview_action_select_date_cancel)
         );
 
         dateTimeFragment.startAtCalendarView();
@@ -268,7 +267,7 @@ public class DayOverviewActivity extends BaseActivity implements DayOverviewFrag
         new AlertDialog.Builder(this)
                 .setView(datePicker)
                 .setTitle(R.string.activity_dayoverview_action_select_date)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.activity_dayoverview_action_select_date_confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         LocalDate selected = new LocalDate(

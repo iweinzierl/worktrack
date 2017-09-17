@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Worktrack</string>
+    <string name="action_settings">Einstellungen</string>
+
+    <string name="drawer_open">Menu öffnen</string>
+    <string name="drawer_close">Menu schließen</string>
+    <string name="drawer_label_pro">Worktrack PRO</string>
+    <string name="drawer_label_dev">Worktrack DEV</string>
+
+    <string name="activity_manage_workplaces">Arbeitsplätze verwalten</string>
+    <string name="activity_manage_workplaces_action_add">Arbeitsplatz hinzufügen</string>
+    <string name="activity_manage_workplaces_action_rename">Umbenennen</string>
+    <string name="activity_manage_workplaces_action_delete">Entfernen</string>
+    <string name="activity_manage_workplaces_dialog_delete_title">Arbeitsplatz entfernen?</string>
+    <string name="activity_manage_workplaces_dialog_delete_confirm">Entfernen</string>
+    <string name="activity_manage_workplaces_dialog_delete_cancel">Abbrechen</string>
+
+    <string name="activity_pick_location">Wähle einen Ort</string>
+    <string name="activity_pick_location_action_confirm">OK</string>
+
+    <string name="activity_dayverview">Tagesübersicht</string>
+    <string name="activity_dayoverview_incorrect_warning">Einträge inkonsistent!</string>
+    <string name="activity_dayoverview_action_select_date">Wähle Datum</string>
+    <string name="activity_dayoverview_action_select_datetime">Datum und Uhrzeit wählen</string>
+    <string name="activity_dayoverview_action_select_date_confirm">OK</string>
+    <string name="activity_dayoverview_action_select_date_cancel">Abbrechen</string>
+    <string name="activity_dayoverview_action_checkin_now">Jetzt einstempeln</string>
+    <string name="activity_dayoverview_action_checkin_specified">Einstempeln um…</string>
+    <string name="activity_dayoverview_action_checkout_now">Jetzt ausstempeln</string>
+    <string name="activity_dayoverview_action_checkout_specified">Ausstempeln um…</string>
+    <string name="activity_dayoverview_action_delete_title">Eintrag entfernen?</string>
+    <string name="activity_dayoverview_action_delete_ok">Entfernen</string>
+    <string name="activity_dayoverview_action_delete_cancel">Abbrechen</string>
+    <string name="activity_dayoverview_message_event_deleted">Event entfernt.</string>
+    <string name="activity_dayoverview_message_event_added">Event hinzugefügt.</string>
+    <string name="activity_dayoverview_message_unable_jump_into_future">Kann nicht in die Zukunft springen.</string>
+
+    <string name="activity_weekoverview">Wochenübersicht</string>
+    <string name="activity_weekoverview_action_export_mail">Exportieren</string>
+    <string name="activity_weekoverview_chart_xaxis_label">Wochentage</string>
+    <string name="activity_weekoverview_chart_yaxis_label">Arbeitstunden pro Tag</string>
+
+    <string name="activity_yearoverview">Jahresübersicht</string>
+    <string name="activity_yearoverview_overhours_label">Überstunden dieses Jahr</string>
+    <string name="activity_yearoverview_chart_xaxis_label">Kalenderwochen</string>
+    <string name="activity_yearoverview_chart_yaxis_label">Arbeitstunden pro Woche</string>
+
+    <string name="activity_manage_backups">Sicherungskopien</string>
+    <string name="activity_manage_backups_error_loading_backups">Fehler beim Laden von Sicherungskopien.</string>
+    <string name="activity_manage_backups_error_deleting_backup">Fehler beim Entfernen von Sicherungskopie.</string>
+    <string name="activity_manage_backups_error_importing_backup">Fehler beim Wiederherstellen einer Sicherungskopie.</string>
+    <string name="activity_manage_backups_create_backup_succeeded">Sicherungskopie erfolgreich erstellt.</string>
+    <string name="activity_manage_backups_import_backup_succeeded">Wiederherstellen erfolgreich.</string>
+    <string name="activity_manage_backups_discard_backup_succeeded">Sicherungskopie erfolgreich entfernt.</string>
+    <string name="activity_manage_backups_dialog_discard_title">Sicherungskopie entfernen?</string>
+    <string name="activity_manage_backups_dialog_import_title">Sicherungskopie wiederherstellen?</string>
+
+    <string name="activity_settings">Einstellungen</string>
+
+    <string name="dialog_datetime_chooser_title">Datum/Uhrzeit wählen</string>
+
+    <string name="dialog_weekpicker_title">Zur Woche springen</string>
+    <string name="dialog_weekpicker_message">Woche/Jahr wählen:</string>
+    <string name="dialog_weekpicker_button_ok">Springen</string>
+    <string name="dialog_weekpicker_button_cancel">Abbrechen</string>
+    <string name="dialog_weekpicker_label_week">Woche:</string>
+    <string name="dialog_weekpicker_label_year">Jahr:</string>
+
+    <string name="dialog_backup_title_input_title">Name der Sicherungskopie</string>
+    <string name="dialog_backup_title_input_confirm">Sichern</string>
+    <string name="dialog_backup_title_input_cancel">Abbrechen</string>
+
+    <string name="dialog_authentication_title">Authentifizieren</string>
+    <string name="dialog_authentication_button_cancel">Abbrechen</string>
+    <string name="dialog_authentication_button_use_fingerprint">Fingerabdruck benutzen</string>
+    <string name="dialog_authentication_button_use_password">Passwort benutzen</string>
+    <string name="dialog_authentication_hint_fingerprint">Fingerabdruck Sensor benutzen</string>
+    <string name="dialog_authentication_button_password_submit">Weiter</string>
+
+    <string name="dialog_account_picker_title">Konto wählen</string>
+    <string name="dialog_account_picker_cancel">Abbrechen</string>
+
+    <string name="dialog_workplace_title_query_title">Name des Arbeitsplatzen setzen</string>
+    <string name="dialog_workplace_title_query_button_ok">Speichern</string>
+    <string name="dialog_workplace_title_query_button_cancel">Abbrechen</string>
+    <string name="dialog_workplace_title_query_label_location">Ort:</string>
+    <string name="dialog_workplace_title_query_label_radius">Radius:</string>
+    <string name="dialog_workplace_title_query_hint_name">Name</string>
+
+    <string name="settings_category_working_time">Arbeitszeit</string>
+    <string name="settings_daily_working_hours_title">Arbeitsstunden pro Tag</string>
+    <string name="settings_daily_working_hours_summary">Anzahl der Arbeitsstunden pro Tag.</string>
+    <string name="settings_weekly_working_hours_title">Arbeitsstunden pro Woche</string>
+    <string name="settings_weekly_working_hours_summary">Anzahl der Arbeitsstunden pro Woche.</string>
+    <string name="settings_category_export">Daten Export</string>
+    <string name="settings_export_default_mail_title">Standard E-Mail Adresse</string>
+    <string name="settings_export_default_mail_summary">Standard E-Mail Adresse zum Versand von Daten Exports.</string>
+    <string name="settings_backup_screen_title">Sicherungskopie</string>
+    <string name="settings_backup_screen_summary">Sicherungskopien konfigurieren.</string>
+    <string name="settings_backup_category_google_drive">Google Drive Einstellungen</string>
+    <string name="settings_backup_frequency">In Google Drive sichern.</string>
+    <string name="settings_backup_frequency_dialogtitle">In Google Drive sichern:</string>
+    <string name="settings_backup_account">Konto</string>
+    <string name="settings_backup_account_dialogtitle">Konto wählen:</string>
+    <string name="settings_backup_required_connection">Nur sichern bei:</string>
+    <string name="settings_backup_required_connection_dialogtitle">Nur sichern bei:</string>
+    <string name="settings_backup_category_last_backup">Letzte Sicherungskopie</string>
+
+    <string name="workplace_viewholder_label_location">Ort:</string>
+    <string name="workplace_viewholder_label_radius">Radius:</string>
+
+    <string name="location_template">%1$.3f x %2$.3f</string>
+    <string name="radius_template">%1$.0f</string>
+
+    <string name="util_delete_title">Eintrag entfernen?</string>
+    <string name="util_delete_action_confirm">Entfernen</string>
+    <string name="util_delete_action_cancel">Abbrechen</string>
+    <string name="util_import_action_confirm">Wiederherstellen</string>
+    <string name="util_import_action_cancel">Abbrechen</string>
+    <string name="util_not_available">n/v</string>
+
+    <string name="util_datetime_format">dd.MM.yyyy HH:mm</string>
+    <string name="util_date_format">dd.MM.yyyy</string>
+    <string name="util_time_format">HH:mm</string>
+    <string name="util_abbreviation_hours">Std</string>
+    <string name="util_abbreviation_days">T</string>
+
+    <string name="cardview_trackingitem_action_discard">Entfernen</string>
+    <string name="cardview_backup_action_restore">Wiederherstellen</string>
+    <string name="cardview_backup_action_discard">Entfernen</string>
+
+    <string name="preference_last_backup">Letzte Sicherungskopie</string>
+    <string name="preference_last_backup_date">Datum:</string>
+    <string name="preference_last_backup_size">Größe:</string>
+    <string name="preference_last_backup_items">Anzahl Events:</string>
+    <string name="preference_last_backup_workplaces">Anzahl Arbeitsplätze:</string>
+    <string name="preference_backup_account">preference_backup_account</string>
+    <string name="preference_backup_account_label">Konto für Sicherungskopien</string>
+
+    <string name="monday">Mo</string>
+    <string name="tuesday">Di</string>
+    <string name="wednesday">Mi</string>
+    <string name="thursday">Do</string>
+    <string name="friday">Fr</string>
+    <string name="saturday">Sa</string>
+    <string name="sunday">Su</string>
+</resources>

@@ -69,8 +69,8 @@ public class LastBackupPreference extends Preference {
         long lastBackupTime = prefs.getLong(LastBackupPreferences.DATE.getProperty(), 0);
 
         return lastBackupTime > 0
-                ? new DateTime(lastBackupTime).toString("yyyy-MM-dd  HH:mm")
-                : "unknown";
+                ? new DateTime(lastBackupTime).toString(getContext().getString(R.string.util_datetime_format))
+                : getContext().getString(R.string.util_not_available);
     }
 
     private long getLastBackupSize() {
