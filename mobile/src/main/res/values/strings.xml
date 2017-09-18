@@ -34,6 +34,8 @@
     <string name="activity_dayoverview_message_event_deleted">Event deleted.</string>
     <string name="activity_dayoverview_message_event_added">Event added.</string>
     <string name="activity_dayoverview_message_unable_jump_into_future">Unable to jump into future.</string>
+    <string name="activity_dayoverview_dialog_nodata_title">No Data</string>
+    <string name="activity_dayoverview_dialog_nodata_message">There is no event data in the app yet. First you need to track your working time. You can do this manually or by adding a workplace.</string>
 
     <string name="activity_weekoverview">Weekly Overview</string>
     <string name="activity_weekoverview_action_export_mail">Export</string>

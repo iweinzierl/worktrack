@@ -35,6 +35,8 @@
     <string name="activity_dayoverview_message_event_deleted">Event entfernt.</string>
     <string name="activity_dayoverview_message_event_added">Event hinzugefügt.</string>
     <string name="activity_dayoverview_message_unable_jump_into_future">Kann nicht in die Zukunft springen.</string>
+    <string name="activity_dayoverview_dialog_nodata_title">Keine Daten vorhanden</string>
+    <string name="activity_dayoverview_dialog_nodata_message">Es gibt aktuell keine erfassten Arbeitszeiten. Erfassen Sie diese zuerst entweder manuell oder indem Sie einen Arbeitsplatz hinzufügen.</string>
 
     <string name="activity_weekoverview">Wochenübersicht</string>
     <string name="activity_weekoverview_action_export_mail">Exportieren</string>

@@ -260,33 +260,40 @@ public class DayOverviewActivity extends BaseActivity implements DayOverviewFrag
         LocalDate now = LocalDate.now();
         LocalDate min = trackingItemRepository.findFirstLocalDate();
 
-        final DatePicker datePicker = new DatePicker(this);
-        datePicker.setMaxDate(now.toDate().getTime());
-        datePicker.setMinDate(min.toDate().getTime());
+        if (min == null) {
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.activity_dayoverview_dialog_nodata_title)
+                    .setMessage(R.string.activity_dayoverview_dialog_nodata_message)
+                    .show();
+        } else {
+            final DatePicker datePicker = new DatePicker(this);
+            datePicker.setMaxDate(now.toDate().getTime());
+            datePicker.setMinDate(min.toDate().getTime());
 
-        new AlertDialog.Builder(this)
-                .setView(datePicker)
-                .setTitle(R.string.activity_dayoverview_action_select_date)
-                .setPositiveButton(R.string.activity_dayoverview_action_select_date_confirm, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        LocalDate selected = new LocalDate(
-                                datePicker.getYear(),
-                                datePicker.getMonth() + 1, // 0 based months
-                                datePicker.getDayOfMonth()
-                        );
+            new AlertDialog.Builder(this)
+                    .setView(datePicker)
+                    .setTitle(R.string.activity_dayoverview_action_select_date)
+                    .setPositiveButton(R.string.activity_dayoverview_action_select_date_confirm, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            LocalDate selected = new LocalDate(
+                                    datePicker.getYear(),
+                                    datePicker.getMonth() + 1, // 0 based months
+                                    datePicker.getDayOfMonth()
+                            );
 
-                        if (selected.isAfter(LocalDate.now())) {
-                            Snackbar.make(
-                                    findViewById(android.R.id.content),
-                                    "Cannot jump into the future",
-                                    Snackbar.LENGTH_LONG).show();
-                        } else {
-                            navigateTo(selected);
+                            if (selected.isAfter(LocalDate.now())) {
+                                Snackbar.make(
+                                        findViewById(android.R.id.content),
+                                        "Cannot jump into the future",
+                                        Snackbar.LENGTH_LONG).show();
+                            } else {
+                                navigateTo(selected);
+                            }
                         }
-                    }
-                })
-                .show();
+                    })
+                    .show();
+        }
     }
 
     @UiThread
