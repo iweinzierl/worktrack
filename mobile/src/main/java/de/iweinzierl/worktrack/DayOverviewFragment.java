@@ -19,7 +19,6 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.res.ColorRes;
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
 import org.joda.time.format.PeriodFormatter;
@@ -34,6 +33,7 @@ import de.iweinzierl.worktrack.persistence.TrackingItem;
 import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
 import de.iweinzierl.worktrack.persistence.TrackingItemType;
 import de.iweinzierl.worktrack.util.SettingsHelper;
+import de.iweinzierl.worktrack.util.WorktimeCalculator;
 import de.iweinzierl.worktrack.view.adapter.NoOpActionCallback;
 import de.iweinzierl.worktrack.view.adapter.TrackingItemAdapter;
 
@@ -171,7 +171,7 @@ public class DayOverviewFragment extends Fragment {
 
     @UiThread
     protected void setDateView(LocalDate date) {
-        dateView.setText(date.toString("yyyy-MM-dd"));
+        dateView.setText(date.toString(getString(R.string.util_date_format)));
     }
 
     public void deleteItem(final TrackingItem item) {
@@ -200,20 +200,7 @@ public class DayOverviewFragment extends Fragment {
     private void calculateAndSetDuration(List<TrackingItem> items) {
         final int dailyWorkingHours = new SettingsHelper(getActivity()).getDailyWorkingHours();
 
-        Period duration = new Period();
-
-        for (int idx = 0; idx < items.size(); idx += 2) {
-            if (idx < items.size() - 1) {
-                TrackingItem itemA = items.get(idx);
-                TrackingItem itemB = items.get(idx + 1);
-
-                DateTime tA = itemA.getEventTime();
-                DateTime tB = itemB.getEventTime();
-
-                duration = duration.plus(new Period(tA, tB));
-            }
-        }
-
+        Period duration = new WorktimeCalculator(items).calculate();
         durationView.setText(duration.normalizedStandard().toString(periodFormatter));
 
         if (duration.getHours() > dailyWorkingHours) {
