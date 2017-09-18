@@ -57,6 +57,10 @@
     <string name="activity_manage_backups_discard_backup_succeeded">Sicherungskopie erfolgreich entfernt.</string>
     <string name="activity_manage_backups_dialog_discard_title">Sicherungskopie entfernen?</string>
     <string name="activity_manage_backups_dialog_import_title">Sicherungskopie wiederherstellen?</string>
+    <string name="activity_manage_backups_dialog_error_account_unset_title">Einstellung fehlt</string>
+    <string name="activity_manage_backups_dialog_error_account_unset_message">Sie haben noch keinen Google Account gewählt, welcher für Sicherungskopien benutzt werden soll. Jetzt einstellen?</string>
+    <string name="activity_manage_backups_dialog_error_account_unset_confirm">Einstellen</string>
+    <string name="activity_manage_backups_dialog_error_account_unset_cancel">Nein</string>
 
     <string name="activity_settings">Einstellungen</string>
 

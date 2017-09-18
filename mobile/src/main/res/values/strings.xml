@@ -56,6 +56,10 @@
     <string name="activity_manage_backups_discard_backup_succeeded">Backup successfully discarded.</string>
     <string name="activity_manage_backups_dialog_discard_title">Discard Backup?</string>
     <string name="activity_manage_backups_dialog_import_title">Import Backup?</string>
+    <string name="activity_manage_backups_dialog_error_account_unset_title">Settings missing</string>
+    <string name="activity_manage_backups_dialog_error_account_unset_message">You did not yet chose a Google account where backups shall be stored. Do you want to chose now?</string>
+    <string name="activity_manage_backups_dialog_error_account_unset_confirm">Configure</string>
+    <string name="activity_manage_backups_dialog_error_account_unset_cancel">No</string>
 
     <string name="activity_settings">Settings</string>
 

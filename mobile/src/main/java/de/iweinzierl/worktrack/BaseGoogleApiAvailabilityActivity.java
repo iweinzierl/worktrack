@@ -30,11 +30,14 @@ public abstract class BaseGoogleApiAvailabilityActivity extends BaseActivity {
     static final int REQUEST_AUTHORIZATION = 1001;
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
 
+    static final int ERROR_UNDEFINED_ACCOUNT = 1000;
+    static final int ERROR_AUTHENTICATION = 2000;
+
     private GoogleAccountCredential googleAccountCredential;
 
     abstract void onConnected();
 
-    abstract void onFailure();
+    abstract void onFailure(int errorCode);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,7 +58,7 @@ public abstract class BaseGoogleApiAvailabilityActivity extends BaseActivity {
         switch (requestCode) {
             case REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode != RESULT_OK) {
-                    onFailure();
+                    onFailure(ERROR_AUTHENTICATION);
                 } else {
                     onConnected();
                 }
@@ -77,8 +80,7 @@ public abstract class BaseGoogleApiAvailabilityActivity extends BaseActivity {
         if (!isGooglePlayServicesAvailable()) {
             acquireGooglePlayServices();
         } else if (googleAccountCredential.getSelectedAccountName() == null) {
-            // TODO add hint to select account in preferences
-            onFailure();
+            onFailure(ERROR_UNDEFINED_ACCOUNT);
         } else {
             action.execute();
         }

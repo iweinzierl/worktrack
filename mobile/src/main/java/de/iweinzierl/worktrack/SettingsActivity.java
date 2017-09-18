@@ -100,6 +100,6 @@ public class SettingsActivity extends BaseGoogleApiAvailabilityActivity implemen
     }
 
     @Override
-    void onFailure() {
+    void onFailure(int errorCode) {
     }
 }

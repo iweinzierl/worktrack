@@ -1,9 +1,10 @@
 package de.iweinzierl.worktrack;
 
-import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -85,8 +86,10 @@ public class ManageBackupsActivity extends BaseGoogleApiAvailabilityActivity {
     }
 
     @Override
-    void onFailure() {
-        showMessage("Authentication Error!");
+    void onFailure(int errorCode) {
+        if (errorCode == ERROR_UNDEFINED_ACCOUNT) {
+            displayAccountUnsetDialog();
+        }
     }
 
     @Override
@@ -98,8 +101,8 @@ public class ManageBackupsActivity extends BaseGoogleApiAvailabilityActivity {
     }
 
     @Override
-    protected void onPostResume() {
-        super.onPostResume();
+    protected void onResume() {
+        super.onResume();
         updateBackups();
     }
 
@@ -118,6 +121,33 @@ public class ManageBackupsActivity extends BaseGoogleApiAvailabilityActivity {
     @Click(R.id.manualBackup)
     protected void clickedManualBack() {
         createBackup();
+    }
+
+    @UiThread
+    protected void displayAccountUnsetDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.activity_manage_backups_dialog_error_account_unset_title)
+                .setMessage(R.string.activity_manage_backups_dialog_error_account_unset_message)
+                .setNegativeButton(R.string.activity_manage_backups_dialog_error_account_unset_cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        hideProgressBar();
+                    }
+                })
+                .setPositiveButton(R.string.activity_manage_backups_dialog_error_account_unset_confirm, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        startActivity(new Intent(ManageBackupsActivity.this, SettingsActivity_.class));
+                    }
+                })
+                .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialogInterface) {
+                        hideProgressBar();
+                    }
+                })
+                .show();
     }
 
     @UiThread
