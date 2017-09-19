@@ -29,7 +29,7 @@ public class TrackingItemAdapter extends RecyclerView.Adapter<TrackingItemViewHo
 
     @Override
     public TrackingItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_trackingitem, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_tracking_item, parent, false);
         return new TrackingItemViewHolder(context, view, actionCallback);
     }
 

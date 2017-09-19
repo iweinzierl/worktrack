@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        style="@style/CardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        app:cardCornerRadius="2dp">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.constraint.Guideline
+                android:id="@+id/guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="@dimen/activity_horizontal_margin" />
+
+            <View
+                android:id="@+id/typeIndicator"
+                android:layout_width="6dp"
+                android:layout_height="match_parent"
+                android:background="@color/cardViewTextTitle"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
+                app:layout_constraintStart_toEndOf="@id/guideline" />
+
+            <TextView
+                android:id="@+id/type"
+                style="@style/CardView.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="8dp"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical"
+                app:layout_constraintStart_toEndOf="@id/typeIndicator"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/containerDateTime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/typeIndicator"
+                app:layout_constraintTop_toBottomOf="@+id/type">
+
+                <TextView
+                    android:id="@+id/eventDate"
+                    style="@style/CardView.Text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawablePadding="4dp"
+                    android:drawableStart="@drawable/ic_date_range_24dp"
+                    android:gravity="center_vertical" />
+
+                <TextView
+                    android:id="@+id/eventTime"
+                    style="@style/CardView.Text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawablePadding="4dp"
+                    android:drawableStart="@drawable/ic_access_time_24dp"
+                    android:gravity="center_vertical" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/containerWorkplace"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/typeIndicator"
+                app:layout_constraintTop_toBottomOf="@+id/containerDateTime">
+
+                <TextView
+                    android:id="@+id/workplaceName"
+                    style="@style/CardView.Text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawablePadding="4dp"
+                    android:drawableStart="@drawable/ic_business_24dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/util_not_available" />
+
+                <TextView
+                    android:id="@+id/eventLocation"
+                    style="@style/CardView.Text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawablePadding="4dp"
+                    android:drawableStart="@drawable/ic_location_on_24dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/util_not_available" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/discard"
+                style="@style/CardView.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="@string/cardview_trackingitem_action_discard"
+                app:layout_constraintStart_toEndOf="@id/typeIndicator"
+                app:layout_constraintTop_toBottomOf="@+id/containerWorkplace" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v7.widget.CardView>
+
+</FrameLayout>
