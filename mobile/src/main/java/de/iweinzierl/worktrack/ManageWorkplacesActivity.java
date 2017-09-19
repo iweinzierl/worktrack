@@ -20,8 +20,10 @@ import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 
@@ -242,22 +244,33 @@ public class ManageWorkplacesActivity extends BaseActivity {
 
         showProgressBar();
 
-        List<Workplace> workplaces = workplaceRepository.findAll();
-        GeofencingRequest geofencingRequest = buildGeofencingRequest(workplaces);
+        final List<Workplace> workplaces = workplaceRepository.findAll();
+        final GeofencingRequest geofencingRequest = buildGeofencingRequest(workplaces);
 
-        geofencingClient.addGeofences(geofencingRequest, getGeofencePendingIntent())
-                .addOnSuccessListener(this, new OnSuccessListener<Void>() {
+        geofencingClient.removeGeofences(getGeofencePendingIntent())
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
-                    public void onSuccess(Void aVoid) {
-                        LOGGER.info("Adding geofences finished successfully");
-                        hideProgressBar();
-                    }
-                })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        LOGGER.warn("Adding geofences failed", e);
-                        hideProgressBar();
+                    public void onComplete(@NonNull Task<Void> task) {
+                        try {
+                            geofencingClient.addGeofences(geofencingRequest, getGeofencePendingIntent())
+                                    .addOnSuccessListener(ManageWorkplacesActivity.this, new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            LOGGER.info("Adding geofences finished successfully");
+                                            hideProgressBar();
+                                        }
+                                    })
+                                    .addOnFailureListener(ManageWorkplacesActivity.this, new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            LOGGER.warn("Adding geofences failed", e);
+                                            hideProgressBar();
+                                        }
+                                    });
+                        } catch (SecurityException e) {
+                            showMessage(getString(R.string.activity_manage_workplaces_error_message_permission));
+                            hideProgressBar();
+                        }
                     }
                 });
     }

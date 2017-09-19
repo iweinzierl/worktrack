@@ -14,6 +14,7 @@
     <string name="activity_manage_workplaces_dialog_delete_title">Discard workplace?</string>
     <string name="activity_manage_workplaces_dialog_delete_confirm">Discard</string>
     <string name="activity_manage_workplaces_dialog_delete_cancel">Cancel</string>
+    <string name="activity_manage_workplaces_error_message_permission">Required location permission not granted.</string>
 
     <string name="activity_pick_location">Choose location</string>
     <string name="activity_pick_location_action_confirm">OK</string>

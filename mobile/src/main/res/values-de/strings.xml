@@ -15,6 +15,7 @@
     <string name="activity_manage_workplaces_dialog_delete_title">Arbeitsplatz entfernen?</string>
     <string name="activity_manage_workplaces_dialog_delete_confirm">Entfernen</string>
     <string name="activity_manage_workplaces_dialog_delete_cancel">Abbrechen</string>
+    <string name="activity_manage_workplaces_error_message_permission">Berechtigung für Standortinformationen nicht vorhanden.</string>
 
     <string name="activity_pick_location">Wähle einen Ort</string>
     <string name="activity_pick_location_action_confirm">OK</string>
