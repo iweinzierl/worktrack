@@ -9,10 +9,13 @@
         style="@style/CardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="1dp"
+        android:layout_marginTop="0dp"
         app:cardCornerRadius="2dp">
 
         <android.support.constraint.ConstraintLayout
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
