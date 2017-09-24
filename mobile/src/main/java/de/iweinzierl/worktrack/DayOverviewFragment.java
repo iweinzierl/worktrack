@@ -2,6 +2,7 @@ package de.iweinzierl.worktrack;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
@@ -71,6 +73,12 @@ public class DayOverviewFragment extends Fragment {
 
     @ViewById
     ImageView warningIcon;
+
+    @ViewById
+    View emptyView;
+
+    @ViewById
+    View emptyViewAddWorkplace;
 
     @ColorRes(R.color.toolbarOverHours)
     int overHoursColor;
@@ -136,6 +144,11 @@ public class DayOverviewFragment extends Fragment {
         }
     }
 
+    @Click(R.id.emptyViewAddWorkplace)
+    protected void launchManageWorkplaceActivity() {
+        startActivity(new Intent(getContext(), ManageWorkplacesActivity_.class));
+    }
+
     private void determineIfItemsAreCorrect(List<TrackingItem> items) {
         setTrackingItemsCorrect(true);
 
@@ -166,7 +179,19 @@ public class DayOverviewFragment extends Fragment {
     @UiThread
     protected void setTrackingItems(List<TrackingItem> items) {
         trackingItemAdapter.setItems(items);
+        updateEmptyView();
         calculateAndSetDuration(items);
+    }
+
+    @UiThread
+    protected void updateEmptyView() {
+        if (trackingItemAdapter.getItemCount() > 0) {
+            emptyView.setVisibility(View.GONE);
+            cardView.setVisibility(View.VISIBLE);
+        } else {
+            emptyView.setVisibility(View.VISIBLE);
+            cardView.setVisibility(View.GONE);
+        }
     }
 
     @UiThread
@@ -188,6 +213,7 @@ public class DayOverviewFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         trackingItemCallback.onDeleteItem(item);
                         trackingItemAdapter.removeItem(item);
+                        updateEmptyView();
                     }
                 })
                 .show();

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content_overview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="de.iweinzierl.worktrack.DayOverviewFragment"
-    tools:showIn="@layout/activity_day_overview">
+    tools:context="de.iweinzierl.worktrack.DayOverviewFragment">
 
     <RelativeLayout
         android:id="@+id/bottom_bar"
@@ -53,6 +53,62 @@
         android:layout_above="@id/bottom_bar"
         android:layout_alignParentTop="true"
         android:paddingTop="@dimen/cardTopPadding"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical"
+        android:visibility="gone" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/emptyView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom_bar"
+        android:layout_alignParentTop="true">
+
+        <TextView
+            android:id="@+id/emptyViewTitle"
+            style="@style/AppTheme.EmptyView.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="32dp"
+            android:paddingTop="32dp"
+            android:text="@string/activity_dayoverview_emptyview_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <ImageView
+            android:id="@+id/icon"
+            style="@style/AppTheme.EmptyView.Icon"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:contentDescription="@string/activity_dayoverview_emptyview_icondesc"
+            android:src="@drawable/clock_sad_secondary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/emptyViewTitle" />
+
+        <TextView
+            android:id="@+id/emptyViewText"
+            style="@style/AppTheme.EmptyView.Text"
+            android:layout_width="368dp"
+            android:layout_height="wrap_content"
+            android:paddingBottom="32dp"
+            android:paddingTop="32dp"
+            android:text="@string/activity_dayoverview_emptyview_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/icon" />
+
+        <Button
+            android:id="@+id/emptyViewAddWorkplace"
+            style="@style/AppTheme.EmptyView.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/activity_dayoverview_emptyview_button_add_workplace"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/emptyViewText" />
+
+    </android.support.constraint.ConstraintLayout>
 
 </RelativeLayout>
