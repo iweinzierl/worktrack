@@ -16,6 +16,9 @@
     <string name="activity_manage_workplaces_dialog_delete_confirm">Entfernen</string>
     <string name="activity_manage_workplaces_dialog_delete_cancel">Abbrechen</string>
     <string name="activity_manage_workplaces_error_message_permission">Berechtigung für Standortinformationen nicht vorhanden.</string>
+    <string name="activity_manage_workplaces_emptyview_text">Füge Arbeitsplätze über den + Knop unten rechts hinzu.</string>
+    <string name="activity_manage_workplaces_emptyview_title">Keine Arbeitsplätze</string>
+    <string name="activity_manage_workplaces_emptyview_icondesc">Keine Arbeitsplätze.</string>
 
     <string name="activity_pick_location">Wähle einen Ort</string>
     <string name="activity_pick_location_action_confirm">OK</string>
@@ -38,7 +41,7 @@
     <string name="activity_dayoverview_message_unable_jump_into_future">Kann nicht in die Zukunft springen.</string>
     <string name="activity_dayoverview_dialog_nodata_title">Keine Daten vorhanden</string>
     <string name="activity_dayoverview_dialog_nodata_message">Es gibt aktuell keine erfassten Arbeitszeiten. Erfassen Sie diese zuerst entweder manuell oder indem Sie einen Arbeitsplatz hinzufügen.</string>
-    <string name="activity_dayoverview_emptyview_text">Füge Events über den + Knopf unten links oder füge einen neuen Arbeitsplatz hinzu um automatisch anhand deines Standortes deine Zeiten zu erfassen.</string>
+    <string name="activity_dayoverview_emptyview_text">Füge Events über den + Knopf unten rechts hinzu oder füge einen neuen Arbeitsplatz hinzu um automatisch anhand deines Standortes deine Zeiten zu erfassen.</string>
     <string name="activity_dayoverview_emptyview_title">Keine Events</string>
     <string name="activity_dayoverview_emptyview_button_add_workplace">Arbeitsplatz hinzufügen</string>
     <string name="activity_dayoverview_emptyview_icondesc">Keine Events.</string>

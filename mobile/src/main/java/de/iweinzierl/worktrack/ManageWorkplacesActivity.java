@@ -79,6 +79,9 @@ public class ManageWorkplacesActivity extends BaseActivity {
     @ViewById
     protected RecyclerView cardView;
 
+    @ViewById
+    protected View emptyView;
+
     private PendingIntent geofencePendingIntent;
 
     private WorkplaceAdapter workplaceAdapter;
@@ -153,8 +156,20 @@ public class ManageWorkplacesActivity extends BaseActivity {
     }
 
     @UiThread
+    protected void updateEmptyView() {
+        if (workplaceAdapter.getItemCount() > 0) {
+            emptyView.setVisibility(View.GONE);
+            cardView.setVisibility(View.VISIBLE);
+        } else {
+            emptyView.setVisibility(View.VISIBLE);
+            cardView.setVisibility(View.GONE);
+        }
+    }
+
+    @UiThread
     protected void setWorkplaces(List<Workplace> workplaces) {
         workplaceAdapter.setWorkplaces(workplaces);
+        updateEmptyView();
     }
 
     @UiThread

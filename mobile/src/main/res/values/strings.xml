@@ -15,6 +15,9 @@
     <string name="activity_manage_workplaces_dialog_delete_confirm">Discard</string>
     <string name="activity_manage_workplaces_dialog_delete_cancel">Cancel</string>
     <string name="activity_manage_workplaces_error_message_permission">Required location permission not granted.</string>
+    <string name="activity_manage_workplaces_emptyview_text">Add new workplaces with the + button at the bottom right.</string>
+    <string name="activity_manage_workplaces_emptyview_title">No workplaces</string>
+    <string name="activity_manage_workplaces_emptyview_icondesc">No workplaces.</string>
 
     <string name="activity_pick_location">Choose location</string>
     <string name="activity_pick_location_action_confirm">OK</string>
@@ -37,7 +40,7 @@
     <string name="activity_dayoverview_message_unable_jump_into_future">Unable to jump into future.</string>
     <string name="activity_dayoverview_dialog_nodata_title">No Data</string>
     <string name="activity_dayoverview_dialog_nodata_message">There is no event data in the app yet. First you need to track your working time. You can do this manually or by adding a workplace.</string>
-    <string name="activity_dayoverview_emptyview_text">Add new events with the + Button at the bottom right or add a new workplace to track your working time automatically by your location.</string>
+    <string name="activity_dayoverview_emptyview_text">Add new events with the + button at the bottom right or add a new workplace to track your working time automatically by your location.</string>
     <string name="activity_dayoverview_emptyview_title">No events</string>
     <string name="activity_dayoverview_emptyview_button_add_workplace">Add Workplace</string>
     <string name="activity_dayoverview_emptyview_icondesc">No events.</string>
