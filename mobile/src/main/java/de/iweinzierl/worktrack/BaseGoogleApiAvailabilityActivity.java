@@ -2,9 +2,7 @@ package de.iweinzierl.worktrack;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -17,6 +15,8 @@ import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EActivity;
 
 import java.util.Arrays;
+
+import de.iweinzierl.worktrack.util.SettingsHelper;
 
 @EActivity
 public abstract class BaseGoogleApiAvailabilityActivity extends BaseActivity {
@@ -42,13 +42,12 @@ public abstract class BaseGoogleApiAvailabilityActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String account = prefs.getString(getString(R.string.preference_backup_account), null);
 
+        SettingsHelper helper = new SettingsHelper(this);
         googleAccountCredential = GoogleAccountCredential.usingOAuth2(this, Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
 
-        googleAccountCredential.setSelectedAccountName(account);
+        googleAccountCredential.setSelectedAccountName(helper.getBackupAccount());
     }
 
     @Override

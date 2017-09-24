@@ -64,16 +64,18 @@ public class SettingsActivity extends BaseGoogleApiAvailabilityActivity implemen
         switch (key) {
             case "settings_backup_frequency":
                 backupFrequencyChanged(prefs.getString(key, null));
+                break;
+            case SettingsHelper.SETTING_BACKUP_ACCOUNT:
+                new SettingsHelper(this).setBackupAccount(prefs.getString(key, null));
+                break;
         }
     }
 
     @Override
     public boolean shouldShowRequestPermissionRationale(@NonNull String permission) {
-        if (Manifest.permission.GET_ACCOUNTS.equals(permission)) {
-            return new SettingsHelper(this).askAgainForGetAccountsPermission();
-        }
+        return Manifest.permission.GET_ACCOUNTS.equals(permission)
+                && new SettingsHelper(this).askAgainForGetAccountsPermission();
 
-        return false;
     }
 
     @Override

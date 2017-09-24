@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.github.iweinzierl.android.logging.AndroidLoggerFactory;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.androidannotations.annotations.AfterViews;
@@ -56,6 +57,8 @@ public class ManageBackupsActivity extends BaseGoogleApiAvailabilityActivity {
     }
 
     private static final Logger LOGGER = AndroidLoggerFactory.getInstance().getLogger(ManageBackupsActivity.class.getName());
+
+    private static final int REQUEST_GOOGLE_DRIVE_LIST_BACKUPS = 1001;
 
     private BackupAdapter backupAdapter;
     private FirebaseAnalytics analytics;
@@ -116,6 +119,15 @@ public class ManageBackupsActivity extends BaseGoogleApiAvailabilityActivity {
 
         toolbar.setTitle(R.string.activity_manage_backups);
         setSupportActionBar(toolbar);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_GOOGLE_DRIVE_LIST_BACKUPS && resultCode == RESULT_OK) {
+            updateBackups();
+        }
     }
 
     @Click(R.id.manualBackup)
@@ -268,6 +280,8 @@ public class ManageBackupsActivity extends BaseGoogleApiAvailabilityActivity {
                             hideProgressBar();
                         }
                     });
+                } catch (UserRecoverableAuthIOException e) {
+                    startActivityForResult(e.getIntent(), REQUEST_GOOGLE_DRIVE_LIST_BACKUPS);
                 } catch (IOException e) {
                     LOGGER.error("Error while loading backups", e);
                     hideProgressBar();
