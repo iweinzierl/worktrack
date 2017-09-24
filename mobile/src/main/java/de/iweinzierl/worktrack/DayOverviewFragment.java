@@ -34,6 +34,7 @@ import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
 import de.iweinzierl.worktrack.persistence.TrackingItemType;
 import de.iweinzierl.worktrack.util.SettingsHelper;
 import de.iweinzierl.worktrack.util.WorktimeCalculator;
+import de.iweinzierl.worktrack.view.WorkingTimeStatisticsView;
 import de.iweinzierl.worktrack.view.adapter.NoOpActionCallback;
 import de.iweinzierl.worktrack.view.adapter.TrackingItemAdapter;
 
@@ -61,16 +62,10 @@ public class DayOverviewFragment extends Fragment {
     TrackingItemRepository trackingItemRepository;
 
     @ViewById
+    WorkingTimeStatisticsView statisticsView;
+
+    @ViewById
     RecyclerView cardView;
-
-    @ViewById
-    TextView dateView;
-
-    @ViewById
-    TextView durationView;
-
-    @ViewById
-    ImageView warningIcon;
 
     @ColorRes(R.color.toolbarOverHours)
     int overHoursColor;
@@ -156,11 +151,13 @@ public class DayOverviewFragment extends Fragment {
 
     @UiThread
     protected void displayWarningIcon(boolean display) {
+        /*
         if (display) {
             warningIcon.setVisibility(View.VISIBLE);
         } else {
             warningIcon.setVisibility(View.GONE);
         }
+        */
     }
 
     @UiThread
@@ -171,7 +168,7 @@ public class DayOverviewFragment extends Fragment {
 
     @UiThread
     protected void setDateView(LocalDate date) {
-        dateView.setText(date.toString(getString(R.string.util_date_format)));
+        //dateView.setText(date.toString(getString(R.string.util_date_format)));
     }
 
     public void deleteItem(final TrackingItem item) {
@@ -201,11 +198,15 @@ public class DayOverviewFragment extends Fragment {
         final int dailyWorkingHours = new SettingsHelper(getActivity()).getDailyWorkingHours();
 
         Period duration = new WorktimeCalculator(items).calculate();
+        /*
         durationView.setText(duration.normalizedStandard().toString(periodFormatter));
 
         if (duration.getHours() > dailyWorkingHours) {
             durationView.setTextColor(overHoursColor);
             durationView.setTypeface(Typeface.DEFAULT_BOLD);
         }
+        */
+
+        statisticsView.setWorkingHours(duration);
     }
 }
