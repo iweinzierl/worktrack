@@ -3,10 +3,12 @@ package de.iweinzierl.worktrack;
 import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.content.PermissionChecker;
+import android.support.v7.app.AlertDialog;
 
 import com.github.iweinzierl.android.logging.AndroidLoggerFactory;
 
@@ -16,6 +18,7 @@ import org.slf4j.Logger;
 
 import de.iweinzierl.worktrack.job.BackupJob;
 import de.iweinzierl.worktrack.model.BackupFrequency;
+import de.iweinzierl.worktrack.util.SettingsHelper;
 
 @EActivity
 public class SettingsActivity extends BaseGoogleApiAvailabilityActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -35,13 +38,17 @@ public class SettingsActivity extends BaseGoogleApiAvailabilityActivity implemen
     SettingsFragment settingsFragment;
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        updateAccounts();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         preferences.registerOnSharedPreferenceChangeListener(this);
-
-        updateAccounts();
     }
 
     @Override
@@ -61,13 +68,48 @@ public class SettingsActivity extends BaseGoogleApiAvailabilityActivity implemen
     }
 
     @Override
+    public boolean shouldShowRequestPermissionRationale(@NonNull String permission) {
+        if (Manifest.permission.GET_ACCOUNTS.equals(permission)) {
+            return new SettingsHelper(this).askAgainForGetAccountsPermission();
+        }
+
+        return false;
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == REQUEST_GET_ACCOUNT_PERMISSION && grantResults[0] == PermissionChecker.PERMISSION_GRANTED) {
             updateAccounts();
-        } else {
+        } else if (requestCode == REQUEST_GET_ACCOUNT_PERMISSION) {
             LOGGER.warn("GET_ACCOUNTS permission not granted!");
+
+            if (shouldShowRequestPermissionRationale(permissions[0])) {
+                showRationale(permissions[0]);
+            }
+        }
+    }
+
+    private void showRationale(String permission) {
+        if (Manifest.permission.GET_ACCOUNTS.equals(permission)) {
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.util_permission_denied)
+                    .setMessage(R.string.util_permission_denied_get_account_rational)
+                    .setPositiveButton(R.string.util_permission_ask_again, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            requestPermissions(new String[]{Manifest.permission.GET_ACCOUNTS}, REQUEST_GET_ACCOUNT_PERMISSION);
+                        }
+                    })
+                    .setNegativeButton(R.string.util_permission_dont_ask_again, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            new SettingsHelper(SettingsActivity.this).setAskAgainForGetAccountsPermission(false);
+                            dialogInterface.dismiss();
+                        }
+                    })
+                    .show();
         }
     }
 

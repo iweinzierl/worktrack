@@ -132,6 +132,10 @@
     <string name="util_import_action_confirm">Import</string>
     <string name="util_import_action_cancel">Cancel</string>
     <string name="util_not_available">n/a</string>
+    <string name="util_permission_denied">Permission Denied</string>
+    <string name="util_permission_denied_get_account_rational">Without this permission you are unable to select the account for backups on Google Drive. Do you want to retry?</string>
+    <string name="util_permission_ask_again">Retry</string>
+    <string name="util_permission_dont_ask_again">No</string>
 
     <string name="util_datetime_format">yyyy-MM-dd HH:mm</string>
     <string name="util_date_format">yyyy-MM-dd</string>
