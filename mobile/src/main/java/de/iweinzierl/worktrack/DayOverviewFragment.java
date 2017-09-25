@@ -168,9 +168,11 @@ public class DayOverviewFragment extends Fragment {
         if (trackingItemAdapter.getItemCount() > 0) {
             emptyView.setVisibility(View.GONE);
             cardView.setVisibility(View.VISIBLE);
+            statisticsView.setVisibility(View.VISIBLE);
         } else {
             emptyView.setVisibility(View.VISIBLE);
             cardView.setVisibility(View.GONE);
+            statisticsView.setVisibility(View.GONE);
         }
     }
 
