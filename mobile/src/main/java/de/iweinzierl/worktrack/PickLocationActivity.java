@@ -177,6 +177,10 @@ public class PickLocationActivity extends AppCompatActivity implements OnMapRead
             locationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
+                    if (location == null) {
+                        return;
+                    }
+
                     LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                             latLng,
