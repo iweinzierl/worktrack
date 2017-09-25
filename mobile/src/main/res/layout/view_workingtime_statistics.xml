@@ -1,35 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/containerWorkingHours"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="0dp" />
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp">
 
-    <TextView
-        android:id="@+id/workingHoursView"
+        <ImageView
+            android:id="@+id/workingHoursIcon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_working_hours_grey_36dp" />
+
+        <TextView
+            android:id="@+id/workingHoursValue"
+            android:layout_width="64dp"
+            android:layout_height="32dp"
+            android:gravity="center_vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <FrameLayout
+            android:id="@+id/containerWorkingHoursBar"
+            android:layout_width="0dp"
+            android:layout_height="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:background="@color/colorSecondaryText"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/workingHoursValue"
+            app:layout_constraintStart_toEndOf="@id/workingHoursIcon"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <View
+                android:id="@+id/workingHoursBar"
+                android:layout_width="0dp"
+                android:layout_height="16dp"
+                android:background="@color/barChartNormalHours" />
+
+            <View
+                android:id="@+id/workingHoursLeftBar"
+                android:layout_width="0dp"
+                android:layout_height="16dp" />
+
+        </FrameLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/containerOverHours"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/backgroundColor"
-        android:drawableLeft="@drawable/ic_access_time_24dp"
-        android:text="WORKING HOURS"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/guideline" />
+        android:layout_below="@id/containerWorkingHours"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp">
 
-    <TextView
-        android:id="@+id/overHoursView"
-        android:background="@color/colorAccent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="OVER HOURS"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/workingHoursView" />
+        <ImageView
+            android:id="@+id/overHoursIcon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_over_hours_grey_36dp" />
 
-</android.support.constraint.ConstraintLayout>
+        <TextView
+            android:id="@+id/overHoursValue"
+            android:layout_width="64dp"
+            android:layout_height="32dp"
+            android:gravity="center_vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <FrameLayout
+            android:id="@+id/containerOverHoursBar"
+            android:layout_width="0dp"
+            android:layout_height="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:background="@color/colorSecondaryText"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/overHoursValue"
+            app:layout_constraintStart_toEndOf="@id/overHoursIcon"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <View
+                android:id="@+id/overHoursBar"
+                android:layout_width="0dp"
+                android:layout_height="16dp"
+                android:background="@color/barChartOverHours" />
+
+            <View
+                android:id="@+id/overHoursLeftBar"
+                android:layout_width="0dp"
+                android:layout_height="16dp" />
+
+        </FrameLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+</RelativeLayout>

@@ -21,6 +21,7 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.res.ColorRes;
+import org.joda.time.Duration;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
 import org.joda.time.format.PeriodFormatter;
@@ -82,14 +83,6 @@ public class DayOverviewFragment extends Fragment {
 
     private TrackingItemAdapter trackingItemAdapter;
 
-    private static final PeriodFormatter periodFormatter = new PeriodFormatterBuilder()
-            .appendHours()
-            .printZeroNever()
-            .appendSuffix("h ")
-            .appendMinutes()
-            .printZeroAlways()
-            .appendSuffix("min")
-            .toFormatter();
 
     public DayOverviewFragment() {
         trackingItemAdapter = new TrackingItemAdapter(new TrackingItemActionCallback());
@@ -223,16 +216,15 @@ public class DayOverviewFragment extends Fragment {
     private void calculateAndSetDuration(List<TrackingItem> items) {
         final int dailyWorkingHours = new SettingsHelper(getActivity()).getDailyWorkingHours();
 
-        Period duration = new WorktimeCalculator(items).calculate();
-        /*
-        durationView.setText(duration.normalizedStandard().toString(periodFormatter));
+        Duration expectedWorkingHours = new Period(dailyWorkingHours, 0, 0, 0).toStandardDuration();
+        Duration accomplishedDuration = new WorktimeCalculator(items).calculate().toStandardDuration();
+        Duration overHours = new Duration(0);
 
-        if (duration.getHours() > dailyWorkingHours) {
-            durationView.setTextColor(overHoursColor);
-            durationView.setTypeface(Typeface.DEFAULT_BOLD);
+        if (accomplishedDuration.isLongerThan(expectedWorkingHours)) {
+            overHours = accomplishedDuration.minus(expectedWorkingHours);
+            accomplishedDuration = expectedWorkingHours;
         }
-        */
 
-        statisticsView.setWorkingHours(duration);
+        statisticsView.apply(expectedWorkingHours, accomplishedDuration, overHours);
     }
 }
