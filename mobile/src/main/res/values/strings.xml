@@ -144,8 +144,9 @@
     <string name="util_datetime_format">yyyy-MM-dd HH:mm</string>
     <string name="util_date_format">yyyy-MM-dd</string>
     <string name="util_time_format">HH:mm</string>
-    <string name="util_abbreviation_hours">h</string>
     <string name="util_abbreviation_days">d</string>
+    <string name="util_abbreviation_hours">h</string>
+    <string name="util_abbreviation_minutes">min</string>
 
     <string name="cardview_trackingitem_action_discard">Discard</string>
     <string name="cardview_backup_action_restore">Restore</string>

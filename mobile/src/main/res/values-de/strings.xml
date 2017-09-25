@@ -137,16 +137,17 @@
     <string name="util_import_action_confirm">Wiederherstellen</string>
     <string name="util_import_action_cancel">Abbrechen</string>
     <string name="util_not_available">n/v</string>
-
-    <string name="util_datetime_format">dd.MM.yyyy HH:mm</string>
-    <string name="util_date_format">dd.MM.yyyy</string>
-    <string name="util_time_format">HH:mm</string>
-    <string name="util_abbreviation_hours">Std</string>
-    <string name="util_abbreviation_days">T</string>
     <string name="util_permission_denied">Berechtigung verweigert</string>
     <string name="util_permission_denied_get_account_rational">Ohne diese Berechtigung kannst du keine Sicherungskopien auf Google Drive erstellen. Möchtest du deine Meinung ändern?</string>
     <string name="util_permission_ask_again">Ändern</string>
     <string name="util_permission_dont_ask_again">Nein</string>
+
+    <string name="util_datetime_format">dd.MM.yyyy HH:mm</string>
+    <string name="util_date_format">dd.MM.yyyy</string>
+    <string name="util_time_format">HH:mm</string>
+    <string name="util_abbreviation_days">T</string>
+    <string name="util_abbreviation_hours">Std</string>
+    <string name="util_abbreviation_minutes">Min</string>
 
     <string name="cardview_trackingitem_action_discard">Entfernen</string>
     <string name="cardview_backup_action_restore">Wiederherstellen</string>

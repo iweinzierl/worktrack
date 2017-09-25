@@ -19,7 +19,7 @@
 
         <TextView
             android:id="@+id/workingHoursValue"
-            android:layout_width="64dp"
+            android:layout_width="72dp"
             android:layout_height="32dp"
             android:gravity="center_vertical"
             app:layout_constraintEnd_toEndOf="parent"
@@ -68,7 +68,7 @@
 
         <TextView
             android:id="@+id/overHoursValue"
-            android:layout_width="64dp"
+            android:layout_width="72dp"
             android:layout_height="32dp"
             android:gravity="center_vertical"
             app:layout_constraintEnd_toEndOf="parent"

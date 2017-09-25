@@ -18,15 +18,7 @@ import de.iweinzierl.worktrack.R;
 
 public class WorkingTimeStatisticsView extends FrameLayout {
 
-    private static final PeriodFormatter periodFormatter = new PeriodFormatterBuilder()
-            .appendHours()
-            .printZeroNever()
-            .appendSuffix("h ")
-            .appendMinutes()
-            .printZeroAlways()
-            .appendSuffix("min")
-            .toFormatter();
-
+    private PeriodFormatter periodFormatter;
 
     private View containerWorkingHoursBar;
     private View workingHoursBar;
@@ -44,16 +36,19 @@ public class WorkingTimeStatisticsView extends FrameLayout {
 
     public WorkingTimeStatisticsView(Context context) {
         super(context);
+        setupPeriodFormatter();
         LayoutInflater.from(context).inflate(R.layout.view_workingtime_statistics, this);
     }
 
     public WorkingTimeStatisticsView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        setupPeriodFormatter();
         LayoutInflater.from(context).inflate(R.layout.view_workingtime_statistics, this);
     }
 
     public WorkingTimeStatisticsView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        setupPeriodFormatter();
         LayoutInflater.from(context).inflate(R.layout.view_workingtime_statistics, this);
     }
 
@@ -63,6 +58,17 @@ public class WorkingTimeStatisticsView extends FrameLayout {
         setOverHours(overHours);
 
         adjustProgressBars();
+    }
+
+    private void setupPeriodFormatter() {
+        periodFormatter = new PeriodFormatterBuilder()
+                .appendHours()
+                .printZeroNever()
+                .appendSuffix(getContext().getString(R.string.util_abbreviation_hours) + " ")
+                .appendMinutes()
+                .printZeroAlways()
+                .appendSuffix(getContext().getString(R.string.util_abbreviation_minutes))
+                .toFormatter();
     }
 
     @Override
