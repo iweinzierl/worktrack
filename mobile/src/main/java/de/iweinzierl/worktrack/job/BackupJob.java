@@ -7,18 +7,22 @@ import android.app.job.JobService;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 
 import com.github.iweinzierl.android.logging.AndroidLoggerFactory;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.drive.DriveScopes;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 
 import java.util.Arrays;
 
+import de.iweinzierl.worktrack.analytics.AnalyticsEvents;
+import de.iweinzierl.worktrack.analytics.AnalyticsParams;
 import de.iweinzierl.worktrack.model.BackupFrequency;
 import de.iweinzierl.worktrack.model.BackupMetaData;
 import de.iweinzierl.worktrack.persistence.LocalTrackingItemRepository;
@@ -26,6 +30,7 @@ import de.iweinzierl.worktrack.persistence.LocalTrackingItemRepository_;
 import de.iweinzierl.worktrack.persistence.LocalWorkplaceRepository_;
 import de.iweinzierl.worktrack.persistence.WorkplaceRepository;
 import de.iweinzierl.worktrack.util.GoogleDriveBackupHelper;
+import de.iweinzierl.worktrack.util.SettingsHelper;
 
 public class BackupJob extends JobService {
 
@@ -40,9 +45,20 @@ public class BackupJob extends JobService {
 
     public static final long INTERVAL_DAILY = 1000L * 60 * 60 * 24;
 
+    private FirebaseAnalytics analytics;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        analytics = FirebaseAnalytics.getInstance(getApplicationContext());
+    }
+
     @Override
     public boolean onStartJob(JobParameters params) {
         LOGGER.info("Backup job started");
+
+        analytics.logEvent(AnalyticsEvents.BACKUP_JOB_EXECUTE.name(), null);
+
         backup(params);
         return true;
     }
@@ -57,6 +73,8 @@ public class BackupJob extends JobService {
     public static void stopBackupJob(Context context) {
         JobScheduler scheduler = context.getSystemService(JobScheduler.class);
         scheduler.cancel(BackupJob.JOB_ID);
+
+        FirebaseAnalytics.getInstance(context).logEvent(AnalyticsEvents.BACKUP_JOB_CANCELLED.name(), null);
 
         LOGGER.info("Cancelled backup job");
     }
@@ -80,10 +98,15 @@ public class BackupJob extends JobService {
                 break;
         }
 
+        Bundle extras = new Bundle();
+        extras.putString(AnalyticsParams.FREQUENCY.name(), frequency.name());
+
         if (scheduler.schedule(builder.build()) == JobScheduler.RESULT_SUCCESS) {
             LOGGER.info("Scheduled backup job successfully");
+            FirebaseAnalytics.getInstance(context).logEvent(AnalyticsEvents.BACKUP_JOB_SCHEDULED.name(), extras);
         } else {
             LOGGER.error("Unable to schedule backup job");
+            FirebaseAnalytics.getInstance(context).logEvent(AnalyticsEvents.BACKUP_JOB_SCHEDULE_FAILURE.name(), extras);
         }
     }
 
@@ -120,9 +143,14 @@ public class BackupJob extends JobService {
 
         try {
             doBackup();
+            analytics.logEvent(AnalyticsEvents.BACKUP_JOB_EXECUTE_FINISHED.name(), null);
             jobFinished(params, false);
         } catch (Exception e) {
             LOGGER.error("Error while running BackupJob.", e);
+
+            Bundle extras = new Bundle();
+            extras.putString(AnalyticsParams.ERROR_MESSAGE.name(), e.getMessage());
+            analytics.logEvent(AnalyticsEvents.BACKUP_JOB_EXECUTE_FAILURE.name(), extras);
             jobFinished(params, true);
         }
 
@@ -137,8 +165,10 @@ public class BackupJob extends JobService {
         WorkplaceRepository workplaceRepository =
                 LocalWorkplaceRepository_.getInstance_(getApplicationContext());
 
-        GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(this, Arrays.asList(SCOPES))
-                .setBackOff(new ExponentialBackOff());
+        GoogleAccountCredential credential = GoogleAccountCredential
+                .usingOAuth2(this, Arrays.asList(SCOPES))
+                .setBackOff(new ExponentialBackOff())
+                .setSelectedAccountName(new SettingsHelper(getApplicationContext()).getBackupAccount());
 
         new GoogleDriveBackupHelper(getApplicationContext(), credential).createBackup(
                 "automatic-backup",

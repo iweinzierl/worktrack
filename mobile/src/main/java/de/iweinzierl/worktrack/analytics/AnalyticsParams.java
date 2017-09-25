@@ -6,5 +6,7 @@ public enum AnalyticsParams {
 
     ERROR_CODE,
 
-    ERROR_MESSAGE
+    ERROR_MESSAGE,
+
+    FREQUENCY
 }
