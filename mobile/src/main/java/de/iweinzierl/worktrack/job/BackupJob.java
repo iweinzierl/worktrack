@@ -19,6 +19,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 import de.iweinzierl.worktrack.analytics.AnalyticsEvents;
@@ -160,27 +161,40 @@ public class BackupJob extends JobService {
     private void doBackup() throws Exception {
         LOGGER.info("doBackup()");
 
-        LocalTrackingItemRepository repository =
+        final LocalTrackingItemRepository repository =
                 LocalTrackingItemRepository_.getInstance_(getApplicationContext());
-        WorkplaceRepository workplaceRepository =
+        final WorkplaceRepository workplaceRepository =
                 LocalWorkplaceRepository_.getInstance_(getApplicationContext());
 
-        GoogleAccountCredential credential = GoogleAccountCredential
+        final GoogleAccountCredential credential = GoogleAccountCredential
                 .usingOAuth2(this, Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff())
                 .setSelectedAccountName(new SettingsHelper(getApplicationContext()).getBackupAccount());
 
-        new GoogleDriveBackupHelper(getApplicationContext(), credential).createBackup(
-                "automatic-backup",
-                repository.findAll(),
-                workplaceRepository.findAll(),
-                new GoogleDriveBackupHelper.Callback<BackupMetaData>() {
+        new Thread(
+                new Runnable() {
                     @Override
-                    public void onSuccess(BackupMetaData result) {
-                        updateLastBackupTime();
+                    public void run() {
+                        try {
+                            new GoogleDriveBackupHelper(getApplicationContext(), credential).createBackup(
+                                    "automatic-backup",
+                                    repository.findAll(),
+                                    workplaceRepository.findAll(),
+                                    new GoogleDriveBackupHelper.Callback<BackupMetaData>() {
+                                        @Override
+                                        public void onSuccess(BackupMetaData result) {
+                                            updateLastBackupTime();
+                                        }
+                                    }
+                            );
+                        } catch (IOException e) {
+                            Bundle extras = new Bundle();
+                            extras.putString(AnalyticsParams.ERROR_MESSAGE.name(), e.getMessage());
+                            analytics.logEvent(AnalyticsEvents.BACKUP_JOB_EXECUTE_FAILURE.name(), extras);
+                        }
                     }
                 }
-        );
+        ).start();
 
         LOGGER.info("Successfully finished backupJob.");
     }
