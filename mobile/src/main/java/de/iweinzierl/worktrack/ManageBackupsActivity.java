@@ -76,7 +76,10 @@ public class ManageBackupsActivity extends BaseGoogleApiAvailabilityActivity {
     Toolbar toolbar;
 
     @ViewById
-    protected ProgressBar progressBar;
+    ProgressBar progressBar;
+
+    @ViewById
+    View emptyView;
 
     @Override
     int getLayoutId() {
@@ -135,6 +138,11 @@ public class ManageBackupsActivity extends BaseGoogleApiAvailabilityActivity {
         createBackup();
     }
 
+    @Click(R.id.emptyViewConfigureBackups)
+    protected void clickedConfigureBackups() {
+        startActivity(new Intent(this, SettingsActivity_.class));
+    }
+
     @UiThread
     protected void displayAccountUnsetDialog() {
         new AlertDialog.Builder(this)
@@ -172,6 +180,17 @@ public class ManageBackupsActivity extends BaseGoogleApiAvailabilityActivity {
         progressBar.setVisibility(View.INVISIBLE);
     }
 
+    @UiThread
+    protected void updateEmptyView() {
+        if (backupAdapter.getItemCount() > 0) {
+            emptyView.setVisibility(View.GONE);
+            backups.setVisibility(View.VISIBLE);
+        } else {
+            emptyView.setVisibility(View.VISIBLE);
+            backups.setVisibility(View.GONE);
+        }
+    }
+
     private void setupAdapter() {
         if (backupAdapter == null) {
             backupAdapter = new BackupAdapter(new BackupsActionCallback());
@@ -182,12 +201,14 @@ public class ManageBackupsActivity extends BaseGoogleApiAvailabilityActivity {
     protected void setBackups(List<BackupMetaData> backupMetaDataList) {
         LOGGER.info("Found {} backups in Google Drive App folder", backupMetaDataList.size());
         backupAdapter.setItems(backupMetaDataList);
+        updateEmptyView();
     }
 
     @UiThread
     protected void addBackup(BackupMetaData backupMetaData) {
         LOGGER.info("Add further backup to backup list: {}", backupMetaData.getDriveId());
         backupAdapter.addItem(backupMetaData);
+        updateEmptyView();
     }
 
     @UiThread
@@ -215,6 +236,7 @@ public class ManageBackupsActivity extends BaseGoogleApiAvailabilityActivity {
     protected void removeBackup(BackupMetaData backupMetaData) {
         LOGGER.info("Remove backup from backup list: {}", backupMetaData.getDriveId());
         backupAdapter.removeItem(backupMetaData);
+        updateEmptyView();
         showMessage(getString(R.string.activity_manage_backups_discard_backup_succeeded));
     }
 

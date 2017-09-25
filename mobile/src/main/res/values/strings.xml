@@ -68,6 +68,10 @@
     <string name="activity_manage_backups_dialog_error_account_unset_message">You did not yet chose a Google account where backups shall be stored. Do you want to chose now?</string>
     <string name="activity_manage_backups_dialog_error_account_unset_confirm">Configure</string>
     <string name="activity_manage_backups_dialog_error_account_unset_cancel">No</string>
+    <string name="activity_manage_backups_emptyview_text">Add new backups with the + button at the bottom right or configure automatic backups in settings.</string>
+    <string name="activity_manage_backups_emptyview_title">No backups</string>
+    <string name="activity_manage_backups_emptyview_button_configure_backups">Configure Backups</string>
+    <string name="activity_manage_backups_emptyview_icondesc">No backups.</string>
 
     <string name="activity_settings">Settings</string>
 

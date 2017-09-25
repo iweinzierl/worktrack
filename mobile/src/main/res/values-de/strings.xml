@@ -69,6 +69,10 @@
     <string name="activity_manage_backups_dialog_error_account_unset_message">Sie haben noch keinen Google Account gewählt, welcher für Sicherungskopien benutzt werden soll. Jetzt einstellen?</string>
     <string name="activity_manage_backups_dialog_error_account_unset_confirm">Einstellen</string>
     <string name="activity_manage_backups_dialog_error_account_unset_cancel">Nein</string>
+    <string name="activity_manage_backups_emptyview_text">Füge neue Sicherungskopien über den + Knopf unten rechts hinzu oder konfiguriere automatische Sicherungskopien in den Einstellungen.</string>
+    <string name="activity_manage_backups_emptyview_title">Keine Sicherungskopien</string>
+    <string name="activity_manage_backups_emptyview_button_configure_backups">Sicherungskopien einstellen</string>
+    <string name="activity_manage_backups_emptyview_icondesc">Keine Sicherungskopien.</string>
 
     <string name="activity_settings">Einstellungen</string>
 
