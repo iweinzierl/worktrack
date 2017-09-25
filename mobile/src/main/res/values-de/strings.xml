@@ -16,6 +16,9 @@
     <string name="activity_manage_workplaces_dialog_delete_confirm">Entfernen</string>
     <string name="activity_manage_workplaces_dialog_delete_cancel">Abbrechen</string>
     <string name="activity_manage_workplaces_error_message_permission">Berechtigung für Standortinformationen nicht vorhanden.</string>
+    <string name="activity_manage_workplaces_emptyview_text">Füge Arbeitsplätze über den + Knop unten rechts hinzu.</string>
+    <string name="activity_manage_workplaces_emptyview_title">Keine Arbeitsplätze</string>
+    <string name="activity_manage_workplaces_emptyview_icondesc">Keine Arbeitsplätze.</string>
 
     <string name="activity_pick_location">Wähle einen Ort</string>
     <string name="activity_pick_location_action_confirm">OK</string>
@@ -38,6 +41,10 @@
     <string name="activity_dayoverview_message_unable_jump_into_future">Kann nicht in die Zukunft springen.</string>
     <string name="activity_dayoverview_dialog_nodata_title">Keine Daten vorhanden</string>
     <string name="activity_dayoverview_dialog_nodata_message">Es gibt aktuell keine erfassten Arbeitszeiten. Erfassen Sie diese zuerst entweder manuell oder indem Sie einen Arbeitsplatz hinzufügen.</string>
+    <string name="activity_dayoverview_emptyview_text">Füge Events über den + Knopf unten rechts hinzu oder füge einen neuen Arbeitsplatz hinzu um automatisch anhand deines Standortes deine Zeiten zu erfassen.</string>
+    <string name="activity_dayoverview_emptyview_title">Keine Events</string>
+    <string name="activity_dayoverview_emptyview_button_add_workplace">Arbeitsplatz hinzufügen</string>
+    <string name="activity_dayoverview_emptyview_icondesc">Keine Events.</string>
 
     <string name="activity_weekoverview">Wochenübersicht</string>
     <string name="activity_weekoverview_action_export_mail">Exportieren</string>
@@ -62,6 +69,10 @@
     <string name="activity_manage_backups_dialog_error_account_unset_message">Sie haben noch keinen Google Account gewählt, welcher für Sicherungskopien benutzt werden soll. Jetzt einstellen?</string>
     <string name="activity_manage_backups_dialog_error_account_unset_confirm">Einstellen</string>
     <string name="activity_manage_backups_dialog_error_account_unset_cancel">Nein</string>
+    <string name="activity_manage_backups_emptyview_text">Füge neue Sicherungskopien über den + Knopf unten rechts hinzu oder konfiguriere automatische Sicherungskopien in den Einstellungen.</string>
+    <string name="activity_manage_backups_emptyview_title">Keine Sicherungskopien</string>
+    <string name="activity_manage_backups_emptyview_button_configure_backups">Sicherungskopien einstellen</string>
+    <string name="activity_manage_backups_emptyview_icondesc">Keine Sicherungskopien.</string>
 
     <string name="activity_settings">Einstellungen</string>
 
@@ -132,6 +143,10 @@
     <string name="util_time_format">HH:mm</string>
     <string name="util_abbreviation_hours">Std</string>
     <string name="util_abbreviation_days">T</string>
+    <string name="util_permission_denied">Berechtigung verweigert</string>
+    <string name="util_permission_denied_get_account_rational">Ohne diese Berechtigung kannst du keine Sicherungskopien auf Google Drive erstellen. Möchtest du deine Meinung ändern?</string>
+    <string name="util_permission_ask_again">Ändern</string>
+    <string name="util_permission_dont_ask_again">Nein</string>
 
     <string name="cardview_trackingitem_action_discard">Entfernen</string>
     <string name="cardview_backup_action_restore">Wiederherstellen</string>

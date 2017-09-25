@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.github.iweinzierl.android.logging.AndroidLoggerFactory;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.androidannotations.annotations.AfterViews;
@@ -57,6 +58,8 @@ public class ManageBackupsActivity extends BaseGoogleApiAvailabilityActivity {
 
     private static final Logger LOGGER = AndroidLoggerFactory.getInstance().getLogger(ManageBackupsActivity.class.getName());
 
+    private static final int REQUEST_GOOGLE_DRIVE_LIST_BACKUPS = 1001;
+
     private BackupAdapter backupAdapter;
     private FirebaseAnalytics analytics;
 
@@ -73,7 +76,10 @@ public class ManageBackupsActivity extends BaseGoogleApiAvailabilityActivity {
     Toolbar toolbar;
 
     @ViewById
-    protected ProgressBar progressBar;
+    ProgressBar progressBar;
+
+    @ViewById
+    View emptyView;
 
     @Override
     int getLayoutId() {
@@ -118,9 +124,23 @@ public class ManageBackupsActivity extends BaseGoogleApiAvailabilityActivity {
         setSupportActionBar(toolbar);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_GOOGLE_DRIVE_LIST_BACKUPS && resultCode == RESULT_OK) {
+            updateBackups();
+        }
+    }
+
     @Click(R.id.manualBackup)
     protected void clickedManualBack() {
         createBackup();
+    }
+
+    @Click(R.id.emptyViewConfigureBackups)
+    protected void clickedConfigureBackups() {
+        startActivity(new Intent(this, SettingsActivity_.class));
     }
 
     @UiThread
@@ -160,6 +180,17 @@ public class ManageBackupsActivity extends BaseGoogleApiAvailabilityActivity {
         progressBar.setVisibility(View.INVISIBLE);
     }
 
+    @UiThread
+    protected void updateEmptyView() {
+        if (backupAdapter.getItemCount() > 0) {
+            emptyView.setVisibility(View.GONE);
+            backups.setVisibility(View.VISIBLE);
+        } else {
+            emptyView.setVisibility(View.VISIBLE);
+            backups.setVisibility(View.GONE);
+        }
+    }
+
     private void setupAdapter() {
         if (backupAdapter == null) {
             backupAdapter = new BackupAdapter(new BackupsActionCallback());
@@ -170,12 +201,14 @@ public class ManageBackupsActivity extends BaseGoogleApiAvailabilityActivity {
     protected void setBackups(List<BackupMetaData> backupMetaDataList) {
         LOGGER.info("Found {} backups in Google Drive App folder", backupMetaDataList.size());
         backupAdapter.setItems(backupMetaDataList);
+        updateEmptyView();
     }
 
     @UiThread
     protected void addBackup(BackupMetaData backupMetaData) {
         LOGGER.info("Add further backup to backup list: {}", backupMetaData.getDriveId());
         backupAdapter.addItem(backupMetaData);
+        updateEmptyView();
     }
 
     @UiThread
@@ -203,6 +236,7 @@ public class ManageBackupsActivity extends BaseGoogleApiAvailabilityActivity {
     protected void removeBackup(BackupMetaData backupMetaData) {
         LOGGER.info("Remove backup from backup list: {}", backupMetaData.getDriveId());
         backupAdapter.removeItem(backupMetaData);
+        updateEmptyView();
         showMessage(getString(R.string.activity_manage_backups_discard_backup_succeeded));
     }
 
@@ -268,6 +302,8 @@ public class ManageBackupsActivity extends BaseGoogleApiAvailabilityActivity {
                             hideProgressBar();
                         }
                     });
+                } catch (UserRecoverableAuthIOException e) {
+                    startActivityForResult(e.getIntent(), REQUEST_GOOGLE_DRIVE_LIST_BACKUPS);
                 } catch (IOException e) {
                     LOGGER.error("Error while loading backups", e);
                     hideProgressBar();

@@ -1,35 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/content_overview"
+    android:id="@+id/content"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="de.iweinzierl.worktrack.DayOverviewFragment"
-    tools:showIn="@layout/activity_day_overview">
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="0dp" />
+    android:layout_height="match_parent">
 
     <de.iweinzierl.worktrack.view.WorkingTimeStatisticsView
         android:id="@+id/statisticsView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="128dp"
+        android:background="@color/barChartNormalHours"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/guideline"
-        app:layout_constraintTop_toTopOf="@id/guideline" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/cardView"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/barChartOverHours"
+        android:paddingTop="@dimen/cardTopPadding"
+        android:scrollbars="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/statisticsView" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/emptyView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/statisticsView" />
+        app:layout_constraintTop_toBottomOf="@+id/statisticsView">
+
+        <TextView
+            android:id="@+id/emptyViewTitle"
+            style="@style/AppTheme.EmptyView.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:focusable="false"
+            android:paddingBottom="32dp"
+            android:paddingTop="32dp"
+            android:text="@string/activity_dayoverview_emptyview_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <ImageView
+            android:id="@+id/icon"
+            style="@style/AppTheme.EmptyView.Icon"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:clickable="false"
+            android:contentDescription="@string/activity_dayoverview_emptyview_icondesc"
+            android:focusable="false"
+            android:src="@drawable/clock_sad_secondary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/emptyViewTitle" />
+
+        <TextView
+            android:id="@+id/emptyViewText"
+            style="@style/AppTheme.EmptyView.Text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:focusable="false"
+            android:paddingBottom="32dp"
+            android:paddingTop="32dp"
+            android:text="@string/activity_dayoverview_emptyview_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/icon" />
+
+        <Button
+            android:id="@+id/emptyViewAddWorkplace"
+            style="@style/AppTheme.EmptyView.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/activity_dayoverview_emptyview_button_add_workplace"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/emptyViewText" />
+
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>
