@@ -78,6 +78,33 @@ public class DayOverviewActivity extends BaseActivity implements DayOverviewFrag
                 createListOfDays(first, last));
         pager.setAdapter(pagerAdapter);
         pager.setCurrentItem(pagerAdapter.getCount() - 1);
+        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                int currentItem = pager.getCurrentItem();
+                DayOverviewFragment fragment = (DayOverviewFragment) pagerAdapter.getItem(currentItem);
+                updateTitle(fragment.getDate());
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+
+        DayOverviewFragment item = (DayOverviewFragment) pagerAdapter.getItem(pager.getCurrentItem());
+        updateTitle(item.getDate());
+    }
+
+    private void updateTitle(LocalDate date) {
+        if (date != null) {
+            setTitle(date.toString(getString(R.string.util_date_format)));
+        } else {
+            setTitle(getString(R.string.app_name));
+        }
     }
 
     @Override

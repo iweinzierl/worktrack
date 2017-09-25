@@ -3,15 +3,12 @@ package de.iweinzierl.worktrack;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -24,8 +21,6 @@ import org.androidannotations.annotations.res.ColorRes;
 import org.joda.time.Duration;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
-import org.joda.time.format.PeriodFormatter;
-import org.joda.time.format.PeriodFormatterBuilder;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -98,6 +93,14 @@ public class DayOverviewFragment extends Fragment {
         }
     }
 
+    public LocalDate getDate() {
+        if (getArguments() != null) {
+            Bundle args = getArguments();
+            return new LocalDate(args.getInt(ARGS_YEAR), args.getInt(ARGS_MONTH), args.getInt(ARGS_DAY));
+        }
+        return null;
+    }
+
     @AfterViews
     protected void setupUI() {
         cardView.setAdapter(trackingItemAdapter);
@@ -125,10 +128,8 @@ public class DayOverviewFragment extends Fragment {
                 }
             });
 
-            setDateView(date);
             setTrackingItems(byDate);
             determineIfItemsAreCorrect(byDate);
-            displayWarningIcon(!trackingItemsCorrect);
         }
     }
 
@@ -156,17 +157,6 @@ public class DayOverviewFragment extends Fragment {
     }
 
     @UiThread
-    protected void displayWarningIcon(boolean display) {
-        /*
-        if (display) {
-            warningIcon.setVisibility(View.VISIBLE);
-        } else {
-            warningIcon.setVisibility(View.GONE);
-        }
-        */
-    }
-
-    @UiThread
     protected void setTrackingItems(List<TrackingItem> items) {
         trackingItemAdapter.setItems(items);
         updateEmptyView();
@@ -182,11 +172,6 @@ public class DayOverviewFragment extends Fragment {
             emptyView.setVisibility(View.VISIBLE);
             cardView.setVisibility(View.GONE);
         }
-    }
-
-    @UiThread
-    protected void setDateView(LocalDate date) {
-        //dateView.setText(date.toString(getString(R.string.util_date_format)));
     }
 
     public void deleteItem(final TrackingItem item) {
