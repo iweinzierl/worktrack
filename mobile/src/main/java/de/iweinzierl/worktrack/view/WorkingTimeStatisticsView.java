@@ -66,12 +66,6 @@ public class WorkingTimeStatisticsView extends FrameLayout {
     }
 
     @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-        adjustProgressBars();
-    }
-
-    @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
 
@@ -84,14 +78,6 @@ public class WorkingTimeStatisticsView extends FrameLayout {
         overHoursBar = UiUtils.getGeneric(View.class, this, R.id.overHoursBar);
         overHoursLeftBar = UiUtils.getGeneric(View.class, this, R.id.overHoursLeftBar);
         overHoursValue = UiUtils.getGeneric(TextView.class, this, R.id.overHoursValue);
-
-        if (workingHours != null) {
-            setWorkingHours(workingHours);
-        }
-
-        if (overHours != null) {
-            setOverHours(overHours);
-        }
     }
 
     private void adjustProgressBars() {
