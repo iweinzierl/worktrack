@@ -44,10 +44,11 @@ public class LocalTrackingItemRepository implements TrackingItemRepository {
             session = sessionFactory.getSession();
         }
 
+        session.clear();
         return session;
     }
 
-    public FirebaseAnalytics getAnalytics() {
+    private FirebaseAnalytics getAnalytics() {
         if (analytics == null) {
             analytics = FirebaseAnalytics.getInstance(context);
         }
