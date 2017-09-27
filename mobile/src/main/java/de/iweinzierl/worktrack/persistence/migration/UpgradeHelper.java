@@ -17,6 +17,7 @@ public class UpgradeHelper extends DaoMaster.OpenHelper {
     static {
         migrations.append(2, new MigrationV2());
         migrations.append(3, new MigrationV3());
+        migrations.append(4, new MigrationV4());
     }
 
     public UpgradeHelper(Context context, String name) {

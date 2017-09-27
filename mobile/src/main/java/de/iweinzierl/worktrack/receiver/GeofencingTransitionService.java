@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,6 +49,9 @@ public class GeofencingTransitionService extends IntentService {
         if (matchingWorkplace == null) {
             LOGGER.info("Ignore geofencing event -> does not match any workplace");
             return;
+        } else if (isAutomaticExitEvent(event, matchingWorkplace)) {
+            LOGGER.info("Ignore automatic exit event which is generated after Geofence creation");
+            return;
         }
 
         Intent intent = new Intent("de.iweinzierl.worktrack.START_WORK");
@@ -82,5 +86,22 @@ public class GeofencingTransitionService extends IntentService {
         }
 
         return null;
+    }
+
+    /**
+     * After registering a new geofence, Google sends automatically an exit event when the device
+     * is outside the geofence while creation. This method defines a 1 minute buffer when exit
+     * events are ignored (compares now - 1minute to the registration time of the geofence if the
+     * registration date is not null).
+     *
+     * @param event             The geofence event.
+     * @param matchingWorkplace The workplace that fits to the event.
+     * @return true if the geofence was only registered within the last minute and the event is an
+     * exit event.
+     */
+    private boolean isAutomaticExitEvent(GeofencingEvent event, Workplace matchingWorkplace) {
+        return event.getGeofenceTransition() == Geofence.GEOFENCE_TRANSITION_EXIT
+                && matchingWorkplace.getRegisteredAt() != null
+                && DateTime.now().minusMinutes(1).isBefore(matchingWorkplace.getRegisteredAt());
     }
 }

@@ -34,6 +34,7 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 
 import java.util.List;
@@ -311,6 +312,8 @@ public class ManageWorkplacesActivity extends BaseActivity {
             @Nullable
             @Override
             public Geofence apply(Workplace workplace) {
+                workplace.setRegisteredAt(DateTime.now());
+                workplaceRepository.save(workplace);
                 return buildGeofence(workplace);
             }
         });

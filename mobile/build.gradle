@@ -5,6 +5,10 @@ apply plugin: 'android-apt'
 def AAVersion = '4.2.0'
 def GPlayVersion = '11.0.4'
 
+greendao {
+    schemaVersion 4
+}
+
 buildscript {
     repositories {
         mavenCentral()
@@ -71,9 +75,6 @@ android {
     }
 }
 
-greendao {
-    schemaVersion 3
-}
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
