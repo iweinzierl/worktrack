@@ -100,7 +100,7 @@
             android:name=".job.BackupJob"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
-        <service android:name=".receiver.GeofencingTransitionService" />
+        <service android:name=".receiver.GeofencingTransitionService_" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
