@@ -5,6 +5,8 @@ mobile/src/dev/res/raw/client_secret.json
 mobile/src/dev/google-services.json
 mobile/src/free/google-services.json
 mobile/src/pro/google-services.json
+mobile/dev
+mobile/pro
 
 *.apk
 *.iml

@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 
 import com.github.iweinzierl.android.logging.AndroidLoggerFactory;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
+import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.androidannotations.annotations.AfterViews;
@@ -59,6 +60,7 @@ public class ManageBackupsActivity extends BaseGoogleApiAvailabilityActivity {
     private static final Logger LOGGER = AndroidLoggerFactory.getInstance().getLogger(ManageBackupsActivity.class.getName());
 
     private static final int REQUEST_GOOGLE_DRIVE_LIST_BACKUPS = 1001;
+    private static final int REQUEST_CONFIGURE_BACKUPS = 1002;
 
     private BackupAdapter backupAdapter;
     private FirebaseAnalytics analytics;
@@ -131,6 +133,14 @@ public class ManageBackupsActivity extends BaseGoogleApiAvailabilityActivity {
         if (requestCode == REQUEST_GOOGLE_DRIVE_LIST_BACKUPS && resultCode == RESULT_OK) {
             updateBackups();
         }
+        if (requestCode == REQUEST_CONFIGURE_BACKUPS) {
+            updateGoogleCredentials();
+            if (Strings.isNullOrEmpty(getCredential().getSelectedAccountName())) {
+                displayAccountUnsetDialog();
+            } else {
+                updateBackups();
+            }
+        }
     }
 
     @Click(R.id.manualBackup)
@@ -152,13 +162,13 @@ public class ManageBackupsActivity extends BaseGoogleApiAvailabilityActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
-                        hideProgressBar();
                     }
                 })
                 .setPositiveButton(R.string.activity_manage_backups_dialog_error_account_unset_confirm, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        startActivity(new Intent(ManageBackupsActivity.this, SettingsActivity_.class));
+                        dialogInterface.dismiss();
+                        startActivityForResult(new Intent(ManageBackupsActivity.this, SettingsActivity_.class), REQUEST_CONFIGURE_BACKUPS);
                     }
                 })
                 .setOnDismissListener(new DialogInterface.OnDismissListener() {

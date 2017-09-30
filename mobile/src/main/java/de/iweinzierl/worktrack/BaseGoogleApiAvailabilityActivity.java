@@ -42,7 +42,10 @@ public abstract class BaseGoogleApiAvailabilityActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        updateGoogleCredentials();
+    }
 
+    protected void updateGoogleCredentials() {
         SettingsHelper helper = new SettingsHelper(this);
         googleAccountCredential = GoogleAccountCredential.usingOAuth2(this, Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
