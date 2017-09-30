@@ -10,6 +10,7 @@
     <color name="colorAccentDark">#38813b</color>
     <color name="colorPrimaryText">#212121</color>
     <color name="colorSecondaryText">#757575</color>
+    <color name="colorBackgroundOverlay">#79757575</color>
     <color name="colorIcons">#FFFFFF</color>
     <color name="colorDivider">#BDBDBD</color>
 

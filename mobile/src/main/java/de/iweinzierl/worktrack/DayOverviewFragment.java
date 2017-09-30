@@ -29,7 +29,7 @@ import java.util.List;
 import de.iweinzierl.worktrack.persistence.LocalTrackingItemRepository;
 import de.iweinzierl.worktrack.persistence.TrackingItem;
 import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
-import de.iweinzierl.worktrack.persistence.TrackingItemType;
+import de.iweinzierl.worktrack.util.LaunchHelper;
 import de.iweinzierl.worktrack.util.SettingsHelper;
 import de.iweinzierl.worktrack.util.WorktimeCalculator;
 import de.iweinzierl.worktrack.view.WorkingTimeStatisticsView;
@@ -74,8 +74,6 @@ public class DayOverviewFragment extends Fragment {
     @ColorRes(R.color.toolbarOverHours)
     int overHoursColor;
 
-    private boolean trackingItemsCorrect;
-
     private TrackingItemAdapter trackingItemAdapter;
 
 
@@ -112,6 +110,10 @@ public class DayOverviewFragment extends Fragment {
     public void onResume() {
         super.onResume();
         updateUI();
+
+        if (LaunchHelper.isFirstLaunch(getActivity())) {
+            showFirstLaunchDialog();
+        }
     }
 
     @Background
@@ -129,31 +131,19 @@ public class DayOverviewFragment extends Fragment {
             });
 
             setTrackingItems(byDate);
-            determineIfItemsAreCorrect(byDate);
         }
+    }
+
+    @UiThread
+    protected void showFirstLaunchDialog() {
+        new AlertDialog.Builder(getContext())
+                .setView(R.layout.dialog_explain_swipe_days)
+                .show();
     }
 
     @Click(R.id.emptyViewAddWorkplace)
     protected void launchManageWorkplaceActivity() {
         startActivity(new Intent(getContext(), ManageWorkplacesActivity_.class));
-    }
-
-    private void determineIfItemsAreCorrect(List<TrackingItem> items) {
-        setTrackingItemsCorrect(true);
-
-        // 1. check if two subsequent items are from the same type
-        TrackingItem last = null;
-        for (TrackingItem item : items) {
-            if (last != null && last.getType() == item.getType()) {
-                setTrackingItemsCorrect(false);
-            }
-            last = item;
-        }
-
-        // 2. check if the last item of a past day is a check-in item
-        if (last != null && !last.getEventTime().toLocalDate().isEqual(LocalDate.now()) && last.getType() == TrackingItemType.CHECKIN) {
-            setTrackingItemsCorrect(false);
-        }
     }
 
     @UiThread
@@ -194,10 +184,6 @@ public class DayOverviewFragment extends Fragment {
                     }
                 })
                 .show();
-    }
-
-    private void setTrackingItemsCorrect(boolean trackingItemsCorrect) {
-        this.trackingItemsCorrect = trackingItemsCorrect;
     }
 
     private void calculateAndSetDuration(List<TrackingItem> items) {

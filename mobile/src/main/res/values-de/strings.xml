@@ -106,6 +106,10 @@
     <string name="dialog_workplace_title_query_label_radius">Radius:</string>
     <string name="dialog_workplace_title_query_hint_name">Name</string>
 
+    <string name="dialog_explain_swipe_days_title">Wische links oder rechts</string>
+    <string name="dialog_explain_swipe_days_icon_desc">Wische links oder rechts</string>
+    <string name="dialog_explain_swipe_days_message">Sobald du Daten über mehrere Tage erfasst hast, kannst du durch Wischen durch die Tage navigieren.</string>
+
     <string name="settings_category_working_time">Arbeitszeit</string>
     <string name="settings_daily_working_hours_title">Arbeitsstunden pro Tag</string>
     <string name="settings_daily_working_hours_summary">Anzahl der Arbeitsstunden pro Tag.</string>
