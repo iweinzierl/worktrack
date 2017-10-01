@@ -30,7 +30,8 @@
     <!-- drawer colors -->
     <color name="drawerBackgroundColor">@color/backgroundColor</color>
     <color name="drawerHeaderBackgroundColor">#303F9F</color>
-    <color name="drawerHeaderLabelTextColor">@color/colorPrimaryLight</color>
+    <color name="drawerHeaderTextColor">@color/colorPrimaryLight</color>
+    <color name="drawerHeaderSloganColor">#a7acc6</color>
     <color name="drawerIconColor">@color/colorSecondaryText</color>
     <color name="drawerFontColor">@color/colorSecondaryText</color>
 

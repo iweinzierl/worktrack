@@ -37,5 +37,5 @@
     <dimen name="drawerItemBottomPadding">12dp</dimen>
     <dimen name="drawerItemTextLeftPadding">24dp</dimen>
     <dimen name="drawerFontSize">14sp</dimen>
-    <dimen name="drawerHeaderFontSize">18sp</dimen>
+    <dimen name="drawerHeaderFontSize">12sp</dimen>
 </resources>

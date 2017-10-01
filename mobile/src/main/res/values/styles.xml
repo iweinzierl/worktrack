@@ -80,7 +80,7 @@
 
     <style name="Drawer.Header.Text">
         <item name="android:textSize">@dimen/drawerHeaderFontSize</item>
-        <item name="android:textColor">@color/drawerFontColor</item>
+        <item name="android:textColor">@color/drawerHeaderTextColor</item>
     </style>
 
     <style name="Drawer.Item">

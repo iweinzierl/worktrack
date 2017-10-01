@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Worktrack</string>
+    <string name="app_name_inc_version">Worktrack</string>
+    <string name="app_slogan">Keep your working time under control!</string>
     <string name="action_settings">Settings</string>
 
     <string name="drawer_open">Open Drawer</string>
