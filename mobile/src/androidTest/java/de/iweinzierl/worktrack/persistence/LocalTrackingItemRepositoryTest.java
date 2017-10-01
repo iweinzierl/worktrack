@@ -9,10 +9,12 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+
+import de.iweinzierl.worktrack.persistence.repository.LocalTrackingItemRepository;
+import de.iweinzierl.worktrack.persistence.repository.LocalTrackingItemRepository_;
 
 @RunWith(AndroidJUnit4.class)
 public class LocalTrackingItemRepositoryTest {

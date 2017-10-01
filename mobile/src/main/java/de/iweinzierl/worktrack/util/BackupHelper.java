@@ -8,9 +8,9 @@ import java.util.Objects;
 
 import de.iweinzierl.worktrack.model.Backup;
 import de.iweinzierl.worktrack.persistence.TrackingItem;
-import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
+import de.iweinzierl.worktrack.persistence.repository.TrackingItemRepository;
 import de.iweinzierl.worktrack.persistence.Workplace;
-import de.iweinzierl.worktrack.persistence.WorkplaceRepository;
+import de.iweinzierl.worktrack.persistence.repository.WorkplaceRepository;
 
 public class BackupHelper {
 

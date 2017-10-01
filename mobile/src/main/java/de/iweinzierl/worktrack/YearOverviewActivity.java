@@ -25,8 +25,8 @@ import java.util.Collections;
 import java.util.List;
 
 import de.iweinzierl.worktrack.model.Year;
-import de.iweinzierl.worktrack.persistence.LocalTrackingItemRepository;
-import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
+import de.iweinzierl.worktrack.persistence.repository.LocalTrackingItemRepository;
+import de.iweinzierl.worktrack.persistence.repository.TrackingItemRepository;
 import de.iweinzierl.worktrack.util.MailHelper;
 import de.iweinzierl.worktrack.view.adapter.YearOverviewFragmentAdapter;
 

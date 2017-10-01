@@ -26,10 +26,9 @@ import de.iweinzierl.worktrack.analytics.AnalyticsEvents;
 import de.iweinzierl.worktrack.analytics.AnalyticsParams;
 import de.iweinzierl.worktrack.model.BackupFrequency;
 import de.iweinzierl.worktrack.model.BackupMetaData;
-import de.iweinzierl.worktrack.persistence.LocalTrackingItemRepository;
-import de.iweinzierl.worktrack.persistence.LocalTrackingItemRepository_;
-import de.iweinzierl.worktrack.persistence.LocalWorkplaceRepository_;
-import de.iweinzierl.worktrack.persistence.WorkplaceRepository;
+import de.iweinzierl.worktrack.persistence.repository.RepositoryFactory_;
+import de.iweinzierl.worktrack.persistence.repository.TrackingItemRepository;
+import de.iweinzierl.worktrack.persistence.repository.WorkplaceRepository;
 import de.iweinzierl.worktrack.util.GoogleDriveBackupHelper;
 import de.iweinzierl.worktrack.util.SettingsHelper;
 
@@ -161,10 +160,10 @@ public class BackupJob extends JobService {
     private void doBackup() throws Exception {
         LOGGER.info("doBackup()");
 
-        final LocalTrackingItemRepository repository =
-                LocalTrackingItemRepository_.getInstance_(getApplicationContext());
+        final TrackingItemRepository repository =
+                RepositoryFactory_.getInstance_(getApplicationContext()).getTrackingItemRepository();
         final WorkplaceRepository workplaceRepository =
-                LocalWorkplaceRepository_.getInstance_(getApplicationContext());
+                RepositoryFactory_.getInstance_(getApplicationContext()).getWorkplaceRepository();
 
         final GoogleAccountCredential credential = GoogleAccountCredential
                 .usingOAuth2(this, Arrays.asList(SCOPES))

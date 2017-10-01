@@ -22,9 +22,9 @@ import java.util.List;
 
 import de.iweinzierl.worktrack.analytics.AnalyticsEvents;
 import de.iweinzierl.worktrack.analytics.AnalyticsParams;
-import de.iweinzierl.worktrack.persistence.LocalWorkplaceRepository;
+import de.iweinzierl.worktrack.persistence.repository.LocalWorkplaceRepository;
 import de.iweinzierl.worktrack.persistence.Workplace;
-import de.iweinzierl.worktrack.persistence.WorkplaceRepository;
+import de.iweinzierl.worktrack.persistence.repository.WorkplaceRepository;
 
 @EService
 public class GeofencingTransitionService extends IntentService {

@@ -22,8 +22,9 @@ import org.slf4j.Logger;
 
 import de.iweinzierl.worktrack.analytics.AnalyticsEvents;
 import de.iweinzierl.worktrack.analytics.AnalyticsParams;
-import de.iweinzierl.worktrack.persistence.LocalTrackingItemRepository;
-import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
+import de.iweinzierl.worktrack.persistence.repository.RepositoryFactory;
+import de.iweinzierl.worktrack.persistence.repository.TrackingItemRepository;
+import de.iweinzierl.worktrack.persistence.repository.WorkplaceRepository;
 import de.iweinzierl.worktrack.view.drawer.DrawerAdapter;
 
 @EActivity
@@ -37,17 +38,13 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     ActionBarDrawerToggle drawerToggle;
 
-    @Bean(LocalTrackingItemRepository.class)
     TrackingItemRepository trackingItemRepository;
+    WorkplaceRepository workplaceRepository;
 
     @ViewById
     ListView leftDrawer;
 
     abstract int getLayoutId();
-
-    public TrackingItemRepository getTrackingItemRepository() {
-        return trackingItemRepository;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +67,20 @@ public abstract class BaseActivity extends AppCompatActivity {
         } else {
             LOGGER.warn("No support action bar given!");
         }
+    }
+
+    @Bean
+    void setRepositoryFactory(RepositoryFactory repositoryFactory) {
+        trackingItemRepository = repositoryFactory.getTrackingItemRepository();
+        workplaceRepository = repositoryFactory.getWorkplaceRepository();
+    }
+
+    public TrackingItemRepository getTrackingItemRepository() {
+        return trackingItemRepository;
+    }
+
+    public WorkplaceRepository getWorkplaceRepository() {
+        return workplaceRepository;
     }
 
     @Override

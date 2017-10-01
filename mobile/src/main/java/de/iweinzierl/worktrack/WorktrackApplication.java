@@ -4,17 +4,12 @@ import android.app.Application;
 
 import com.github.iweinzierl.android.logging.AndroidLoggerFactory;
 
-import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EApplication;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.List;
-
-import de.iweinzierl.worktrack.persistence.LocalTrackingItemRepository;
-import de.iweinzierl.worktrack.persistence.TrackingItem;
-import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
+import de.iweinzierl.worktrack.persistence.repository.LocalTrackingItemRepository;
+import de.iweinzierl.worktrack.persistence.repository.TrackingItemRepository;
 import de.iweinzierl.worktrack.util.ProductFlavor;
 
 @EApplication

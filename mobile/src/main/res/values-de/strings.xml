@@ -123,6 +123,8 @@
     <string name="dialog_feature_only_in_pro_message_no_backups">Sicherungskopien sind nur in der Pro Version verfügbar. Willst du jetzt zur Pro wechseln?</string>
     <string name="dialog_feature_only_in_pro_title_only_one_workplace">Premium Funktion</string>
     <string name="dialog_feature_only_in_pro_message_only_one_workplace">In dieser Version ist nur das Erstellen eines Arbeitsplatzes erlaubt. Weitere Arbeitsplätze kannst du in der Pro Version erstellen. Willst du jetzt zur Pro wechseln?</string>
+    <string name="dialog_feature_only_in_pro_title_events_approached_limit">Premium Funktion</string>
+    <string name="dialog_feature_only_in_pro_message_events_approached_limit">Du hast das Limit von 30 Tagen Zeiterfassung dieser kostenfreien Version erreicht. Mit der Pro Version kannst du unbegrenzt Arbeitszeiten erfassen. Willst du jetzt zur Pro wechseln?</string>
 
     <string name="settings_category_working_time">Arbeitszeit</string>
     <string name="settings_daily_working_hours_title">Arbeitsstunden pro Tag</string>

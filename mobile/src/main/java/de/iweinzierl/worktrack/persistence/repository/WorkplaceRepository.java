@@ -1,6 +1,8 @@
-package de.iweinzierl.worktrack.persistence;
+package de.iweinzierl.worktrack.persistence.repository;
 
 import java.util.List;
+
+import de.iweinzierl.worktrack.persistence.Workplace;
 
 public interface WorkplaceRepository {
 

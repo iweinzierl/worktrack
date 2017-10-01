@@ -1,4 +1,4 @@
-package de.iweinzierl.worktrack.persistence;
+package de.iweinzierl.worktrack.persistence.repository;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -7,12 +7,13 @@ import java.util.List;
 
 import de.iweinzierl.worktrack.model.Week;
 import de.iweinzierl.worktrack.model.Year;
+import de.iweinzierl.worktrack.persistence.DaoSession;
+import de.iweinzierl.worktrack.persistence.TrackingItem;
+import de.iweinzierl.worktrack.persistence.repository.exception.PersistenceException;
 
 public interface TrackingItemRepository {
 
-    DaoSession getSession();
-
-    TrackingItem save(TrackingItem item);
+    TrackingItem save(TrackingItem item) throws PersistenceException;
 
     boolean delete(TrackingItem item);
 

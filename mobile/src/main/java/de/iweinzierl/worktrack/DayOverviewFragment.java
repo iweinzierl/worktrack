@@ -26,9 +26,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import de.iweinzierl.worktrack.persistence.LocalTrackingItemRepository;
+import de.iweinzierl.worktrack.persistence.repository.LocalTrackingItemRepository;
 import de.iweinzierl.worktrack.persistence.TrackingItem;
-import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
+import de.iweinzierl.worktrack.persistence.repository.TrackingItemRepository;
 import de.iweinzierl.worktrack.util.LaunchHelper;
 import de.iweinzierl.worktrack.util.SettingsHelper;
 import de.iweinzierl.worktrack.util.WorktimeCalculator;

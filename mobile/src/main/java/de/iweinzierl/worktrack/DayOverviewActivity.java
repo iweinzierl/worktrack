@@ -1,6 +1,7 @@
 package de.iweinzierl.worktrack;
 
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -17,7 +18,6 @@ import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
@@ -34,20 +34,21 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
+import de.iweinzierl.worktrack.analytics.AnalyticsEvents;
+import de.iweinzierl.worktrack.analytics.AnalyticsParams;
 import de.iweinzierl.worktrack.persistence.CreationType;
-import de.iweinzierl.worktrack.persistence.DaoSessionFactory;
 import de.iweinzierl.worktrack.persistence.TrackingItem;
 import de.iweinzierl.worktrack.persistence.TrackingItemType;
+import de.iweinzierl.worktrack.persistence.repository.exception.LimitApproachedException;
+import de.iweinzierl.worktrack.persistence.repository.exception.PersistenceException;
 import de.iweinzierl.worktrack.util.AsyncCallback;
 import de.iweinzierl.worktrack.view.adapter.DayOverviewFragmentAdapter;
+import de.iweinzierl.worktrack.view.dialog.OnlySupportedInProDialogFragment;
 
 @EActivity
 public class DayOverviewActivity extends BaseActivity implements DayOverviewFragment.TrackingItemCallback {
 
     private static final Logger LOGGER = AndroidLoggerFactory.getInstance().getLogger("DayOverviewActivity");
-
-    @Bean
-    DaoSessionFactory sessionFactory;
 
     @ViewById
     ViewPager pager;
@@ -229,10 +230,24 @@ public class DayOverviewActivity extends BaseActivity implements DayOverviewFrag
 
     @Background
     protected void saveTrackingItem(TrackingItem item, AsyncCallback callback) {
-        trackingItemRepository.save(item);
+        try {
+            trackingItemRepository.save(item);
 
-        if (callback != null) {
-            callback.callback();
+            if (callback != null) {
+                callback.callback();
+            }
+        } catch (LimitApproachedException e) {
+            Bundle bundle = new Bundle();
+            bundle.putString(AnalyticsParams.ERROR_MESSAGE.name(), e.getMessage());
+            firebaseAnalytics.logEvent(AnalyticsEvents.TRACKING_ITEM_SAVE_FAILURE.name(), bundle);
+
+            showLimitApproachedError();
+        } catch (PersistenceException e) {
+            Bundle bundle = new Bundle();
+            bundle.putString(AnalyticsParams.ERROR_MESSAGE.name(), e.getMessage());
+            firebaseAnalytics.logEvent(AnalyticsEvents.TRACKING_ITEM_SAVE_FAILURE.name(), bundle);
+
+            showMessage(e.getMessage());
         }
     }
 
@@ -329,6 +344,14 @@ public class DayOverviewActivity extends BaseActivity implements DayOverviewFrag
         if (pos >= 0 && pos < pagerAdapter.getCount()) {
             pager.setCurrentItem(pos);
         }
+    }
+
+    @UiThread
+    protected void showLimitApproachedError() {
+        OnlySupportedInProDialogFragment fragment = OnlySupportedInProDialogFragment.newInstance();
+        fragment.setTitleResId(R.string.dialog_feature_only_in_pro_title_events_approached_limit);
+        fragment.setMessageResId(R.string.dialog_feature_only_in_pro_message_events_approached_limit);
+        fragment.show(getSupportFragmentManager(), null);
     }
 
     @SuppressWarnings("unchecked")

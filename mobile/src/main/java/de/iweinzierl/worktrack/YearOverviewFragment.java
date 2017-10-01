@@ -20,8 +20,8 @@ import java.util.List;
 
 import de.iweinzierl.worktrack.model.Week;
 import de.iweinzierl.worktrack.model.Year;
-import de.iweinzierl.worktrack.persistence.LocalTrackingItemRepository;
-import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
+import de.iweinzierl.worktrack.persistence.repository.LocalTrackingItemRepository;
+import de.iweinzierl.worktrack.persistence.repository.TrackingItemRepository;
 import de.iweinzierl.worktrack.util.SettingsHelper;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;

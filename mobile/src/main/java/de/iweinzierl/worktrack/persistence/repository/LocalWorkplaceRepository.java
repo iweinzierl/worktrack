@@ -1,4 +1,4 @@
-package de.iweinzierl.worktrack.persistence;
+package de.iweinzierl.worktrack.persistence.repository;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
@@ -6,6 +6,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+
+import de.iweinzierl.worktrack.persistence.DaoSession;
+import de.iweinzierl.worktrack.persistence.DaoSessionFactory;
+import de.iweinzierl.worktrack.persistence.Workplace;
+import de.iweinzierl.worktrack.persistence.WorkplaceDao;
 
 @EBean
 public class LocalWorkplaceRepository implements WorkplaceRepository {

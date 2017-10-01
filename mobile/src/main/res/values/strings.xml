@@ -123,6 +123,8 @@
     <string name="dialog_feature_only_in_pro_message_no_backups">Backups are only available in Pro version. Upgrade to Pro now?</string>
     <string name="dialog_feature_only_in_pro_title_only_one_workplace">Premium Feature</string>
     <string name="dialog_feature_only_in_pro_message_only_one_workplace">This version of the app only allows a single workplace. The Pro version allows you to create unlimited number of workplaces. Upgrade to Pro now?</string>
+    <string name="dialog_feature_only_in_pro_title_events_approached_limit">Premium Feature</string>
+    <string name="dialog_feature_only_in_pro_message_events_approached_limit">You approached the limit of 30 days of time tracking that are supported by the free version of the app. The Pro version allows you to track an unlimited number of events. Upgrade to Pro now?</string>
 
     <string name="settings_category_working_time">Working Time</string>
     <string name="settings_daily_working_hours_title">Daily working hours</string>

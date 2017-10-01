@@ -1,13 +1,9 @@
 package de.iweinzierl.worktrack;
 
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -31,9 +27,9 @@ import java.util.List;
 
 import de.iweinzierl.worktrack.model.Week;
 import de.iweinzierl.worktrack.model.WeekDay;
-import de.iweinzierl.worktrack.persistence.LocalTrackingItemRepository;
+import de.iweinzierl.worktrack.persistence.repository.LocalTrackingItemRepository;
 import de.iweinzierl.worktrack.persistence.TrackingItem;
-import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
+import de.iweinzierl.worktrack.persistence.repository.TrackingItemRepository;
 import de.iweinzierl.worktrack.util.MailHelper;
 import de.iweinzierl.worktrack.view.adapter.WeekOverviewFragmentAdapter;
 import de.iweinzierl.worktrack.view.dialog.OnlySupportedInProDialogFragment;

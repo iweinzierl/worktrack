@@ -1,4 +1,4 @@
-package de.iweinzierl.worktrack.persistence;
+package de.iweinzierl.worktrack.persistence.repository;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -21,7 +21,12 @@ import de.iweinzierl.worktrack.analytics.AnalyticsParams;
 import de.iweinzierl.worktrack.model.Week;
 import de.iweinzierl.worktrack.model.WeekDay;
 import de.iweinzierl.worktrack.model.Year;
+import de.iweinzierl.worktrack.persistence.DaoSession;
+import de.iweinzierl.worktrack.persistence.DaoSessionFactory;
+import de.iweinzierl.worktrack.persistence.TrackingItem;
+import de.iweinzierl.worktrack.persistence.TrackingItemDao;
 import de.iweinzierl.worktrack.persistence.converter.DateTimeConverter;
+import de.iweinzierl.worktrack.persistence.repository.exception.PersistenceException;
 
 @EBean
 public class LocalTrackingItemRepository implements TrackingItemRepository {
@@ -34,12 +39,12 @@ public class LocalTrackingItemRepository implements TrackingItemRepository {
     protected Context context;
 
     @Bean
-    DaoSessionFactory sessionFactory;
+    protected DaoSessionFactory sessionFactory;
 
-    private DaoSession session;
-    private FirebaseAnalytics analytics;
+    protected DaoSession session;
+    protected FirebaseAnalytics analytics;
 
-    public DaoSession getSession() {
+    protected DaoSession getSession() {
         if (session == null) {
             session = sessionFactory.getSession();
         }
@@ -57,7 +62,7 @@ public class LocalTrackingItemRepository implements TrackingItemRepository {
     }
 
     @Override
-    public TrackingItem save(TrackingItem item) {
+    public TrackingItem save(TrackingItem item) throws PersistenceException {
         getAnalytics().logEvent(AnalyticsEvents.TRACKING_ITEM_SAVE.name(), null);
 
         try {

@@ -40,7 +40,7 @@ import org.slf4j.Logger;
 import java.util.List;
 import java.util.UUID;
 
-import de.iweinzierl.worktrack.persistence.LocalWorkplaceRepository;
+import de.iweinzierl.worktrack.persistence.repository.LocalWorkplaceRepository;
 import de.iweinzierl.worktrack.persistence.Workplace;
 import de.iweinzierl.worktrack.receiver.GeofencingTransitionService;
 import de.iweinzierl.worktrack.view.adapter.NoOpActionCallback;
