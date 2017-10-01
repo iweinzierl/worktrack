@@ -8,6 +8,7 @@
     <string name="drawer_close">Menu schließen</string>
     <string name="drawer_label_pro">Worktrack PRO</string>
     <string name="drawer_label_dev">Worktrack DEV</string>
+    <string name="drawer_label_go_pro">Upgrade auf PRO Version</string>
 
     <string name="activity_manage_workplaces">Arbeitsplätze verwalten</string>
     <string name="activity_manage_workplaces_action_add">Arbeitsplatz hinzufügen</string>
