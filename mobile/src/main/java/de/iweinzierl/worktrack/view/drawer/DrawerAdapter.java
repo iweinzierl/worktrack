@@ -11,7 +11,9 @@ import de.iweinzierl.worktrack.ManageWorkplacesActivity_;
 import de.iweinzierl.worktrack.R;
 import de.iweinzierl.worktrack.SettingsActivity_;
 import de.iweinzierl.worktrack.WeekOverviewActivity_;
+import de.iweinzierl.worktrack.WorktrackApplication;
 import de.iweinzierl.worktrack.YearOverviewActivity_;
+import de.iweinzierl.worktrack.util.ProductFlavor;
 
 public class DrawerAdapter extends BaseAdapter {
 
@@ -22,7 +24,8 @@ public class DrawerAdapter extends BaseAdapter {
             new DrawerActivityItem(R.string.activity_weekoverview, R.drawable.drawer_view_week, WeekOverviewActivity_.class),
             new DrawerActivityItem(R.string.activity_yearoverview, R.drawable.drawer_view_week, YearOverviewActivity_.class),
             new DrawerActivityItem(R.string.activity_manage_backups, R.drawable.drawer_backup, ManageBackupsActivity_.class),
-            new DrawerActivityItem(R.string.activity_settings, R.drawable.drawer_settings, SettingsActivity_.class)
+            new DrawerActivityItem(R.string.activity_settings, R.drawable.drawer_settings, SettingsActivity_.class),
+            new DrawerGoProItem(R.string.drawer_label_go_pro, R.drawable.pro_green)
     };
 
     private final DrawerLayout drawerLayout;
@@ -33,7 +36,9 @@ public class DrawerAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return NAV_ITEMS.length;
+        return WorktrackApplication.getInstance().getProductFlavor() == ProductFlavor.PRO
+                ? NAV_ITEMS.length - 1
+                : NAV_ITEMS.length;
     }
 
     @Override
