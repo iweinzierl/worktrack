@@ -1,38 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/title"
-        style="@style/AppTheme.Dialog.Title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/dialog_feature_only_in_pro_title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <android.support.constraint.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        style="@style/AppTheme.Dialog"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/icon"
-        style="@style/AppTheme.Dialog.Icon"
-        android:contentDescription="@string/dialog_feature_only_in_pro_icon_desc"
-        android:gravity="center"
-        android:src="@drawable/pro_green"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title" />
+        <TextView
+            android:id="@+id/title"
+            style="@style/AppTheme.Dialog.Title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/dialog_feature_only_in_pro_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        style="@style/AppTheme.Dialog.Text"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/dialog_feature_only_in_pro_message"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/icon" />
+        <ImageView
+            android:id="@+id/icon"
+            style="@style/AppTheme.Dialog.Icon"
+            android:contentDescription="@string/dialog_feature_only_in_pro_icon_desc"
+            android:gravity="center"
+            android:src="@drawable/pro_green"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title" />
 
-</android.support.constraint.ConstraintLayout>
+        <TextView
+            android:id="@+id/message"
+            style="@style/AppTheme.Dialog.Text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/dialog_feature_only_in_pro_message"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/icon" />
+
+        <Button
+            android:id="@+id/positive"
+            style="@style/AppTheme.Dialog.Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_feature_only_in_pro_button_positive"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/message" />
+
+        <Button
+            android:id="@+id/negative"
+            style="@style/AppTheme.Dialog.Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_feature_only_in_pro_button_negative"
+            app:layout_constraintEnd_toStartOf="@id/positive"
+            app:layout_constraintTop_toBottomOf="@id/message" />
+
+    </android.support.constraint.ConstraintLayout>
+</FrameLayout>

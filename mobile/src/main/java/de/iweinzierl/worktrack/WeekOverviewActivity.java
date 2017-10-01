@@ -36,6 +36,7 @@ import de.iweinzierl.worktrack.persistence.TrackingItem;
 import de.iweinzierl.worktrack.persistence.TrackingItemRepository;
 import de.iweinzierl.worktrack.util.MailHelper;
 import de.iweinzierl.worktrack.view.adapter.WeekOverviewFragmentAdapter;
+import de.iweinzierl.worktrack.view.dialog.OnlySupportedInProDialogFragment;
 import de.iweinzierl.worktrack.view.dialog.WeekPickerDialogFragment;
 
 @EActivity
@@ -168,25 +169,10 @@ public class WeekOverviewActivity extends BaseActivity {
         if (WorktrackApplication.getInstance().isPro()) {
             ActivityCompat.requestPermissions(this, PERMISSIONS_EMAIL, REQUEST_SEND_MAIL);
         } else {
-            new AlertDialog.Builder(this)
-                    .setView(R.layout.dialog_feature_only_in_pro)
-                    .setPositiveButton(R.string.dialog_feature_only_in_pro_button_positive, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-
-                            Intent intent = new Intent(Intent.ACTION_VIEW);
-                            intent.setData(Uri.parse("market://details?id=" + WorktrackApplication.PACKAGE_NAME_PRO));
-                            startActivity(intent);
-                        }
-                    })
-                    .setNegativeButton(R.string.dialog_feature_only_in_pro_button_negative, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                        }
-                    })
-                    .show();
+            OnlySupportedInProDialogFragment fragment = OnlySupportedInProDialogFragment.newInstance();
+            fragment.setTitleResId(R.string.dialog_feature_only_in_pro_title_no_exports);
+            fragment.setMessageResId(R.string.dialog_feature_only_in_pro_message_no_exports);
+            fragment.show(getSupportFragmentManager(), null);
         }
     }
 

@@ -41,6 +41,7 @@ import de.iweinzierl.worktrack.util.GoogleDriveBackupHelper;
 import de.iweinzierl.worktrack.view.adapter.BackupAdapter;
 import de.iweinzierl.worktrack.view.adapter.NoOpActionCallback;
 import de.iweinzierl.worktrack.view.dialog.BackupTitleInputDialog;
+import de.iweinzierl.worktrack.view.dialog.OnlySupportedInProDialogFragment;
 
 @EActivity
 public class ManageBackupsActivity extends BaseGoogleApiAvailabilityActivity {
@@ -145,7 +146,14 @@ public class ManageBackupsActivity extends BaseGoogleApiAvailabilityActivity {
 
     @Click(R.id.manualBackup)
     protected void clickedManualBack() {
-        createBackup();
+        if (WorktrackApplication.getInstance().isPro()) {
+            createBackup();
+        } else {
+            OnlySupportedInProDialogFragment fragment = OnlySupportedInProDialogFragment.newInstance();
+            fragment.setTitleResId(R.string.dialog_feature_only_in_pro_title_no_backups);
+            fragment.setMessageResId(R.string.dialog_feature_only_in_pro_message_no_backups);
+            fragment.show(getSupportFragmentManager(), null);
+        }
     }
 
     @Click(R.id.emptyViewConfigureBackups)

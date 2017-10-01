@@ -17,13 +17,8 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="AppTheme.Dialog">
-        <item name="android:background">@color/colorBackgroundOverlay</item>
-        <item name="android:opacity">opaque</item>
-        <item name="android:paddingStart">32dp</item>
-        <item name="android:paddingEnd">32dp</item>
-        <item name="android:paddingTop">64dp</item>
-        <item name="android:paddingBottom">64dp</item>
+    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:layout_gravity">center</item>
     </style>
 
     <style name="AppTheme.Dialog.Title" parent="android:Widget.Material.Button.Borderless">
@@ -44,6 +39,11 @@
     <style name="AppTheme.Dialog.Icon" parent="android:Widget.Material.Button.Borderless">
         <item name="android:layout_width">128dp</item>
         <item name="android:layout_height">128dp</item>
+    </style>
+
+    <style name="AppTheme.Dialog.Button" parent="android:Widget.Material.Button.Borderless">
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/colorAccent</item>
     </style>
 
     <style name="AppTheme.EmptyView.Title" parent="android:Widget.Material.Button.Borderless">
