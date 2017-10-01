@@ -2,6 +2,8 @@ package de.iweinzierl.worktrack;
 
 import android.app.Application;
 
+import com.github.iweinzierl.android.logging.AndroidLoggerFactory;
+
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EApplication;
@@ -23,9 +25,9 @@ public class WorktrackApplication extends Application {
 
     public static final String LOG_TAG = "[WT]";
 
-    private static WorktrackApplication INSTANCE;
+    private static final Logger LOGGER = AndroidLoggerFactory.getInstance(LOG_TAG).getLogger("WorktrackApplication");
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(WorktrackApplication.class);
+    private static WorktrackApplication INSTANCE;
 
     @Bean(LocalTrackingItemRepository.class)
     TrackingItemRepository trackingItemRepository;
@@ -43,12 +45,6 @@ public class WorktrackApplication extends Application {
         }
     }
 
-    @AfterInject
-    public void logStatistics() {
-        List<TrackingItem> trackingItems = trackingItemRepository.findAll();
-        LOGGER.info("Found {} tracking items in database", trackingItems.size());
-    }
-
     public ProductFlavor getProductFlavor() {
         if (getPackageName().equals(PACKAGE_NAME_PRO)) {
             return ProductFlavor.PRO;
@@ -57,5 +53,10 @@ public class WorktrackApplication extends Application {
         } else {
             return ProductFlavor.DEV;
         }
+    }
+
+    public boolean isPro() {
+        return getProductFlavor() == ProductFlavor.PRO
+                || getProductFlavor() == ProductFlavor.DEV;
     }
 }

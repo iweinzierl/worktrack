@@ -112,6 +112,12 @@
     <string name="dialog_explain_swipe_days_icon_desc">Swipe left or right</string>
     <string name="dialog_explain_swipe_days_message">Once you collected data for some days, you can swipe left and right to navigate through days.</string>
 
+    <string name="dialog_feature_only_in_pro_title">Pro Feature</string>
+    <string name="dialog_feature_only_in_pro_message">This feature is only enabled in PRO version. Do you want to upgrade?</string>
+    <string name="dialog_feature_only_in_pro_icon_desc">go pro</string>
+    <string name="dialog_feature_only_in_pro_button_positive">Upgrade PRO</string>
+    <string name="dialog_feature_only_in_pro_button_negative">No</string>
+
     <string name="settings_category_working_time">Working Time</string>
     <string name="settings_daily_working_hours_title">Daily working hours</string>
     <string name="settings_daily_working_hours_summary">The number of working hours per day.</string>
