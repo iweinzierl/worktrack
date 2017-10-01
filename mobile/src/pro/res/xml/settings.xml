@@ -34,7 +34,6 @@
     </PreferenceCategory>
 
     <PreferenceScreen
-        android:enabled="false"
         android:key="settings_backup"
         android:persistent="false"
         android:summary="@string/settings_backup_screen_summary"
@@ -42,8 +41,7 @@
 
         <PreferenceCategory android:title="@string/settings_backup_category_last_backup">
 
-            <de.iweinzierl.worktrack.view.settings.LastBackupPreference
-                android:key="@string/preference_last_backup" />
+            <de.iweinzierl.worktrack.view.settings.LastBackupPreference android:key="@string/preference_last_backup" />
 
         </PreferenceCategory>
 

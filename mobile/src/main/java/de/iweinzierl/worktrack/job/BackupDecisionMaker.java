@@ -5,6 +5,7 @@ import com.github.iweinzierl.android.logging.AndroidLoggerFactory;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 
+import de.iweinzierl.worktrack.WorktrackApplication;
 import de.iweinzierl.worktrack.model.BackupFrequency;
 
 class BackupDecisionMaker {
@@ -20,7 +21,11 @@ class BackupDecisionMaker {
     }
 
     boolean backupRequired() {
-        if (lastBackupTime == null && backupFrequency != null && backupFrequency != BackupFrequency.NEVER) {
+        if (!WorktrackApplication.getInstance().isPro()) {
+            LOGGER.debug("BackupJob is only supposed to run in PRO app, not im FREE!");
+            return false;
+        }
+        else if (lastBackupTime == null && backupFrequency != null && backupFrequency != BackupFrequency.NEVER) {
             LOGGER.debug("BackupJob never run before.");
             return true;
         } else if (backupFrequency == null) {

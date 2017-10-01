@@ -136,9 +136,11 @@ public class ManageBackupsActivity extends BaseGoogleApiAvailabilityActivity {
         }
         if (requestCode == REQUEST_CONFIGURE_BACKUPS) {
             updateGoogleCredentials();
-            if (Strings.isNullOrEmpty(getCredential().getSelectedAccountName())) {
+            boolean isPro = WorktrackApplication.getInstance().isPro();
+
+            if (Strings.isNullOrEmpty(getCredential().getSelectedAccountName()) && isPro) {
                 displayAccountUnsetDialog();
-            } else {
+            } else if (isPro) {
                 updateBackups();
             }
         }
