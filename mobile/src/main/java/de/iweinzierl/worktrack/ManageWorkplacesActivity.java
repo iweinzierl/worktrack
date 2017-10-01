@@ -45,6 +45,7 @@ import de.iweinzierl.worktrack.persistence.Workplace;
 import de.iweinzierl.worktrack.receiver.GeofencingTransitionService;
 import de.iweinzierl.worktrack.view.adapter.NoOpActionCallback;
 import de.iweinzierl.worktrack.view.adapter.WorkplaceAdapter;
+import de.iweinzierl.worktrack.view.dialog.OnlySupportedInProDialogFragment;
 import de.iweinzierl.worktrack.view.dialog.WorkplaceTitleQueryDialog;
 
 @EActivity
@@ -64,6 +65,7 @@ public class ManageWorkplacesActivity extends BaseActivity {
 
     private static final Logger LOGGER = AndroidLoggerFactory.getInstance().getLogger("ManageWorkplacesActivity");
 
+    private static final int ALLOWED_WORKPLACES_IN_FREE = 1;
     private static final int REQUEST_UPDATE_GEOFENCES = 100;
 
     private GeofencingClient geofencingClient;
@@ -105,7 +107,15 @@ public class ManageWorkplacesActivity extends BaseActivity {
     @Click(R.id.addAction)
     protected void clickedAddAction() {
         LOGGER.debug("clicked action button: add workplace");
-        startActivityForResult(new Intent(this, PickLocationActivity_.class), PickLocationActivity.REQUEST_LOCATION);
+        if (!WorktrackApplication.getInstance().isPro()
+                && workplaceRepository.findAll().size() >= ALLOWED_WORKPLACES_IN_FREE) {
+            OnlySupportedInProDialogFragment fragment = OnlySupportedInProDialogFragment.newInstance();
+            fragment.setTitleResId(R.string.dialog_feature_only_in_pro_title_only_one_workplace);
+            fragment.setMessageResId(R.string.dialog_feature_only_in_pro_message_only_one_workplace);
+            fragment.show(getSupportFragmentManager(), null);
+        } else {
+            startActivityForResult(new Intent(this, PickLocationActivity_.class), PickLocationActivity.REQUEST_LOCATION);
+        }
     }
 
     @Override

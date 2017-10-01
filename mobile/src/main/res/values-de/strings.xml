@@ -121,6 +121,8 @@
     <string name="dialog_feature_only_in_pro_message_no_exports">Exporte sind nur in der Pro Version verfügbar. Willst du jetzt zur Pro wechseln?</string>
     <string name="dialog_feature_only_in_pro_title_no_backups">Premium Funktion</string>
     <string name="dialog_feature_only_in_pro_message_no_backups">Sicherungskopien sind nur in der Pro Version verfügbar. Willst du jetzt zur Pro wechseln?</string>
+    <string name="dialog_feature_only_in_pro_title_only_one_workplace">Premium Funktion</string>
+    <string name="dialog_feature_only_in_pro_message_only_one_workplace">In dieser Version ist nur das Erstellen eines Arbeitsplatzes erlaubt. Weitere Arbeitsplätze kannst du in der Pro Version erstellen. Willst du jetzt zur Pro wechseln?</string>
 
     <string name="settings_category_working_time">Arbeitszeit</string>
     <string name="settings_daily_working_hours_title">Arbeitsstunden pro Tag</string>
