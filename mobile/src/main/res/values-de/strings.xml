@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Worktrack</string>
+    <string name="app_name_inc_version">Worktrack</string>
     <string name="app_slogan">Behalte deine Arbeitszeit im Blick!</string>
     <string name="action_settings">Einstellungen</string>
 
