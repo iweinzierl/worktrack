@@ -104,6 +104,10 @@
 
         <service android:name=".receiver.GeofencingTransitionService_" />
 
+        <service
+            android:name=".service.UpdateGeofenceService_"
+            android:exported="false" />
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.provider"

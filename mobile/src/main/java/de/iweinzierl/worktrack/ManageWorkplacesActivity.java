@@ -1,12 +1,10 @@
 package de.iweinzierl.worktrack;
 
 import android.Manifest;
-import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,16 +14,6 @@ import android.widget.ProgressBar;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.iweinzierl.android.logging.AndroidLoggerFactory;
-import com.google.android.gms.location.Geofence;
-import com.google.android.gms.location.GeofencingClient;
-import com.google.android.gms.location.GeofencingRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -34,15 +22,14 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.UUID;
 
-import de.iweinzierl.worktrack.persistence.repository.LocalWorkplaceRepository;
 import de.iweinzierl.worktrack.persistence.Workplace;
-import de.iweinzierl.worktrack.receiver.GeofencingTransitionService;
+import de.iweinzierl.worktrack.persistence.repository.LocalWorkplaceRepository;
+import de.iweinzierl.worktrack.service.UpdateGeofenceService_;
 import de.iweinzierl.worktrack.view.adapter.NoOpActionCallback;
 import de.iweinzierl.worktrack.view.adapter.WorkplaceAdapter;
 import de.iweinzierl.worktrack.view.dialog.OnlySupportedInProDialogFragment;
@@ -68,8 +55,6 @@ public class ManageWorkplacesActivity extends BaseActivity {
     private static final int ALLOWED_WORKPLACES_IN_FREE = 1;
     private static final int REQUEST_UPDATE_GEOFENCES = 100;
 
-    private GeofencingClient geofencingClient;
-
     @Bean(LocalWorkplaceRepository.class)
     protected LocalWorkplaceRepository workplaceRepository;
 
@@ -85,8 +70,6 @@ public class ManageWorkplacesActivity extends BaseActivity {
     @ViewById
     protected View emptyView;
 
-    private PendingIntent geofencePendingIntent;
-
     private WorkplaceAdapter workplaceAdapter;
 
     @Override
@@ -96,7 +79,6 @@ public class ManageWorkplacesActivity extends BaseActivity {
 
     @AfterViews
     protected void setup() {
-        geofencingClient = LocationServices.getGeofencingClient(this);
         workplaceAdapter = new WorkplaceAdapter(new WorkplaceActionCallback());
 
         cardView.setAdapter(workplaceAdapter);
@@ -268,79 +250,10 @@ public class ManageWorkplacesActivity extends BaseActivity {
             return;
         }
 
-        showProgressBar();
-
-        final List<Workplace> workplaces = workplaceRepository.findAll();
-        final GeofencingRequest geofencingRequest = buildGeofencingRequest(workplaces);
-
-        geofencingClient.removeGeofences(getGeofencePendingIntent())
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        try {
-                            geofencingClient.addGeofences(geofencingRequest, getGeofencePendingIntent())
-                                    .addOnSuccessListener(ManageWorkplacesActivity.this, new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            LOGGER.info("Adding geofences finished successfully");
-                                            hideProgressBar();
-                                        }
-                                    })
-                                    .addOnFailureListener(ManageWorkplacesActivity.this, new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            LOGGER.warn("Adding geofences failed", e);
-                                            hideProgressBar();
-                                        }
-                                    });
-                        } catch (SecurityException e) {
-                            showMessage(getString(R.string.activity_manage_workplaces_error_message_permission));
-                            hideProgressBar();
-                        }
-                    }
-                });
+        UpdateGeofenceService_.intent(this).updateAction().start();
     }
 
     private void removeGeofence(Workplace workplace) {
-        geofencingClient.removeGeofences(Lists.newArrayList(workplace.getGeofenceRequestId()));
-    }
-
-    private Geofence buildGeofence(Workplace workplace) {
-        return new Geofence.Builder()
-                .setRequestId(workplace.getGeofenceRequestId())
-                .setCircularRegion(
-                        workplace.getLat(),
-                        workplace.getLon(),
-                        (float) workplace.getRadius())
-                .setExpirationDuration(Geofence.NEVER_EXPIRE)
-                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
-                .build();
-    }
-
-    private GeofencingRequest buildGeofencingRequest(List<Workplace> workplaces) {
-        List<Geofence> geofences = Lists.transform(workplaces, new Function<Workplace, Geofence>() {
-            @Nullable
-            @Override
-            public Geofence apply(Workplace workplace) {
-                workplace.setRegisteredAt(DateTime.now());
-                workplaceRepository.save(workplace);
-                return buildGeofence(workplace);
-            }
-        });
-
-        return new GeofencingRequest.Builder()
-                .addGeofences(geofences)
-                .setInitialTrigger(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
-                .build();
-    }
-
-    private PendingIntent getGeofencePendingIntent() {
-        if (geofencePendingIntent != null) {
-            return geofencePendingIntent;
-        }
-
-        Intent intent = new Intent(this, GeofencingTransitionService.class);
-        geofencePendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        return geofencePendingIntent;
+        UpdateGeofenceService_.intent(this).deleteAction(workplace.getGeofenceRequestId()).start();
     }
 }
