@@ -172,7 +172,7 @@ public class UpdateGeofenceService extends AbstractIntentService {
 
         return new GeofencingRequest.Builder()
                 .addGeofences(geofences)
-                .setInitialTrigger(Geofence.GEOFENCE_TRANSITION_DWELL)
+                .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_DWELL)
                 .build();
     }
 
@@ -185,7 +185,7 @@ public class UpdateGeofenceService extends AbstractIntentService {
                         (float) workplace.getRadius())
                 .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
                 .setExpirationDuration(Geofence.NEVER_EXPIRE)
-                .setLoiteringDelay(60000)
+                .setLoiteringDelay(180000)
                 .build();
     }
 
